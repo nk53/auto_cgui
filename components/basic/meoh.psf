@@ -1,0 +1,50 @@
+PSF EXT CMAP CHEQ XPLOR
+
+         2 !NTITLE
+* GENERATE LIGAND                                                               
+*  DATE:    11/ 8/18     15:13:35      CREATED BY USER: apache                  
+
+         6 !NATOM
+         1 MEOH     1        MEOH     CB       CG331   -0.400000E-01   12.0110           0   0.00000     -0.301140E-02
+         2 MEOH     1        MEOH     OG       OG311   -0.650000       15.9994           0   0.00000     -0.301140E-02
+         3 MEOH     1        MEOH     HG1      HGP1     0.420000       1.00800           0   0.00000     -0.301140E-02
+         4 MEOH     1        MEOH     HB1      HGA3     0.900000E-01   1.00800           0   0.00000     -0.301140E-02
+         5 MEOH     1        MEOH     HB2      HGA3     0.900000E-01   1.00800           0   0.00000     -0.301140E-02
+         6 MEOH     1        MEOH     HB3      HGA3     0.900000E-01   1.00800           0   0.00000     -0.301140E-02
+
+         5 !NBOND: bonds
+         1         2         2         3         1         4         1         5
+         1         6
+
+         7 !NTHETA: angles
+         2         1         4         2         1         5         2         1         6
+         4         1         5         4         1         6         5         1         6
+         1         2         3
+
+         3 !NPHI: dihedrals
+         3         2         1         4         3         2         1         5
+         3         2         1         6
+
+         0 !NIMPHI: impropers
+
+
+         1 !NDON: donors
+         2         3
+
+         1 !NACC: acceptors
+         2         0
+
+         0 !NNB
+
+         0         0         0         0         0         0
+
+         1         0 !NGRP NST2
+         0         1         0
+
+         1 !MOLNT
+         1         1         1         1         1         1
+
+         0         0 !NUMLP NUMLPH
+
+         0 !NCRTERM: cross-terms
+

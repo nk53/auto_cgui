@@ -1,0 +1,31 @@
+# this file uses mostly default options to test different component types
+- label: solvated
+  #jobid: 8264461337
+  #resume_link: 1
+  base: components/basic
+  components:
+    1ubq:
+      type: solvated
+      count: 3
+    1vii:
+      type: solvated
+      count: 3
+    3gb1:
+      type: solvated
+      count: 3
+  steps:
+    - wait_text: Component ID
+      presteps:
+        - select_components()
+      elems:
+        - cube_side_length: 60
+      poststeps:
+        - click('size_button', 'Calculated System Size')
+    - wait_text: Solvation Options
+      presteps:
+        - set_component_density()
+        - click_by_attrs(value='Calculate Solvent Composition')
+        - time.sleep(1)
+    - wait_text: Periodic Boundary Condition Options
+    - wait_text: Force Field Options
+  final_wait_text: Please download
