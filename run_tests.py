@@ -1,205 +1,178 @@
 #!/usr/bin/env python3
 
-import time
+import copy
 import os
+import shutil
 import sys
-import urllib.request, urllib.parse, urllib.error
-import subprocess
 import yaml
-from splinter import Browser
-from splinter.exceptions import ElementDoesNotExist
+from multiprocessing import Queue
 from os.path import join as pjoin
 
+#from AsyncResultWaiter import AsyncResultWaiter
+from MCABrowserProcess import MCABrowserProcess
+
 LOGFILE = 'results.log'
+WWW_DIR = '/Users/nathan/multicomp/www'
 
-def log_failure(case_info, jobid, step, start_time):
+def log_exception(case_info, step_num, exc_info):
+    templ = 'Job "{}" ({}) encountered an exception on step {}:\n{}\n'
+    if not 'jobid' in case_info:
+        case_info['jobid'] = '-1'
+    jobid = case_info['jobid']
+    label = case_info['label']
+    with open(LOGFILE, 'a') as fh:
+        label = case_info['label']
+        fh.write(templ.format(label, jobid, step_num, exc_info))
+
+def log_failure(case_info, step, elapsed_time):
     templ = 'Job "{}" ({}) failed on step {} after {:.2f} seconds\n'
-    run_time = time.time() - start_time
+    if not 'jobid' in case_info:
+        case_info['jobid'] = '-1'
+    jobid = case_info['jobid']
+    label = case_info['label']
     with open(LOGFILE, 'a') as fh:
         label = case_info['label']
-        fh.write(templ.format(label, jobid, step, run_time))
+        fh.write(templ.format(label, jobid, step, elapsed_time))
 
-def log_success(case_info, jobid, start_time):
+def log_success(case_info, elapsed_time):
     templ = 'Job "{}" ({}) finished successfully after {:.2f} seconds\n'
-    run_time = time.time() - start_time
+    jobid = case_info['jobid']
+    label = case_info['label']
     with open(LOGFILE, 'a') as fh:
         label = case_info['label']
-        fh.write(templ.format(label, jobid, run_time))
+        fh.write(templ.format(label, jobid, elapsed_time))
 
-def set_component_density():
-    global components
-    for comp_name, comp_info in components.items():
-        if not 'density' in comp_info:
-            continue
-        row = find_comp_row(comp_name, 'solvent options')
-        comp_type = comp_info['type']
-        comp_type_elem = row.find_by_css("[id^=solv_density]")
-        comp_type_elem.fill(comp_info['density'])
-
-def select_components():
-    global components
-    for comp_name, comp_info in components.items():
-        row = find_comp_row(comp_name, 'molpacking')
-        comp_type = comp_info['type']
-        comp_type_elem = row.find_by_css("[name^=type_component")
-        comp_type_elem.select(comp_type)
-
-        # can't set number of some component types in this step
-        if comp_type in ['solvent', 'ion']:
-            continue
-
-        # changing component type might change row element
-        row = find_comp_row(comp_name, 'molpacking')
-
-        num_comps = row.find_by_css("[name^=num_components")
-        num_comps.fill(comp_info['count'])
-
-def go_next(test_text=None):
-    global browser
-    browser.find_by_id('nextBtn').click()
-    if test_text:
-        wait_text(test_text)
-
-def handle_step(step_info):
-    global browser
-    for elem in step_info['elems']:
-        name = list(elem.keys())[0]
-        value = elem[name]
-        browser.fill(name, value)
-
-def click(click_elem_id, wait_elem_text=None):
-    global browser
-    browser.find_by_id(click_elem_id).click()
-    if wait_elem_text:
-        wait_text(wait_elem_text)
-
-def click_by_attrs(wait_elem_text=None, **attrs):
-    global browser
-    css_templ = "[{}='{}']"
-    css_str = ''
-    for attr, value in attrs.items():
-        css_str += css_templ.format(attr, value)
-    browser.find_by_css(css_str).click()
-    if wait_elem_text:
-        wait_text(wait_elem_text)
-
-def click_lipid_category(category):
-    global browser
-    browser.find_by_text(category).find_by_xpath('../img').first.click()
-
-def wait_text(text):
-    global browser
-    print("Waiting for:", text)
-    while not browser.is_text_present(text, wait_time=1):
-        pass
-
-def wait_text_multi(texts):
-    global browser
-    wait_time = None
-    while True:
-        for text in texts:
-            if browser.is_text_present(text, wait_time):
-                return
-            wait_time = None
-        wait_time = 1
-
-def resume_step(jobid, project=None, step=None, link_no=None):
-    global browser
-    """Uses Job Retriever to return to the given step.
-
-    You must provide either:
-        1) Project name AND step number
-        2) Link number
-
-    project: doc to return to
-    step: step of doc to return to
-    link_no: 0-indexed order of recovery link to return to
+def handle_solvent_tests(test_case):
+    """Modifies water/ion options to include solvents according to the
+    following scheme:
+        None: no water and no ions
+        water: water only
+        ions: ions only
+        water+ions: water and ions
+    The return value is a set of new test cases modified to test each case in
+    the solvent_tests list.
     """
-    url = "http://localhost:8888/?doc=input/retriever"
-    browser.visit(url)
+    if not 'solvent_tests' in test_case:
+        raise ValueError("Missing 'solvent_tests'")
+    solvent_tests = test_case['solvent_tests']
 
-    browser.fill('jobid', str(jobid))
-    browser.find_by_css('input[type=submit]').click()
-
-    success = 'Job found'
-    failure = 'No job with that ID'
-    wait_text_multi([success, failure])
-    if browser.is_text_present(failure):
-        raise ValueError(failure)
-
-    if link_no != None:
-        assert isinstance(link_no, int), "link_no must be an integer"
-        browser.find_by_css("#recovery_table tr:not(:first-child) td:nth-child(3)")[link_no].click()
-    else:
-        assert project != None and step != None, "Missing args"
-        raise NotImplementedError
-
-def find_comp_row(comp_name, step):
-    global browser
-    """Returns the row element page corresponding to the given uploaded
-    component basename"""
-    selectors = {
-        'molpacking': lambda: browser.find_by_css(".component_list table tr:not(:first-child) td:nth-child(2)"),
-        'solvent options': lambda: browser.find_by_text("Component ID").find_by_xpath('../..').find_by_css("tr:not(:first-child) td:nth-child(2)")
-    }
-    rows = selectors[step]()
+    # find the step containing SOLVENT_TEST_PLACEHOLDER
+    placeholder = 'SOLVENT_TEST_PLACEHOLDER'
     found = False
-    for row in rows:
-        if row.text == comp_name:
-            found = True
+    index = None
+    check_lists = 'presteps', 'poststeps'
+    for step_num, step in enumerate(test_case['steps']):
+        for check_list in check_lists:
+            if check_list in step and placeholder in step[check_list]:
+                found = True
+                index = step[check_list].index(placeholder)
+                break
+        if found:
             break
     if not found:
-        raise ElementDoesNotExist("Could not find component: "+comp_name)
-    comp_row = row.find_by_xpath('..')
-    return comp_row
+        raise ValueError("Missing '"+placeholder+"'")
+
+    # action to do to *uncheck* an option
+    test_map = {
+        'water': "click('water_checked')",
+        'ions': "click('ion_checked')",
+    }
+
+    cases = []
+    for test_str in solvent_tests:
+        test = test_str.split('+')
+        case = copy.deepcopy(test_case)
+        step_proc = case['steps'][step_num][check_list]
+        step_proc.pop(index)
+
+        if 'None' in test:
+            for component, action in test_map.items():
+                step_proc.insert(index, action)
+        else:
+            for component, action in test_map.items():
+                if not component in test:
+                    step_proc.insert(index, action)
+
+        case['label'] += ' (solvent: '+test_str+')'
+        cases.append(case)
+
+    for num, case in enumerate(cases):
+        case['case_id'] = num
+        case['solvent_link'] = step_num
+
+    copy_action = "copy_dir(ncopy=3)"
+    cases[0]['steps'][step_num][check_list].insert(index, copy_action)
+
+    return cases
 
 # psf name: component type
 with open('test_cases/basic.yml') as fh:
     test_cases = yaml.load(fh, Loader=yaml.FullLoader)
 
-# load MCA front page
-browser = Browser('chrome')
+# rather than giving a separate test case for each variation of solvent
+# settings, the 'solvent_tests' variable indicates which variants should be
+# tested
+base_cases = []
+wait_cases = {}
 for test_case in test_cases:
-    start_time = time.time()
-    components = test_case['components']
-    resume_link = 0
-    base = os.path.abspath(test_case['base'])
-    if 'jobid' in test_case:
-        jobid = test_case['jobid']
-        resume_link = test_case['resume_link']
-        resume_step(jobid, link_no=resume_link)
+    if not 'solvent_tests' in test_case:
+        base_cases.append(test_case)
     else:
-        url = "http://localhost:8888/?doc=input/multicomp"
-        browser.visit(url)
+        cases = handle_solvent_tests(test_case)
+        base_case = cases[0]
+        base_cases.append(base_case)
+        wait_cases[base_case['label']] = cases[1:]
 
-        # attach files for this test case
-        for comp_name in components.keys():
-            comp_name = pjoin(base, comp_name)
-            browser.attach_file("files[]", comp_name+'.crd')
-            browser.attach_file("files[]", comp_name+'.psf')
+cap = 3
+todo_queue = Queue()
+done_queue = Queue()
+processes = [MCABrowserProcess(todo_queue, done_queue, www_dir=WWW_DIR) for i in range(cap)]
 
-        go_next(test_case['steps'][0]['wait_text'])
+# initialize browser processes
+for p in processes:
+    p.start()
 
-        jobid = browser.find_by_css(".jobid").first.text.split()[-1]
-        print("Job ID:", jobid)
+# main communication loop
+pending = 0
+for case in base_cases:
+    todo_queue.put(case)
+    pending += 1
 
-    steps = test_case['steps'][resume_link:]
-    for step_num, step in enumerate(steps):
-        if browser.is_text_present('CHARMM was terminated abnormally.'):
-            log_failure(test_case, jobid, step_num, start_time)
-        if 'wait_text' in step:
-            wait_text(step['wait_text'])
-        if 'presteps' in step:
-            for prestep in step['presteps']:
-                eval(prestep)
-        if 'elems' in step:
-            handle_step(step)
-        if 'poststeps' in step:
-            for poststep in step['poststeps']:
-                eval(poststep)
-        go_next()
+while pending:
+    result = done_queue.get()
+    pending -= 1
+    if result[0] == 'SUCCESS':
+        done_case, elapsed_time = result[1:]
+        done_label = done_case['label']
+        done_jobid = str(done_case['jobid'])
+        log_success(done_case, elapsed_time)
+    elif result[0] == 'FAILURE':
+        done_case, step_num, elapsed_time = result[1:]
+        log_failure(test_case, step_num, elapsed_time)
+    elif result[0] == 'EXCEPTION':
+        done_case, step_num, exc_info = result[1:]
+        elapsed_time = -1 # don't report time for exceptions
+        log_exception(test_case, step_num, exc_info)
+        print("Exception encountered for job ({})".format(test_case['jobid']))
+        print(exc_info)
+    elif result[0] == 'CONTINUE':
+        pending += 1
+        done_case = result[1]
+        done_label = done_case['label']
+        # are any tasks waiting on this one?
+        if done_label in wait_cases:
+            done_jobid = str(done_case['jobid'])
+            for num, wait_case in enumerate(wait_cases[done_label]):
+                wait_case['jobid'] = done_jobid+'_'+str(num+1)
+                wait_case['resume_link'] = done_case['solvent_link']
+                todo_queue.put(wait_case)
+                pending += 1
+            del wait_cases[done_label]
 
-    wait_text(test_case['final_wait_text'])
-    log_success(test_case, jobid, start_time)
+# signal to stop
+for p in processes:
+    todo_queue.put('STOP')
 
-browser.quit()
+# clean up
+for p in processes:
+    p.join()
