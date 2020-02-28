@@ -41,7 +41,7 @@ def log_success(case_info, elapsed_time):
         label = case_info['label']
         fh.write(templ.format(label, jobid, elapsed_time))
 
-def handle_solvent_memb_tests(test_case):
+def handle_solvent_memb_tests(test_case, do_copy=False):
     """Like handle_solvent_tests(), but for systems with a membrane"""
     if not 'solvent_tests' in test_case:
         raise ValueError("Missing 'solvent_tests'")
@@ -92,11 +92,12 @@ def handle_solvent_memb_tests(test_case):
         case['case_id'] = num
         case['solvent_link'] = step_num - 1
 
-    copy_action = "copy_dir(ncopy={})".format(len(solvent_tests))
-    cases[0]['steps'][step_num-1]['presteps'].insert(index, copy_action)
+    if do_copy:
+        copy_action = "copy_dir(ncopy={})".format(len(solvent_tests))
+        cases[0]['steps'][step_num-1]['presteps'].insert(index, copy_action)
 
     return cases
-def handle_solvent_tests(test_case):
+def handle_solvent_tests(test_case, do_copy=False):
     """Modifies water/ion options to include solvents according to the
     following scheme:
         None: no water and no ions
@@ -154,8 +155,9 @@ def handle_solvent_tests(test_case):
         case['case_id'] = num
         case['solvent_link'] = step_num
 
-    copy_action = "copy_dir(ncopy={})".format(len(solvent_tests))
-    cases[0]['steps'][step_num][check_list].insert(index, copy_action)
+    if do_copy:
+        copy_action = "copy_dir(ncopy={})".format(len(solvent_tests))
+        cases[0]['steps'][step_num][check_list].insert(index, copy_action)
 
     return cases
 
@@ -170,9 +172,11 @@ parser.add_argument('-w', '--www-dir', metavar="PATH",
 parser.add_argument('-b', '--base-url', metavar="URL",
         default='http://charmm-gui.org/',
         help="Web address to CHARMM-GUI (default: http://charmm-gui.org/)")
+parser.add_argument('--no-copy', action='store_true',
+        help="For tests on localhost, run each solvent_test independently; this is the default for beta/production tests")
 parser.add_argument('--config', type=argparse.FileType('r'),
         default="config.yml", metavar="PATH",
-        help="Path to configuration file (default: config.yml")
+        help="Path to configuration file (default: config.yml)")
 args = parser.parse_args()
 
 # read configuration
@@ -208,13 +212,21 @@ for test_case in test_cases:
     if not 'solvent_tests' in test_case:
         base_cases.append(test_case)
     else:
+        do_copy = not args.no_copy
         if 'memb' in test_case['label']:
-            cases = handle_solvent_memb_tests(test_case)
+            cases = handle_solvent_memb_tests(test_case, do_copy)
         else:
-            cases = handle_solvent_tests(test_case)
-        base_case = cases[0]
-        base_cases.append(base_case)
-        wait_cases[base_case['label']] = cases[1:]
+            cases = handle_solvent_tests(test_case, do_copy)
+
+        # for tests on localhost, computation can be sped up by copying
+        # the project directory at the test-branching point; for remote
+        # tests, this is not possible
+        if 'localhost' in BASE_URL and do_copy:
+            base_case = cases[0]
+            base_cases.append(base_case)
+            wait_cases[base_case['label']] = cases[1:]
+        else:
+            base_cases += cases
 
 todo_queue = Queue()
 done_queue = Queue()
