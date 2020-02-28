@@ -167,6 +167,9 @@ parser.add_argument('-n', '--num-threads', type=int, default=1,
         help="Number of parallel threads to spawn for testing (default: 1)")
 parser.add_argument('-w', '--www-dir', metavar="PATH",
         help="Directory where C-GUI projects are stored. Uses value stored in config by default.")
+parser.add_argument('-b', '--base-url', metavar="URL",
+        default='http://charmm-gui.org/',
+        help="Web address to CHARMM-GUI (default: http://charmm-gui.org/)")
 parser.add_argument('--config', type=argparse.FileType('r'),
         default="config.yml", metavar="PATH",
         help="Path to configuration file (default: config.yml")
@@ -175,6 +178,10 @@ args = parser.parse_args()
 # read configuration
 with args.config:
     CONFIG = yaml.load(args.config, Loader=yaml.FullLoader)
+
+BASE_URL = args.base_url
+if 'BASE_URL' in CONFIG:
+    BASE_URL = CONFIG['BASE_URL']
 
 # validate WWW_DIR as a directory
 if args.www_dir != None:
@@ -211,7 +218,7 @@ for test_case in test_cases:
 
 todo_queue = Queue()
 done_queue = Queue()
-processes = [MCABrowserProcess(todo_queue, done_queue, www_dir=WWW_DIR) for i in range(args.num_threads)]
+processes = [MCABrowserProcess(todo_queue, done_queue, www_dir=WWW_DIR, base_url=BASE_URL) for i in range(args.num_threads)]
 
 # initialize browser processes
 for p in processes:

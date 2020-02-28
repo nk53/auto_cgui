@@ -18,7 +18,7 @@ class CGUIBrowserProcess(Process):
         del kwargs['browser_type']
 
         if not 'base_url' in kwargs:
-            kwargs['base_url'] = 'http://localhost:8888/'
+            kwargs['base_url'] = 'http://charmm-gui.org/'
         self.base_url = kwargs['base_url']
         if not self.base_url.endswith('/'):
             self.base_url += '/'

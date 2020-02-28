@@ -5,10 +5,10 @@
   components:
     1ubq:
       type: solvated
-      count: 1
+      count: 3
     1vii:
       type: solvated
-      count: 1
+      count: 3
     3gb1:
       type: solvated
       count: 3
