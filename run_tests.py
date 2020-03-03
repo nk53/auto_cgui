@@ -174,8 +174,8 @@ parser.add_argument('-w', '--www-dir', metavar="PATH",
 parser.add_argument('-b', '--base-url', metavar="URL",
         default='http://charmm-gui.org/',
         help="Web address to CHARMM-GUI (default: http://charmm-gui.org/)")
-parser.add_argument('--no-copy', action='store_true',
-        help="For tests on localhost, run each solvent_test independently; this is the default for beta/production tests")
+parser.add_argument('--copy', action='store_true',
+        help="For tests on localhost, run solvent tests by cloning the project at the solvent test's branch point; saves time, but can cause errors if the request cache is corrupted")
 parser.add_argument('--config', type=argparse.FileType('r'),
         default="config.yml", metavar="PATH",
         help="Path to configuration file (default: config.yml)")
@@ -214,7 +214,7 @@ for test_case in test_cases:
     if not 'solvent_tests' in test_case:
         base_cases.append(test_case)
     else:
-        do_copy = not args.no_copy
+        do_copy = args.copy
         if 'memb' in test_case['label']:
             cases = handle_solvent_memb_tests(test_case, do_copy)
         else:
