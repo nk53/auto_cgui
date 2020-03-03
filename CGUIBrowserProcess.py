@@ -5,6 +5,7 @@ import os.path
 from os.path import join as pjoin
 from splinter import Browser
 from splinter.exceptions import ElementDoesNotExist
+from selenium.common.exceptions import TimeoutException
 
 class CGUIBrowserProcess(Process):
     """Usage: subclass this class and override the run() method"""
@@ -28,6 +29,11 @@ class CGUIBrowserProcess(Process):
             kwargs['www_dir'] = None
         self.www_dir = kwargs['www_dir']
         del kwargs['www_dir']
+
+        if not 'pause' in kwargs:
+            kwargs['pause'] = False
+        self.pause = kwargs['pause']
+        del kwargs['pause']
 
         super().__init__(**kwargs)
         self.todo_q = todo_q
@@ -137,15 +143,21 @@ class CGUIBrowserProcess(Process):
 
     def wait_text(self, text):
         print(self.name, "waiting for text:", text)
-        while not self.browser.is_text_present(text, wait_time=1):
-            pass
+        try:
+            while not self.browser.is_text_present(text, wait_time=1):
+                pass
+        except TimeoutException:
+            print(self.name, "timed out receiving message from renderer")
 
     def wait_text_multi(self, texts):
         wait_time = None
         while True:
             for text in texts:
-                if self.browser.is_text_present(text, wait_time):
-                    return text
+                try:
+                    if self.browser.is_text_present(text, wait_time):
+                        return text
+                except TimeoutException:
+                    print(self.name, "timed out receiving message from renderer")
                 wait_time = None
             wait_time = 1
 

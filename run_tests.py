@@ -167,6 +167,8 @@ parser.add_argument('-t', '--test-name', default='basic',
 parser.add_argument('-n', '--num-threads', type=int, default=1,
         metavar="N",
         help="Number of parallel threads to spawn for testing (default: 1)")
+parser.add_argument('-p', '--pause', action='store_true',
+        help="Pause execution on error")
 parser.add_argument('-w', '--www-dir', metavar="PATH",
         help="Directory where C-GUI projects are stored. Uses value stored in config by default.")
 parser.add_argument('-b', '--base-url', metavar="URL",
@@ -230,7 +232,7 @@ for test_case in test_cases:
 
 todo_queue = Queue()
 done_queue = Queue()
-processes = [MCABrowserProcess(todo_queue, done_queue, www_dir=WWW_DIR, base_url=BASE_URL) for i in range(args.num_threads)]
+processes = [MCABrowserProcess(todo_queue, done_queue, www_dir=WWW_DIR, base_url=BASE_URL, pause=args.pause) for i in range(args.num_threads)]
 
 # initialize browser processes
 for p in processes:
@@ -253,12 +255,12 @@ while pending:
         log_success(done_case, elapsed_time)
     elif result[0] == 'FAILURE':
         done_case, step_num, elapsed_time = result[1:]
-        log_failure(test_case, step_num, elapsed_time)
+        log_failure(done_case, step_num, elapsed_time)
     elif result[0] == 'EXCEPTION':
         done_case, step_num, exc_info = result[1:]
         elapsed_time = -1 # don't report time for exceptions
-        log_exception(test_case, step_num, exc_info)
-        print("Exception encountered for job ({})".format(test_case['jobid']))
+        log_exception(done_case, step_num, exc_info)
+        print("Exception encountered for job ({})".format(done_case['jobid']))
         print(exc_info)
     elif result[0] == 'CONTINUE':
         pending += 1
@@ -268,8 +270,9 @@ while pending:
         if done_label in wait_cases:
             done_jobid = str(done_case['jobid'])
             for num, wait_case in enumerate(wait_cases[done_label]):
-                wait_case['jobid'] = done_jobid+'_'+str(num+1)
-                wait_case['resume_link'] = done_case['solvent_link']
+                if do_copy:
+                    wait_case['jobid'] = done_jobid+'_'+str(num+1)
+                    wait_case['resume_link'] = done_case['solvent_link']
                 todo_queue.put(wait_case)
                 pending += 1
             del wait_cases[done_label]

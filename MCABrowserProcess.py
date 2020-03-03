@@ -122,4 +122,8 @@ class MCABrowserProcess(CGUIBrowserProcess):
                     # give the full exception string
                     exc_str = ''.join(traceback.format_exception(*sys.exc_info()))
                     self.done_q.put(('EXCEPTION', test_case, step_num, exc_str))
+                    if self.pause:
+                        print(self.name, "pausing; interrupt to exit")
+                        while True:
+                            time.sleep(1)
 
