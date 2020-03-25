@@ -55,10 +55,11 @@ class MCABrowserProcess(CGUIBrowserProcess):
     def run(self):
         with Browser(self.browser_type) as browser:
             self.browser = browser
-            step_num = -1
+            self.step = step_num = -1
             for test_case in iter(self.todo_q.get, 'STOP'):
                 try:
                     self.test_case = test_case
+                    print(self.name, "starting", test_case['label'])
                     start_time = time.time()
                     self.components = test_case['components']
                     resume_link = 0
@@ -86,12 +87,20 @@ class MCABrowserProcess(CGUIBrowserProcess):
                     steps = test_case['steps'][resume_link:]
                     failure = False
                     for step_num, step in enumerate(steps):
+                        self.step = step_num
                         if 'wait_text' in step:
                             print(self.name, "waiting for", step['wait_text'])
-                            found_text = self.wait_text_multi([step['wait_text'], self.CHARMM_ERROR])
+                            found_text = self.wait_text_multi([step['wait_text'], self.CHARMM_ERROR, self.PHP_FATAL_ERROR])
                         if found_text == self.CHARMM_ERROR:
                             failure = True
                             break
+                        # Check for PHP errors, warnings, and notices
+
+                        if self.warn_if_text(self.PHP_MESSAGES) and self.pause:
+                            print(self.name, "pausing; interrupt to exit")
+                            while True:
+                                time.sleep(1)
+
                         if 'presteps' in step:
                             for prestep in step['presteps']:
                                 self.eval(prestep)

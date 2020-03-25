@@ -10,6 +10,11 @@ from selenium.common.exceptions import TimeoutException
 class CGUIBrowserProcess(Process):
     """Usage: subclass this class and override the run() method"""
     CHARMM_ERROR = 'CHARMM was terminated abnormally.'
+    PHP_NOTICE = "Notice:"
+    PHP_WARNING = "Warning:"
+    PHP_ERROR = "Error:"
+    PHP_FATAL_ERROR = "Fatal error:"
+    PHP_MESSAGES = PHP_NOTICE, PHP_WARNING, PHP_ERROR
 
     def __init__(self, todo_q, done_q, **kwargs):
         """Setup Queues, browser settings, and delegate rest to multiprocessing.Process"""
@@ -161,3 +166,19 @@ class CGUIBrowserProcess(Process):
                 wait_time = None
             wait_time = 1
 
+    def warn_if_text(self, text):
+        msg = "Warning: {} ({}) found '{{}}' on step {}"
+        if not 'jobid' in self.test_case:
+            jobid = '-1'
+        else:
+            jobid = str(self.test_case['jobid'])
+        msg = msg.format(self.name, jobid, self.step)
+        if isinstance(text, list) or isinstance(text, tuple):
+            texts = text
+            for text in texts:
+                if self.browser.is_text_present(text):
+                    print(msg.format(text))
+                    return text
+        elif self.browser.is_text_present(text):
+            print(msg.format(text))
+            return text
