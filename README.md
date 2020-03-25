@@ -38,7 +38,7 @@ Each step in `steps` should be an associative array with the following keys:
  - `presteps` (optional): an array of steps to perform *before* filling the values of `elems`. Will be evaluated with `CGUIBrowserProcess.eval()`, which defaults to Python's built-in `eval()`.
  - `poststeps` (optional): an array of steps to perform *after* filling the values of `elems`. Same format as `presteps`.
 
-Next, extend the `CGUIBrowserProcess` class. See the example in `MCABrowserProcess.py`.
+Next, extend the `CGUIBrowserProcess` class. See the example in `MCABrowserProcess.py`. The most important requirement is that you define a `init_system()` method that determines how to get through the first step of your module.
 
 Finally, write tests for your project. See the examples in `test_cases/basic.yml`.
 

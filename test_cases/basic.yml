@@ -2,7 +2,6 @@
 - label: solvated
   base: components/basic
   solvent_tests: [water, water+ions]
-  #solvent_tests: [water]
   components:
     1ubq:
       type: solvated
@@ -31,7 +30,6 @@
   final_wait_text: Please download
 - label: solvated + custom_solvent
   solvent_tests: [water, ions, water+ions, None]
-  #solvent_tests: [water]
   base: components/basic
   components:
     1ubq:
@@ -66,7 +64,6 @@
 - label: solvated + membrane_only
   base: components/basic
   solvent_tests: [water, water+ions]
-  #solvent_tests: [water]
   components:
     1ubq:
       type: solvated
@@ -141,8 +138,7 @@
   final_wait_text: Equilibration Input Notes
 - label: membrane + custom_solvent
   base: components/basic
-  #solvent_tests: [water, water+ions]
-  solvent_tests: [water]
+  solvent_tests: [water, water+ions]
   components:
     2hac:
       type: membrane
