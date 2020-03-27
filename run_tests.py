@@ -188,6 +188,10 @@ with args.config:
 BASE_URL = args.base_url
 if 'BASE_URL' in CONFIG:
     BASE_URL = CONFIG['BASE_URL']
+if 'USER' in CONFIG and 'PASS' in CONFIG:
+    BASE_URL = BASE_URL.split('/')
+    BASE_URL[2] = CONFIG['USER']+':'+CONFIG['PASS']+'@'+BASE_URL[2]
+    BASE_URL = '/'.join(BASE_URL)
 
 # validate WWW_DIR as a directory
 if args.www_dir != None:

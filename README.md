@@ -11,7 +11,7 @@ First create a configuration file that points to your CGUI project's `/data/www/
 BASE_URL: http://localhost:8888/
 WWW_DIR: /Users/nathan/multicomp/www
 ```
-This file should be named `config.yml` and be located in the same directory as `run_tests.py`. The `BASE_URL` shown above is for alpha tests. For beta tests, `BASE_URL` should be `http://beta.charmm-gui.org/`, and for production tests, the entry can be omitted.
+This file should be named `config.yml` and be located in the same directory as `run_tests.py`. The `BASE_URL` shown above is for alpha tests. For beta tests, `BASE_URL` should be `http://beta.charmm-gui.org/`, and for production tests, the entry can be omitted. If you are using the beta server, you must also include a `USER` and `PASS` entry.
 
 To run the testing program, execute:
 `$ ./run_tests.py [opts]`
