@@ -1,14 +1,17 @@
 import shutil
+import os.path
 import time
 from multiprocessing import Process, Queue
-import os.path
 from os.path import join as pjoin
 from splinter import Browser
 from splinter.exceptions import ElementDoesNotExist
 from selenium.common.exceptions import TimeoutException
 
 class CGUIBrowserProcess(Process):
-    """Usage: subclass this class and override the run() method"""
+    """Usage: subclass this class and write an init_system() method.
+
+    For an example, see MCABrowserProcess.
+    """
     CHARMM_ERROR = 'CHARMM was terminated abnormally.'
     PHP_NOTICE = "Notice:"
     PHP_WARNING = "Warning:"
@@ -115,7 +118,6 @@ class CGUIBrowserProcess(Process):
             self.browser.fill(name, value)
 
     def resume_step(self, jobid, project=None, step=None, link_no=None):
-        browser = self.browser
         """Uses Job Retriever to return to the given step.
 
         You must provide either:
@@ -126,6 +128,7 @@ class CGUIBrowserProcess(Process):
         step: step of doc to return to
         link_no: 0-indexed order of recovery link to return to
         """
+        browser = self.browser
         url = self.base_url + "?doc=input/retriever"
         browser.visit(url)
 
