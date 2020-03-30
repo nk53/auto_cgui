@@ -192,18 +192,20 @@ if 'USER' in CONFIG and 'PASS' in CONFIG:
     BASE_URL = BASE_URL.split('/')
     BASE_URL[2] = CONFIG['USER']+':'+CONFIG['PASS']+'@'+BASE_URL[2]
     BASE_URL = '/'.join(BASE_URL)
-
+'localhost' in BASE_URL.lower()
 # validate WWW_DIR as a directory
-if args.www_dir != None:
-    WWW_DIR = args.www_dir
-elif not 'WWW_DIR' in CONFIG:
-    raise ValueError("Missing WWW_DIR from "+args.config)
+WWW_DIR = args.www_dir
+if not 'WWW_DIR' in CONFIG:
+    if 'localhost' in BASE_URL.lower():
+        raise ValueError("Missing WWW_DIR from "+args.config)
 else:
     WWW_DIR = CONFIG['WWW_DIR']
-if not os.path.exists(WWW_DIR):
-    raise ValueError(WWW_DIR+" does not exist")
-elif not os.path.isdir(WWW_DIR):
-    raise ValueError(WWW_DIR+" is not a directory")
+
+if WWW_DIR != None:
+    if not os.path.exists(WWW_DIR):
+        raise ValueError(WWW_DIR+" does not exist")
+    elif not os.path.isdir(WWW_DIR):
+        raise ValueError(WWW_DIR+" is not a directory")
 
 # psf name: component type
 with open('test_cases/'+args.test_name+'.yml') as fh:
