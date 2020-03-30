@@ -3,6 +3,7 @@ This repository demonstrates how to automate browser interactions for CHARMM-GUI
 
 ## Prerequisites
  - Python 3
+ - [Selenium](https://splinter.readthedocs.io/en/latest/drivers/chrome.html)
  - [Splinter](https://splinter.readthedocs.io/en/latest/)
 
 ## Usage
