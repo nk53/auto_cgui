@@ -52,6 +52,11 @@ class CGUIBrowserProcess(Process):
         if wait:
             self.wait_text(wait)
 
+    def click_by_text(self, text, wait=None):
+        self.browser.find_by_text(text).click()
+        if wait:
+            self.wait_text(wait)
+
     def click_by_attrs(self, wait=None, **attrs):
         css_templ = "[{}='{}']"
         css_str = ''

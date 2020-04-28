@@ -181,6 +181,12 @@ parser.add_argument('--config', type=argparse.FileType('r'),
         help="Path to configuration file (default: config.yml)")
 args = parser.parse_args()
 
+# indicate whether logfile already exists
+if os.path.exists(LOGFILE):
+    print("Appending to existing logfile:", LOGFILE)
+else:
+    print("Creating new logfile:", LOGFILE)
+
 # read configuration
 with args.config:
     CONFIG = yaml.load(args.config, Loader=yaml.FullLoader)
