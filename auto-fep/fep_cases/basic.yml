@@ -1,0 +1,17 @@
+# this file uses mostly default options to test different component types
+- label: solvator
+  base: ligands/basic
+  ligands:
+    lig1:
+      type: solvator
+    lig2:
+      type: solvator
+    lig3:
+      type: solvator
+  steps:
+    - wait_text: Ligand ID
+      presteps:
+        - select_ligands()
+    - wait_text: Waterbox Size Option
+    - wait_text: Please download
+       
