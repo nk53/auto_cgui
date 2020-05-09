@@ -41,16 +41,16 @@ def log_success(case_info, elapsed_time):
         label = case_info['label']
         fh.write(templ.format(label, jobid, elapsed_time))
 
-def handle_solvator_tests(fep_case, do_copy=False):
-    if not 'solvator_tests' in  fep_case:
+def handle_solvator_tests(test_case, do_copy=False):
+    if not 'solvator_tests' in  test_case:
         raise ValueError("Missing 'solvator_tests'")
-    solvtor_tests = fep_case[solvent_tests]
+    solvtor_tests = test_case[solvent_tests]
 
     placeholder = 'SOLVATOR_TEST_PLACEHOLDER'
     found = False
     index = None
     check_lists = 'presteps', 'poststeps'
-    for step_num, step in enumerate(fep_case['steps']):
+    for step_num, step in enumerate(test_case['steps']):
         for check_list in check_lists:
             if check_list in step and placeholder in step[check_list]:
                 found = True
@@ -117,18 +117,18 @@ if WWW_DIR != None:
     elif not os.path.isdir(WWW_DIR):
         raise ValueError(WWW_DIR+" is not a directory")
 
-with open('fep_cases/'+args.test_name+'.yml') as fh:
-    fep_cases = yaml.load(fh, Loader=yaml.FullLoader)
+with open('test_cases/'+args.test_name+'.yml') as fh:
+    test_cases = yaml.load(fh, Loader=yaml.FullLoader)
 
 
 base_cases = []
 wait_cases = {}
-for fep_case in fep_cases:
-    if not 'solvator_tests' in fep_case:
-        base_cases.append(fep_case)
+for test_case in test_cases:
+    if not 'solvator_tests' in test_case:
+        base_cases.append(test_case)
     else:
         do_copy = args.copy
-        cases = handle_solvator_tests(fep_case, do_copy) 
+        cases = handle_solvator_tests(test_case, do_copy) 
 
         if 'localhost' in BASE_URL and do_copy:
             base_case = cases[0]
