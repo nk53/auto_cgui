@@ -9,8 +9,9 @@
     lig3:
       type: solvator
   steps:
-    - wait_text: Ligand ID
+    - wait_text: Set Pair Options
       presteps:
         - select_ligands()
-  final_wait_text: Please Download
+    - wait_text: Waterbox Size Option
+    - wait_text: Please download
        

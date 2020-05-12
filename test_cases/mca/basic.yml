@@ -1,0 +1,176 @@
+# this file uses mostly default options to test different component types
+- label: solvated
+  base: components/basic
+  solvent_tests: [water, water+ions]
+  components:
+    1ubq:
+      type: solvated
+      count: 3
+    1vii:
+      type: solvated
+      count: 3
+    3gb1:
+      type: solvated
+      count: 3
+  steps:
+    - wait_text: Component ID
+      presteps:
+        - select_components()
+      elems:
+        - cube_side_length: 60
+      poststeps:
+        - click('size_button', 'Calculated System Size')
+    - wait_text: Solvation Options
+      presteps:
+        - SOLVENT_TEST_PLACEHOLDER
+        - click_by_attrs(value='Calculate Solvent Composition')
+        - time.sleep(1)
+    - wait_text: Periodic Boundary Condition Options
+    - wait_text: Force Field Options
+  final_wait_text: Please download
+- label: solvated + custom_solvent
+  solvent_tests: [water, ions, water+ions, None]
+  base: components/basic
+  components:
+    1ubq:
+      type: solvated
+      count: 3
+    meoh:
+      type: solvent
+      density: 792
+    nbut:
+      type: solvent
+      density: 810
+    tolu:
+      type: solvent
+      density: 870
+  steps:
+    - wait_text: Component ID
+      presteps:
+        - select_components()
+      elems:
+        - cube_side_length: 60
+      poststeps:
+        - click('size_button', 'Calculated System Size')
+    - wait_text: Solvation Options
+      presteps:
+        - SOLVENT_TEST_PLACEHOLDER
+        - set_component_density()
+        - click_by_attrs(value='Calculate Solvent Composition')
+        - time.sleep(1)
+    - wait_text: Periodic Boundary Condition Options
+    - wait_text: Force Field Options
+  final_wait_text: Please download
+- label: solvated + membrane_only
+  base: components/basic
+  solvent_tests: [water, water+ions]
+  components:
+    1ubq:
+      type: solvated
+      count: 3
+    1vii:
+      type: solvated
+      count: 3
+    3gb1:
+      type: solvated
+      count: 3
+  steps:
+    - wait_text: Component ID
+      presteps:
+        - select_components()
+        - click('solv_membrane_checkbox', 'Box XY length')
+      elems:
+        - box_side_length: 50
+        - memb_side_length: 50
+      poststeps:
+        - click('size_button', 'Calculated System Size')
+    - wait_text: PC (phosphatidylcholine) Lipids
+      presteps:
+        - click_lipid_category('PC (phosphatidylcholine) Lipids')
+      elems:
+        - "lipid_ratio[upper][ddpc]": 1
+        - "lipid_ratio[lower][ddpc]": 1
+      poststeps:
+        - click('hetero_size_button', 'Calculated XY System Size')
+    - wait_text: Component Building Options
+      presteps:
+        - click_by_attrs(value='Calculate number of ions', wait='will be generated')
+    - wait_text: Solvation Options
+      presteps:
+        - SOLVENT_TEST_PLACEHOLDER
+        - click_by_attrs(value='Calculate Solvent Composition')
+        - time.sleep(1)
+    - wait_text: Force Field Options
+  final_wait_text: Equilibration Input Notes
+- label: membrane_only + custom_solvent
+  base: components/basic
+  solvent_tests: [water, water+ions]
+  components:
+    tolu:
+      type: solvent
+      density: 870
+  steps:
+    - wait_text: Component ID
+      presteps:
+        - select_components()
+        - click('solv_membrane_checkbox', 'Box XY length')
+      elems:
+        - box_side_length: 25
+        - memb_side_length: 50
+    - wait_text: PC (phosphatidylcholine) Lipids
+      presteps:
+        - click_lipid_category('PC (phosphatidylcholine) Lipids')
+      elems:
+        - "lipid_ratio[upper][ddpc]": 1
+        - "lipid_ratio[lower][ddpc]": 1
+      poststeps:
+        - click('hetero_size_button', 'Calculated XY System Size')
+    - wait_text: Component Building Options
+      presteps:
+        - click_by_attrs(value='Calculate number of ions', wait='will be generated')
+    - wait_text: Solvation Options
+      presteps:
+        - SOLVENT_TEST_PLACEHOLDER
+        - set_component_density()
+        - click_by_attrs(value='Calculate Solvent Composition')
+        - time.sleep(1)
+    - wait_text: Force Field Options
+  final_wait_text: Equilibration Input Notes
+- label: membrane + custom_solvent
+  base: components/basic
+  solvent_tests: [water, water+ions]
+  components:
+    2hac:
+      type: membrane
+      count: 3
+    tolu:
+      type: solvent
+      density: 870
+  steps:
+    - wait_text: Component ID
+      presteps:
+        - select_components()
+      elems:
+        - box_side_length: 25
+        - memb_side_length: 50
+      poststeps:
+        - click('size_button', 'Calculated System Size')
+    - wait_text: PC (phosphatidylcholine) Lipids
+      presteps:
+        - click_lipid_category('PC (phosphatidylcholine) Lipids')
+      elems:
+        - "lipid_ratio[upper][ddpc]": 1
+        - "lipid_ratio[lower][ddpc]": 1
+      poststeps:
+        - click('hetero_size_button', 'Calculated XY System Size')
+    - wait_text: Component Building Options
+      presteps:
+        - click_by_attrs(value='Calculate number of ions', wait='will be generated')
+    - wait_text: Solvation Options
+      presteps:
+        - SOLVENT_TEST_PLACEHOLDER
+        - set_component_density()
+        - click_by_attrs(value='Calculate Solvent Composition')
+        - time.sleep(1)
+    - wait_text: Force Field Options
+  final_wait_text: Equilibration Input Notes

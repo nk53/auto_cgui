@@ -5,7 +5,7 @@ import os
 class ClockTime(object):
     """A helper class for dealing with clock time math and str/int
     conversions
-    
+
     Example usage:
         # string initialization
         t1 = ClockTime('11:44') # 11 minutes and 44 seconds
@@ -58,12 +58,12 @@ class ClockTime(object):
         for time, conv in zip(times, conversions):
             time_total += time * conv
         return time_total
-    
+
     @staticmethod
     def time_to_str(time):
         conversions = 3600, 60, 1
         parts = []
-        printed = False # print 00 when 
+        printed = False # print 00 when
         for conv in conversions:
             if printed:
                 parts.append("{:02d}".format(int(time/conv)))
@@ -105,7 +105,7 @@ class ClockTime(object):
     def __truediv__(self, y):
         """Not actually true division. Converts result to integer"""
         return self.__div__(y)
-    
+
     def __floordiv__(self, y):
         """Same as __truediv__, since both convert to integer"""
         return self.__truediv__(y)
@@ -118,7 +118,7 @@ class ClockTime(object):
 
     def __gt__(self, value):
         return self.value > ClockTime(value).value
-    
+
     def __ge__(self, value):
         return self.value >= ClockTime(value).value
 
@@ -127,7 +127,7 @@ class ClockTime(object):
 
     def __le__(self, value):
         return self.value < ClockTime(value).value
-    
+
     def __eq__(self, value):
         return self.value == ClockTime(value).value
 

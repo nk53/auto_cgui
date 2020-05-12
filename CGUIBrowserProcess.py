@@ -114,6 +114,7 @@ class CGUIBrowserProcess(Process):
     def go_next(self, test_text=None):
         self.browser.find_by_id('nextBtn').click()
         if test_text:
+            print("waiting for", test_text)
             self.wait_text_multi([test_text, self.CHARMM_ERROR])
 
     def handle_step(self, step_info):
@@ -164,7 +165,7 @@ class CGUIBrowserProcess(Process):
                     print(self.name, "starting", test_case['label'])
                     start_time = time.time()
                     resume_link = 0
-                    base = os.path.abspath(test_case['base'])
+                    base = os.path.abspath(pjoin('files', test_case['base']))
                     self.base = base
                     if 'jobid' in test_case:
                         jobid = test_case['jobid']
