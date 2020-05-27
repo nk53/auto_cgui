@@ -1,0 +1,66 @@
+# e uses mostly default options to test different component types
+#initcap - none, methyl, hydroxy
+#endcap - none, methyl, hydroxy
+#
+- label: melt #single solution melt
+  base: components/basic
+  pchains:
+    pchain1:
+      type1:
+        name: PE
+        leng: 5 
+      type2:
+        name: PS(ata)
+        leng: 4 
+      type3:
+        name: PS(R)
+        leng: 6
+      type4:
+        name: PS(S)
+        leng: 7 
+      type5:
+        name: PS(syn)
+        leng: 8 
+      initcap: methyl
+      endcap: methyl
+      repeat: 2
+    pchain2:
+      type1:
+        name: PNIPAAM(ata)
+        leng: 2
+      initcap : none
+      endcap: none
+      repeat: 3
+  steps:
+    # step 1
+    - wait_text: Generate Systems
+      presteps:
+        - select('boxtype', 'tetra') # tetra, cubic
+        - choose('component_type', 'component_ratio') # component_ratio, num_components
+      elems:    # system size( cubic: lxyz, tetra: lxy, lz )
+        - lxy: 80
+        - lz: 100
+        - "nchar[0]": 2 # ratio of pchain1
+        - "nchar[1]": 1 # ratio of pchain2
+      poststeps:
+        - click('size_button')
+    # step 2
+    - wait_text: Generate Equilibrium
+      elems:    
+        - run_openmm: True
+        - temperature: '330.0'
+    # step 3
+    - wait_text: Replace into All-atom
+    # step 4
+    - wait_text: Input Generations
+      elems:    
+        - temperature: '330.0'
+        - namd_checked: True
+        - gmx_checked: True
+        - amb_checked: False
+        - omm_checked: True
+        - comm_checked: True
+        - gns_checked: False
+        - dms_checked: False
+        - lammps_checked: True
+  final_wait_text: Please download

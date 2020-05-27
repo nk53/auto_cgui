@@ -1,0 +1,65 @@
+# e uses mostly default options to test different component types
+#initcap - none, methyl, hydroxy
+#endcap - none, methyl, hydroxy
+#
+- label: solution #single solution melt
+  #jobid: 9045659047
+  #resume_link: 3
+  base: components/basic
+  pchains:
+    pchain1:
+      type1:
+        name: PE
+        leng: 5 
+      type2:
+        name: PS(ata)
+        leng: 4 
+      type3:
+        name: PS(R)
+        leng: 6
+      type4:
+        name: PS(S)
+        leng: 7 
+      type5:
+        name: PS(syn)
+        leng: 8 
+      initcap: methyl
+      endcap: methyl
+      repeat: 2
+    pchain2:
+      type1:
+        name: PNIPAAM(ata)
+        leng: 2
+      initcap : none
+      endcap: none
+      repeat: 3
+  steps:
+    # step 1
+    - wait_text: Generate Systems
+      elems:    #system size
+        - lxyz: 80 # should be larger than 50.
+        - "ncha[0]": 10 # number of pchain1
+        - "ncha[1]": 10 # number of pchain2
+      poststeps:
+        - select('organic_solvent', 'acetone') # water, acetone, acetonitrile, benzene
+        - click('size_button')
+    # step 2
+    - wait_text: Generate Equilibrium
+      elems:    
+        - run_openmm: True
+        - temperature: '300.0'
+    # step 3
+    - wait_text: Replace into All-atom
+    # step 4
+    - wait_text: Input Generations
+      elems:    
+        - temperature: '300.0'
+        - namd_checked: True
+        - gmx_checked: True
+        - amb_checked: False
+        - omm_checked: True
+        - comm_checked: True
+        - gns_checked: False
+        - dms_checked: False
+        - lammps_checked: True
+  final_wait_text: Please download

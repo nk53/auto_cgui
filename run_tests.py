@@ -84,6 +84,10 @@ if 'USER' in CONFIG and 'PASS' in CONFIG:
     BASE_URL[2] = CONFIG['USER']+':'+CONFIG['PASS']+'@'+BASE_URL[2]
     BASE_URL = '/'.join(BASE_URL)
 
+browser_type = 'chrome'
+if 'BROWSER_TYPE' in CONFIG:
+    browser_type = CONFIG['BROWSER_TYPE']
+
 # validate WWW_DIR as a directory
 WWW_DIR = args.www_dir
 if not 'WWW_DIR' in CONFIG:
@@ -121,7 +125,7 @@ base_cases, wait_cases = init_module(test_cases, args)
 
 todo_queue = Queue()
 done_queue = Queue()
-processes = [BrowserProcess(todo_queue, done_queue, www_dir=WWW_DIR, base_url=BASE_URL, pause=args.pause) for i in range(args.num_threads)]
+processes = [BrowserProcess(todo_queue, done_queue, www_dir=WWW_DIR, base_url=BASE_URL, pause=args.pause, browser_type=browser_type) for i in range(args.num_threads)]
 
 # initialize browser processes
 for p in processes:

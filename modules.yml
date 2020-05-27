@@ -1,3 +1,4 @@
 # abbreviation (case insensitive): module filename base
 FEP: FEPBrowserProcess
 MCA: MCABrowserProcess
+POLYMER: PBBrowserProcess

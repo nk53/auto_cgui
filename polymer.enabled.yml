@@ -1,0 +1,599 @@
+Polymer:
+  title: Polymer Type
+  sub:
+    Acrylamides:
+      title: Acrylamides
+      sub:
+        Poly(N-isopropylacrylamide):
+          chirality: true
+          resi: NIPAM
+          name: PIPAAm
+          sub: 
+            isotactic (R):
+               name: PNIPAAM(R)
+               type: R
+            isotactic (S):
+               name: PNIPAAM(S)
+               type: S
+            syndio (R):
+               name: PNIPAAM(syn)
+               type: RS
+            atactic:
+               name: PNIPAAM(ata)
+               type: ARS
+        Poly(N-sec-butylacrylamide):
+          chirality: true
+          resi: NSBA
+          name: P-sec-BAAm
+          sub:
+            isotactic (R):
+               name: PNSBAAM(R)
+               type: R
+            isotactic (S):
+               name: PNSBAAM(S)
+               type: S
+            syndio (R):
+               name: PNSBAAM(syn)
+               type: RS
+            atactic:
+               name: PNSBAAM(ata)
+               type: ARS
+        Poly(N-tert-butylacrylamide):
+          chirality: true
+          resi: NTBA
+          name: P-ter-BAAm
+          sub:
+            isotactic (R):
+               name: PNTBAAM(R) 
+               type: R
+            isotactic (S):
+               name: PNTBAAM(S)
+               type: S
+            syndio (R):
+               name: PNTBAAM(syn)
+               type: RS
+            atactic:
+               name: PNTBAAM(ata)
+               type: ARS
+        Poly(acrylamide):
+          chirality: true
+          resi: AAMD
+          name: PAAm
+          sub:
+            isotactic (R):
+               name: PAAM(R)
+               type: R
+            isotactic (S):
+               name: PAAM(S)
+               type: S
+            syndio (R):
+               name: PAAM(syn)
+               type: RS
+            atactic:
+               name: PAAM(ata)
+               type: ARS
+    Acrylates:
+      title: Acrylates
+      sub:
+        Poly(methyl acrylate):
+          chirality: true
+          resi: MAC
+          name: PMA
+          sub:
+            isotactic (R):
+               name: PMA(R)
+               type: R
+            isotactic (S):
+               name: PMA(S)
+               type: S
+            syndio (R):
+               name: PMA(syn)
+               type: RS
+            atactic:
+               name: PMA(ata)
+               type: ARS
+        Poly(propyl acrylate):
+          chirality: true
+          resi: PAC
+          name: PPA
+          sub:
+            isotactic (R):
+               name: PPA(R) 
+               type: R
+            isotactic (S):
+               name: PPA(S)
+               type: S
+            syndio (R):
+               name: PPA(syn)
+               type: RS
+            atactic: 
+               name: PPA(ata)
+               type: ARS
+        Poly(acrylic acid):
+          chirality: true
+          resi: AAC
+          name: PAA
+          sub:
+            isotactic (R):
+               name: PAA(R)
+               type: R
+            isotactic (S):
+               name: PAA(S)
+               type: S
+            syndio (R):
+               name: PAA(syn)
+               type: SR
+            atactic:
+               name: PAA(ata)
+               type: ARS
+        Poly(acrylic acid(-)):
+          chirality: true
+          resi: AACI
+          name: PAA
+          sub:
+            isotactic (R):
+               name: PAAI(R)
+               type: R
+            isotactic (S):
+               name: PAAI(S)
+               type: S
+            syndio (R):
+               name: PAAI(syn)
+               type: SR
+            atactic:
+               name: PAAI(ata)
+               type: ARS
+        Poly(methyl methacrylate):
+          chirality: true
+          resi: MMA
+          name: PMMA
+          sub:
+            isotactic (R):
+               name: PMMA(R)
+               type: R
+            isotactic (S):
+               name: PMMA(S)
+               type: S
+            syndio (R):
+               name: PMMA(syn)
+               type: RS
+            atactic:
+               name: PMMA(ata)
+               type: ARS
+        Poly(propyl methacrylate):
+          chirality: true
+          resi: PMA
+          name: PPMA
+          sub:
+            isotactic (R):
+               name: PPMA(R)
+               type: R
+            isotactic (S):
+               name: PPMA(S)
+               type: S
+            syndio (R):
+               name: PPMA(syn)
+               type: RS
+            atactic:
+               name: PPMA(ata)
+               type: ARS
+    AMIDES:
+      title: Amides
+      sub:
+        Polyamide:
+          name: PAM
+          chirality: false
+          resi: AMIDU
+        Polyamide (inv):
+          name: AMID(i)
+          chirality: false
+          resi: AMIDI
+        Nylon 3:
+          name: NYL3
+          chirality: false
+          resi: NYL3
+        Nylon 6:
+          name: NYL6
+          chirality: false
+          resi: NYL6
+    DIENES:
+      title: Dienes
+      sub:
+        Polybutadiene:
+          chirality: true
+          resi: 13BD
+          name: PB
+          sub:
+            trans:
+               name: PB(trans)
+               type: T
+            cis:
+               name: PB(cis)
+               type: C
+        Polyisoprene:
+          chirality: true
+          resi: 14IP
+          name:  PIP
+          sub:
+            trans:
+               name: PI(trans)
+               type: T
+            cis:
+               name: PI(cis)
+               type: C
+    ESTERS:
+      title: Esters
+      sub:
+        Polylactic acid:
+          chirality: true
+          resi: LACT
+          name: PLA
+          sub:
+            isotactic (R):
+               name: PLA(R)
+               type: R
+            isotactic (S):
+               name: PLA(S)
+               type: S
+            syndio (R):
+               name: PLA(syn)
+               type: RS
+            atactic:
+               name: PLA(ata)
+               type: ARS
+        Polyhydroxybutyrate:
+          chirality: true
+          resi: HDBT
+          name: PHB
+          sub:
+            isotactic (R):
+               name: PHB(R)
+               type: R
+            isotactic (S):
+               name: PHB(S)
+               type: S
+            syndio (R):
+               name: PHB(syn)
+               type: RS
+            atactic:
+               name: PHB(ata)
+               type: ARS
+        Polyethylene terephthalate:
+          name: PET
+          chirality: false
+          resi: PETL
+        Polyethylene 2,5-furandicarboxylate:
+          name: PEF
+          chirality: false
+          resi: PEFA
+    Halides:
+      title: Halides
+      sub:
+        Polyvinyl chloride:
+          chirality: true
+          resi: VIC
+          name: PVC
+          sub:
+            isotactic (R):
+               name: PVC(R)
+               type: R
+            isotactic (S):
+               name: PVC(S)
+               type: S
+            syndio (R):
+               name: PVC(syn)
+               type: RS
+            atactic:
+               name: PVC(ata)
+               type: ARS
+        Polyvinyl fluoride:
+          chirality: true
+          resi: VIF
+          name: PVF
+          sub:
+            isotactic (R):
+               name: PVF(R)
+               type: R
+            isotactic (S):
+               name: PVF(S)
+               type: S
+            syndio (R):
+               name: PVF(syn)
+               type: RS
+            atactic:
+               name: PVF(ata)
+               type: ARS
+        Polytetrafluoroethylene:
+          name: PTFE
+          chirality: false
+          resi: TEFET
+    IMINES:
+      title: Imines
+      sub:
+        Polyethyleneimine:
+          name: PEI
+          chirality: false
+          resi: EIMIN
+        Polyethyleneimine (inv):
+          name: PEII
+          chirality: false
+          resi: EIMINI
+    KETONES:
+      title: Ketones
+      sub:
+        Poly(vinyl methyl ketone):
+          chirality: true
+          resi: ETKT
+          name: PEK
+          sub:
+            isotactic (R):
+               name: PVMK(R)
+               type: R
+            isotactic (S):
+               name: PVMK(S)
+               type: S
+            syndio (R):
+               name: PVMK(syn)
+               type: RS
+            atactic:
+               name: PVMK(ata)
+               type: ARS
+        Polyketone:
+          name: PK
+          chirality: false
+          resi: KETN
+        Polyketone (inv):
+          name: PKI
+          chirality: false
+          resi: KETNI
+    Olefins:
+      title: Olefins
+      sub:
+        Polyethylene:
+          name: PE
+          chirality: false
+          resi: ETHY
+        Polypropylene:
+          chirality: true
+          resi: PRO
+          name: PP
+          sub:
+            isotactic (R):
+               name: PP(R)
+               type: R
+            isotactic (S):
+               name: PP(S)
+               type: S
+            syndio (R):
+               name: PP(syn)
+               type: RS
+            atactic:
+               name: PP(ata)
+               type: ARS
+        Poly(1-butene):
+          chirality: true
+          resi: 1BUT
+          name: P-1-Bu
+          sub:
+            isotactic (R):
+               name: iPB(R)
+               type: R
+            isotactic (S):
+               name: iPB(S)
+               type: S
+            syndio (R):
+               name: iPB(syn)
+               type: RS
+            atactic:
+               name: iPB(syn)
+               type: ARS
+        Polyisobutane:
+          name: PIBu
+          chirality: false
+          resi: PIBUT
+    Oxides:
+      title: Oxides
+      sub:
+        Poly(ethylene oxide):
+          name: PEO
+          chirality: false
+          resi: ETHOX
+        Poly(ethylene oxide) (inv):
+          name: ETHOXI
+          chirality: false
+          resi: ETHOXI
+        Poly(propylene oxide):
+          chirality: true
+          resi: PROX
+          name:  PPO
+          sub:
+            isotactic (R):
+               name: PPO(R)
+               type: R
+            isotactic (S):
+               name: PPO(S)
+               type: S
+            syndio (R):
+               name: PPO(syn)
+               type: RS
+            atactic:
+               name: PPO(ata)
+               type: ARS
+        Poly(propylene oxide) (inv):
+          chirality: true
+          resi: PROXI
+          name:  PPO
+          sub:
+            isotactic (R):
+               name: PPOI(R)
+               type: R
+            isotactic (S):
+               name: PPOI(S)
+               type: S
+            syndio (R):
+               name: PPOI(syn)
+               type: RS
+            atactic:
+               name: PPO(ata)
+               type: ARS
+
+    Vinyls:
+      title: Vinyls
+      sub:
+        Polyethylene:
+          name: PE
+          chirality: false
+          resi: ETHY
+        Polypropylene:
+          chirality: true
+          resi: PRO
+          name: PP
+          sub:
+            isotactic (R):
+               name: PP(R)
+               type: R
+            isotactic (S):
+               name: PP(S)
+               type: S
+            syndio (R):
+               name: PP(syn)
+               type: RS
+            atactic:
+               name: PP(ata)
+               type: ARS
+        Poly(1-butene):
+          chirality: true
+          resi: 1BUT
+          name: P-1-Bu
+          sub:
+            isotactic (R):
+               name: iPB(R)
+               type: R
+            isotactic (S):
+               name: iPB(S)
+               type: S
+            syndio (R):
+               name: iPB(syn)
+               type: RS
+            atactic:
+               name: iPB(syn)
+               type: ARS
+        Polystyrene:
+          chirality: true
+          resi: STYR
+          name: PS
+          sub:
+            isotactic (R):
+               name: PS(R)
+               type: R
+            isotactic (S):
+               name: PS(S)
+               type: S
+            syndio (R):
+               name: PS(syn)
+               type: RS
+            atactic:
+               name: PS(ata)
+               type: ARS
+        Polyvinyl alcohol:
+          chirality: true
+          resi: VIAL
+          name: PVA
+          sub:
+            isotactic (R):
+               name: PVA(R)
+               type: R
+            isotactic (S):
+               name: PVA(S)
+               type: S
+            syndio (R):
+               name: PVA(syn)
+               type: RS
+            atactic:
+               name: PVA(ata)
+               type: ARS
+        Polyvinyl chloride:
+          chirality: true
+          resi: VIC
+          name: PVC
+          sub:
+            isotactic (R):
+               name: PVC(R)
+               type: R
+            isotactic (S):
+               name: PVC(S)
+               type: S
+            syndio (R):
+               name: PVC(syn)
+               type: RS
+            atactic:
+               name: PVC(ata)
+               type: ARS
+        Polyvinyl fluoride:
+          chirality: true
+          resi: VIF
+          name: PVF
+          sub:
+            isotactic (R):
+               name: PVF(R)
+               type: R
+            isotactic (S):
+               name: PVF(S)
+               type: S
+            syndio (R):
+               name: PVF(syn)
+               type: RS
+            atactic:
+               name: PVF(ata)
+               type: ARS
+        Polyacrylonitrile:
+          chirality: true
+          resi: ACN
+          name: PAN
+          sub:
+            isotactic (R):
+               name: PAN(R)
+               type: R
+            isotactic (S):
+               name: PAN(S)
+               type: S
+            syndio (R):
+               name: PAN(syn)
+               type: RS
+            atactic:
+               name: PAN(ata)
+               type: ARS
+        Poly(vinyl methyl ketone):
+          chirality: true
+          resi: ETKT
+          name: PEK
+          sub:
+            isotactic (R):
+               name: PVMK(R)
+               type: R
+            isotactic (S):
+               name: PVMK(S)
+               type: S
+            syndio (R):
+               name: PVMK(syn)
+               type: RS
+            atactic:
+               name: PVMK(ata)
+               type: ARS
+        Polyvinylpyrrolidone:
+          chirality: true
+          resi: VIP
+          name: N-PYR
+          sub:
+            isotactic (R):
+               name: PVP(R)
+               type: R
+            isotactic (S):
+               name: PVP(S)
+               type: S
+            syndio (R):
+               name: PVP(syn)
+               type: RS
+            atactic:
+               name: PVP(ata)
+               type: ARS
