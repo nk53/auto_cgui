@@ -177,7 +177,7 @@ Polymer:
             atactic:
                name: PPMA(ata)
                type: ARS
-    AMIDES:
+    Amides:
       title: Amides
       sub:
         Polyamide:
@@ -196,7 +196,7 @@ Polymer:
           name: NYL6
           chirality: false
           resi: NYL6
-    DIENES:
+    Dienes:
       title: Dienes
       sub:
         Polybutadiene:
@@ -213,7 +213,7 @@ Polymer:
         Polyisoprene:
           chirality: true
           resi: 14IP
-          name:  PIP
+          name:  PI
           sub:
             trans:
                name: PI(trans)
@@ -221,7 +221,7 @@ Polymer:
             cis:
                name: PI(cis)
                type: C
-    ESTERS:
+    Esters:
       title: Esters
       sub:
         Polylactic acid:
@@ -307,7 +307,7 @@ Polymer:
           name: PTFE
           chirality: false
           resi: TEFET
-    IMINES:
+    Imines:
       title: Imines
       sub:
         Polyethyleneimine:
@@ -318,7 +318,7 @@ Polymer:
           name: PEII
           chirality: false
           resi: EIMINI
-    KETONES:
+    Ketones:
       title: Ketones
       sub:
         Poly(vinyl methyl ketone):
