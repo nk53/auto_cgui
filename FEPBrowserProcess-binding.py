@@ -72,8 +72,8 @@ class FEPBrowserProcess(CGUIBrowserProcess):
     def fill(self, name, value):
         self.browser.fill(name, value)
 
-    def xpath(self, element):
-        self.browser.find_by_xpath(element).click()
+    def click_by_xpath(self, xpath):
+        self.browser.find_by_xpath(xpath).click()
 
     def click_by_name(self, name):
         self.browser.find_by_name(name).click()
@@ -83,18 +83,23 @@ class FEPBrowserProcess(CGUIBrowserProcess):
         browser = self.browser
         browser.visit(url)
 
-        # attach files for this test case
-        browser.attach_file('files[]', '/Users/hanzhang/Desktop/auto_cgui/ligands/basic/lig1.mol2')  
-        browser.attach_file('files[]', '/Users/hanzhang/Desktop/auto_cgui/ligands/basic/lig2.mol2')  
-        browser.attach_file('files[]', '/Users/hanzhang/Desktop/auto_cgui/ligands/basic/lig3.mol2')  
+       # give pdb info
+#        browser.attach_file('file', '/Users/hanzhang/Desktop/auto_cgui/ligands/basic/4gih.pdb')  
+#        browser.find_by_xpath("//input[@value='PDB']").click()
+        pdb_name= test_case['pdb']
+        browser.fill('pdb_id', pdb_name)         
 
+        browser.find_by_text('Next Step:').click()
         self.go_next(test_case['steps'][0]['wait_text'])
 
         jobid = browser.find_by_css(".jobid").first.text.split()[-1]
+   
         test_case['jobid'] = jobid
         self.jobid = jobid
         if 'output' in test_case:
             self.output = test_case['output']
+#        self.go_next(test_case['steps'][0]['wait_text'])
+
 
     def download(self, saveas):
         url = "{url}?doc=input/download&jobid={jobid}".format(url=self.base_url, jobid=self.jobid)
@@ -115,18 +120,4 @@ class FEPBrowserProcess(CGUIBrowserProcess):
             self.download(self.output + '.tgz')
         else:
             self.download('charmm-gui-%s.tgz' % str(self.jobid))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

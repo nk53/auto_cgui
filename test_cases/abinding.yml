@@ -1,0 +1,32 @@
+# this file uses mostly default options to test different component types
+- label: afes
+  base: ligands/basic
+  url_ym: ?doc=input/afes.abinding
+  pdb: 4gih        #provide PDB
+  steps:
+    - wait_text: PDB Manipulation Options
+    - wait_text: Waterbox Size Options
+      presteps:
+        - select('ion_method', 'dist')
+        - time.sleep(1)
+    - wait_text: System Size
+    - wait_text: FEP/TI simulation
+    - wait_text: drag
+      presteps:      #upload ligands
+        - self.browser.attach_file('files[]', '/Users/hanzhang/Desktop/auto_cgui/ligands/basic/23.mol2') 
+        - self.browser.attach_file('files[]', '/Users/hanzhang/Desktop/auto_cgui/ligands/basic/27.mol2') 
+        - self.browser.attach_file('files[]', '/Users/hanzhang/Desktop/auto_cgui/ligands/basic/28.mol2') 
+        - time.sleep(1)
+    - wait_text: Force Field Options
+      presteps:
+        - click_by_name('gns_checked')  #packages selection - GENSIS
+        - select('gns_method', 'rmsd') #Restraint of protein-ligand distance (rest) or Restraint of protein-ligand distance and RMSD (rmsd) or Norestraints (mpca)
+        - click_by_name('charmm_checked') #packages selection - CHARMM
+        - click_by_name('dormsd')  #include conformational restraint
+        - click_by_name('dorepdstr') # use replica-exchange method
+        - click_by_attrs(value='CGenFF Checker') # FF checker
+        - fill('lfitedge', 25)    # Waterbox Size
+        - time.sleep(5)
+  final_wait_text: Please download
+
+

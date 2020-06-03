@@ -1,0 +1,34 @@
+# this file uses mostly default options to test different component types
+- label: rbinding
+  base: ligands/basic
+  url_ym: ?doc=input/afes.rbinding
+  pdb: 4gih        #provide PDB
+  steps:
+    - wait_text: PDB Manipulation Options
+    - wait_text: Waterbox Size Options
+      presteps:
+        - select('ion_method', 'dist')
+        - time.sleep(1)
+    - wait_text: System Size
+    - wait_text: FEP/TI simulation
+    - wait_text: drag
+      presteps:      #upload ligands
+        - self.browser.attach_file('files[]', '/Users/hanzhang/Desktop/auto_cgui/ligands/basic/23.mol2') 
+        - self.browser.attach_file('files[]', '/Users/hanzhang/Desktop/auto_cgui/ligands/basic/27.mol2') 
+        - self.browser.attach_file('files[]', '/Users/hanzhang/Desktop/auto_cgui/ligands/basic/28.mol2') 
+        - click_by_xpath("//input[@value='min']")
+        - time.sleep(1)
+    - wait_text: Force Field Options
+      presteps:
+#        - click_by_name('gns_checked')  # packages selection - GENSIS
+#        - click_by_name('omm_checked')  # packages selection - SAI
+#        - click_by_name('amb_checked')  # packages selection - AMBER
+#        - click_by_xpath("//input[@name='amb_spli_checked']") # Split (protocol options)
+#        - click_by_xpath("//input[@name='amb_unif_checked']") # Unified (protocol options)
+#        - click_by_attrs(value='AMBER FF Checker') # AMBER FF checker
+        - click_by_attrs(value='CGenFF Checker') # CCgenFF checker
+        - fill('lfitedge', 15)    # Waterbox Size
+        - time.sleep(1)
+  final_wait_text: Please download
+
+
