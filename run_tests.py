@@ -183,7 +183,8 @@ while pending:
             if cmd == 'STOP':
                 break
             result = msg_queue.get()
-            print(result)
+            if result != None:
+                print(result)
     elif result[0] == 'CONTINUE':
         pending += 1
         done_case = result[1]

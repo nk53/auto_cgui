@@ -137,12 +137,15 @@ class CGUIBrowserProcess(Process):
             value = elem[name]
             self.browser.fill(name, value)
 
+    def init_system(self):
+        raise NotImplementedError("This must be implemented in a child class")
+
     def interact(self):
         self.done_q.put(('INTERACT',))
         for cmd in iter(self.inter_q.get, 'STOP'):
             try:
                 result = eval(cmd)
-                self.msg_q.put(repr(result))
+                self.msg_q.put(result)
             except Exception as e:
                 import sys, traceback
                 # give the full exception string
@@ -266,11 +269,12 @@ class CGUIBrowserProcess(Process):
 
     def wait_text(self, text):
         print(self.name, "waiting for text:", text)
-        try:
-            while not self.browser.is_text_present(text, wait_time=1):
-                pass
-        except TimeoutException:
-            print(self.name, "timed out receiving message from renderer")
+        while True:
+            try:
+                if self.browser.is_text_present(text, wait_time=1):
+                    break
+            except TimeoutException:
+                print(self.name, "timed out receiving message from renderer")
 
     def wait_text_multi(self, texts):
         wait_time = None
