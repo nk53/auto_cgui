@@ -112,7 +112,7 @@ class CGUIBrowserProcess(Process):
         """Evaluate a Python command that could refer to a method of self
         *OR* to a global function.
         """
-        if expr == 'INTERACT' and self.interact:
+        if expr == 'INTERACT' and self.interactive:
             self.interact()
             return
         try:
