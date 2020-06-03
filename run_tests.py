@@ -52,6 +52,8 @@ parser.add_argument('-n', '--num-threads', type=int, default=1,
         help="Number of parallel threads to spawn for testing (default: 1)")
 parser.add_argument('-p', '--pause', action='store_true',
         help="Pause execution on error")
+parser.add_argument('-i', '--interactive', action='store_true',
+        help="Accept commands interactively when complete or on error")
 parser.add_argument('-w', '--www-dir', metavar="PATH",
         help="Directory where C-GUI projects are stored. Uses value stored in config by default.")
 parser.add_argument('-b', '--base-url', metavar="URL",
@@ -125,7 +127,17 @@ base_cases, wait_cases = init_module(test_cases, args)
 
 todo_queue = Queue()
 done_queue = Queue()
-processes = [BrowserProcess(todo_queue, done_queue, www_dir=WWW_DIR, base_url=BASE_URL, pause=args.pause, browser_type=browser_type) for i in range(args.num_threads)]
+
+if args.interactive:
+    inter_queue = Queue()
+    msg_queue = Queue()
+    if args.num_threads > 1:
+        print("Error: --interactive flag is incompatible with 2+ threads")
+        sys.exit(1)
+else:
+    inter_queue = None
+    msg_queue = None
+processes = [BrowserProcess(todo_queue, done_queue, www_dir=WWW_DIR, base_url=BASE_URL, pause=args.pause, browser_type=browser_type, interactive=args.interactive, inter_q=inter_queue, msg_q=msg_queue) for i in range(args.num_threads)]
 
 # initialize browser processes
 for p in processes:
@@ -155,6 +167,23 @@ while pending:
         log_exception(done_case, step_num, exc_info)
         print("Exception encountered for job ({})".format(done_case['jobid']))
         print(exc_info)
+    elif result[0] == 'INTERACT':
+        pending += 1
+        while True:
+            try:
+                cmd = input('>>> ')
+            except EOFError:
+                inter_queue.put('STOP')
+                break
+            if cmd == 'quit()' or cmd.startswith('sys.exit('):
+                cmd = 'STOP'
+            if cmd.strip() == '':
+                continue
+            inter_queue.put(cmd)
+            if cmd == 'STOP':
+                break
+            result = msg_queue.get()
+            print(result)
     elif result[0] == 'CONTINUE':
         pending += 1
         done_case = result[1]
@@ -169,6 +198,8 @@ while pending:
                 todo_queue.put(wait_case)
                 pending += 1
             del wait_cases[done_label]
+    else:
+        print('Warning: got unknown result:', result)
 
 # signal to stop
 for p in processes:

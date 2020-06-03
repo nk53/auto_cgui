@@ -43,6 +43,17 @@ class CGUIBrowserProcess(Process):
         self.pause = kwargs['pause']
         del kwargs['pause']
 
+        if not 'interactive' in kwargs:
+            kwargs['interactive'] = False
+        self.interactive = kwargs['interactive']
+        del kwargs['interactive']
+
+        if self.interactive:
+            self.inter_q = kwargs['inter_q']
+            self.msg_q = kwargs['msg_q']
+        del kwargs['inter_q']
+        del kwargs['msg_q']
+
         super().__init__(**kwargs)
         self.todo_q = todo_q
         self.done_q = done_q
@@ -101,6 +112,9 @@ class CGUIBrowserProcess(Process):
         """Evaluate a Python command that could refer to a method of self
         *OR* to a global function.
         """
+        if expr == 'INTERACT' and self.interact:
+            self.interact()
+            return
         try:
             # isolate the function name
             fname = expr[:expr.index('(')]
@@ -122,6 +136,18 @@ class CGUIBrowserProcess(Process):
             name = list(elem.keys())[0]
             value = elem[name]
             self.browser.fill(name, value)
+
+    def interact(self):
+        self.done_q.put(('INTERACT',))
+        for cmd in iter(self.inter_q.get, 'STOP'):
+            try:
+                result = eval(cmd)
+                self.msg_q.put(repr(result))
+            except Exception as e:
+                import sys, traceback
+                # give the full exception string
+                exc_str = ''.join(traceback.format_exception(*sys.exc_info()))
+                self.msg_q.put(exc_str)
 
     def resume_step(self, jobid, project=None, step=None, link_no=None):
         """Uses Job Retriever to return to the given step.
@@ -217,6 +243,9 @@ class CGUIBrowserProcess(Process):
                     if found_text == self.CHARMM_ERROR:
                         self.done_q.put(('FAILURE', test_case, step_num, elapsed_time))
                         failure = False
+                    elif self.interactive:
+                        self.interact()
+                        self.done_q.put(('SUCCESS', test_case, elapsed_time))
                     else:
                         self.done_q.put(('SUCCESS', test_case, elapsed_time))
                 except Exception as e:
@@ -224,10 +253,15 @@ class CGUIBrowserProcess(Process):
                     # give the full exception string
                     exc_str = ''.join(traceback.format_exception(*sys.exc_info()))
                     self.done_q.put(('EXCEPTION', test_case, step_num, exc_str))
-                    if self.pause:
+                    if self.interactive:
+                        self.interact()
+                    elif self.pause:
                         print(self.name, "pausing; interrupt to exit")
                         while True:
                             time.sleep(1)
+
+    def select(self, name, value):
+        self.browser.select(name, value)
 
     def wait_text(self, text):
         print(self.name, "waiting for text:", text)
