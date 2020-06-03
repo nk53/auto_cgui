@@ -193,12 +193,13 @@ class CGUIBrowserProcess(Process):
                     resume_link = 0
                     base = os.path.abspath(pjoin('files', test_case['base']))
                     self.base = base
-                    if 'jobid' in test_case:
+
+                    resume = 'jobid' in test_case
+                    if resume:
                         jobid = test_case['jobid']
                         resume_link = test_case['resume_link']
                         self.resume_step(jobid, link_no=resume_link)
-                    else:
-                        self.init_system(test_case)
+                    self.init_system(test_case, resume)
 
                     jobid = test_case['jobid']
                     print(self.name, "Job ID:", jobid)

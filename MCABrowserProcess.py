@@ -205,20 +205,22 @@ class MCABrowserProcess(CGUIBrowserProcess):
             num_comps = row.find_by_css("[name^=num_components")
             num_comps.fill(comp_info['count'])
 
-    def init_system(self, test_case):
-        url = self.base_url + "?doc=input/multicomp"
+    def init_system(self, test_case, resume=False):
         browser = self.browser
-        browser.visit(url)
-
-        # attach files for this test case
         self.components = test_case['components']
-        for comp_name in self.components.keys():
-            comp_name = pjoin(self.base, comp_name)
-            browser.attach_file("files[]", comp_name+'.crd')
-            browser.attach_file("files[]", comp_name+'.psf')
 
-        self.go_next(test_case['steps'][0]['wait_text'])
+        if not resume:
+            url = self.base_url + "?doc=input/multicomp"
+            browser.visit(url)
 
-        jobid = browser.find_by_css(".jobid").first.text.split()[-1]
-        test_case['jobid'] = jobid
+            # attach files for this test case
+            for comp_name in self.components.keys():
+                comp_name = pjoin(self.base, comp_name)
+                browser.attach_file("files[]", comp_name+'.crd')
+                browser.attach_file("files[]", comp_name+'.psf')
+
+            self.go_next(test_case['steps'][0]['wait_text'])
+
+            jobid = browser.find_by_css(".jobid").first.text.split()[-1]
+            test_case['jobid'] = jobid
 

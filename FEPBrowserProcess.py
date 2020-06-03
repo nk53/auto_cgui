@@ -95,10 +95,12 @@ class FEPBrowserProcess(CGUIBrowserProcess):
 #            num_ligs = rows.find_by_css("[name^=num_ligands")
 #            num_ligs.fill(lig_info['count'])
 
-    def init_system(self, fep_case):
-#        url = self.base_url + "?doc=input/asolvating"
-        url = self.base_url + "?doc=input/rsolvating"
+    def init_system(self, fep_case, resume=False):
+        if not resume:
+            return
+
         browser = self.browser
+        url = self.base_url + "?doc=input/rsolvating"
         browser.visit(url)
 
         # attach files for this test case
