@@ -131,28 +131,29 @@ class ClockTime(object):
     def __eq__(self, value):
         return self.value == ClockTime(value).value
 
-def usage():
-    print("Usage:", sys.argv[0], "[logfile]", file=sys.stderr)
+if __name__ == '__main__':
+    def usage():
+        print("Usage:", sys.argv[0], "[logfile]", file=sys.stderr)
 
-if len(sys.argv) == 1:
-    infile = 'results.log'
-else:
-    infile = sys.argv[1]
+    if len(sys.argv) == 1:
+        infile = 'results.log'
+    else:
+        infile = sys.argv[1]
 
-if not os.path.exists(infile):
-    print("Error: No such file or directory:", infile, file=sys.stderr)
-    usage()
-    sys.exit(1)
-elif os.path.isdir(infile):
-    print("Error:", infile, "is a directory", file=sys.stderr)
-    usage()
-    sys.exit(2)
+    if not os.path.exists(infile):
+        print("Error: No such file or directory:", infile, file=sys.stderr)
+        usage()
+        sys.exit(1)
+    elif os.path.isdir(infile):
+        print("Error:", infile, "is a directory", file=sys.stderr)
+        usage()
+        sys.exit(2)
 
-import re
-expr = re.compile(r'(\d+\.\d+)')
-with open(infile) as fh:
-    times = [expr.search(line).group(1) for line in fh]
+    import re
+    expr = re.compile(r'(\d+\.\d+)')
+    with open(infile) as fh:
+        times = [expr.search(line).group(1) for line in fh]
 
-tot_time = sum(map(float, times))
+    tot_time = sum(map(float, times))
 
-print("Total running time: {:.2f} seconds {!s}".format(tot_time, ClockTime(int(tot_time))))
+    print("Total running time: {:.2f} seconds {!s}".format(tot_time, ClockTime(int(tot_time))))

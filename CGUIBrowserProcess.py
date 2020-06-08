@@ -134,7 +134,7 @@ class CGUIBrowserProcess(Process):
     def handle_step(self, step_info):
         for elem in step_info['elems']:
             name = list(elem.keys())[0]
-            value = elem[name]
+            value = str(elem[name])
             self.browser.fill(name, value)
 
     def init_system(self):
