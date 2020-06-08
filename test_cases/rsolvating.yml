@@ -1,11 +1,10 @@
 # this file uses mostly default options to test different component types
-- label: asolvating
+- label: rsolvating
   base: ligands/basic
-  url_ym: ?doc=input/asolvating
+  url_ym: ?doc=input/rsolvating
   steps:
-    - wait_text: Force Field Options
+    - wait_text: Force Field Option
       presteps:
         - fill('lfitedge', 15)    # Waterbox Size
         - click_by_attrs(value='CGenFF Checker') # CCgenFF checker
-  final_wait_text: Please download
-       
+  final_wait_text: Please download       
