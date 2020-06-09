@@ -144,7 +144,7 @@ class PBBrowserProcess(CGUIBrowserProcess):
         else:
             self.download('charmm-gui-%s.tgz' % str(self.jobid))
 
-    def init_system(self, test_case):
+    def init_system(self, test_case, resume=False):
         url = self.base_url + "?doc=input/polymer"
         self.browser.visit(url)
 
