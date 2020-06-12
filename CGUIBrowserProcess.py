@@ -79,8 +79,22 @@ class CGUIBrowserProcess(Process):
 
     def click_lipid_category(self, category):
         """Activate a lipid category in the Membrane Builder lipid selection page"""
-        self.browser.find_by_text(category).find_by_xpath('../img').first.click()
-
+        category_root = self.browser.find_by_text(category)
+        arrow_elem = category_root.find_by_xpath('../img').first
+        table_elem = category_root.find_by_xpath('../table').first
+        cnt = 0
+        # clicking the arrow is somehow not very reliable ....
+        while not arrow_elem.visible:
+            cnt += 1
+            time.sleep(1)
+        arrow_elem.click()
+        cnt = 0
+        while not table_elem.visible:
+            cnt += 1
+            time.sleep(1)
+            if cnt > 5:
+                arrow_elem.click()
+                cnt = 0
 
     def copy_dir(self, ncopy, signal=True):
         """Make `ncopy` copies of the current project directory.
@@ -126,7 +140,10 @@ class CGUIBrowserProcess(Process):
         return eval(expr)
 
     def go_next(self, test_text=None):
-        self.browser.find_by_id('nextBtn').click()
+        button_elem = self.browser.find_by_id('nextBtn')
+        while not button_elem.visible:
+            time.sleep(1)
+        button_elem.click()
         if test_text:
             print("waiting for", test_text)
             self.wait_text_multi([test_text, self.CHARMM_ERROR])
@@ -248,7 +265,6 @@ class CGUIBrowserProcess(Process):
                         self.done_q.put(('FAILURE', test_case, step_num, elapsed_time))
                         failure = False
                     elif self.interactive:
-                        self.interact()
                         self.done_q.put(('SUCCESS', test_case, elapsed_time))
                     else:
                         self.done_q.put(('SUCCESS', test_case, elapsed_time))
