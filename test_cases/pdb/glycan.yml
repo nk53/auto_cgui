@@ -1,0 +1,34 @@
+# this file uses mostly default options to test different component types
+- label: reader
+  base: components/basic
+  pdb: 1l6x
+  #pdb: 3dj9
+  glycan:
+  - 
+    type: n-linked
+    prot: '{"segid":"PROA","resname":"ASN","resid":297}'
+    grs: |
+      1 BGLCNA
+      3 - 14B: BGLCNA
+      4 - - 14B: BMAN
+      5 - - - 13A: AMAN
+      6 - - - - 12B: BGLCNA
+      7 - - - - - 14B: BGAL
+      8 - - - - 14B: BGLCNA
+      9 - - - 16A: AMAN
+      10 - - - - 12B: BGLCNA
+      2 - 16A: AFUC
+      segid: CARA
+  - 
+    type: n-linked
+    prot: '{"segid":"PROA","resname":"ASN","resid":276}'
+    grs: |
+      1 BGLCNA
+      2 - 14B: BGLCNA
+      3 - - 14B: BMAN
+  steps:
+    - wait_text: Manipulate PDB
+    - wait_text: Generate PDB
+      presteps:
+        - set_glycosylation()
+  final_wait_text: Computed Energy
