@@ -2,11 +2,10 @@
 - label: reader
   base: components/basic
   pdb: 1l6x
-  #pdb: 3dj9
   glycan:
   - 
     type: n-linked
-    prot: '{"segid":"PROA","resname":"ASN","resid":297}'
+    prot: '{"segid":"PROA","resname":"ASN","resid":286}'
     grs: |
       1 BGLCNA
       3 - 14B: BGLCNA
@@ -18,7 +17,6 @@
       9 - - - 16A: AMAN
       10 - - - - 12B: BGLCNA
       2 - 16A: AFUC
-      segid: CARA
   - 
     type: n-linked
     prot: '{"segid":"PROA","resname":"ASN","resid":276}'

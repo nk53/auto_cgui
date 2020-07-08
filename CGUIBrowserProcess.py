@@ -1,5 +1,6 @@
 import shutil
 import os.path
+import requests
 import time
 from multiprocessing import Process, Queue
 from os.path import join as pjoin
@@ -121,6 +122,38 @@ class CGUIBrowserProcess(Process):
 
         if signal:
             self.done_q.put(('CONTINUE', self.test_case))
+
+    def download(self, saveas=None):
+        test_case = self.test_case
+        # don't attempt an impossible download
+        if not 'jobid' in test_case:
+            return
+
+        jobid = test_case['jobid']
+
+        if saveas:
+            saveas = saveas + '.tgz'
+        elif 'output' in test_case:
+            saveas = test_case['output'] + '.tgz'
+        else:
+            saveas = 'charmm-gui-{}.tgz'.format(jobid)
+
+        url = "{url}?doc=input/download&jobid={jobid}".format(url=self.base_url, jobid=jobid)
+        print("downloading %s to %s" % (url, saveas))
+
+        user_agent = 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'
+        headers = {'User-Agent': user_agent}
+        user = ''
+        password = ''
+        if '@' in self.base_url:
+            urlname = self.base_url.split('//')[1]
+            idx = urlname.find('@')
+            user, password = urlname[:idx].split(':')
+
+        r = requests.get(url, headers=headers, auth=(user, password))
+        open(saveas, "wb").write(r.content)
+        fsize = float(os.stat(saveas).st_size) / (1024.0 * 1024.0)
+        print("download complete, file size is %5.2f MB" % fsize)
 
     def eval(self, expr):
         """Evaluate a Python command that could refer to a method of self
@@ -268,20 +301,31 @@ class CGUIBrowserProcess(Process):
                         self.done_q.put(('SUCCESS', test_case, elapsed_time))
                     else:
                         self.done_q.put(('SUCCESS', test_case, elapsed_time))
+                    if not 'localhost' in self.base_url: self.download()
                 except Exception as e:
                     import sys, traceback
                     # give the full exception string
                     exc_str = ''.join(traceback.format_exception(*sys.exc_info()))
-                    self.done_q.put(('EXCEPTION', test_case, step_num, exc_str))
+                    print(exc_str)
                     if self.interactive:
                         self.interact()
                     elif self.pause:
                         print(self.name, "pausing; interrupt to exit")
                         while True:
                             time.sleep(1)
+                    self.done_q.put(('EXCEPTION', test_case, step_num, exc_str))
+                    if not 'localhost' in self.base_url: self.download()
 
     def select(self, name, value):
         self.browser.select(name, value)
+
+    def stop(self, reason=None):
+        """Message main thread to safely terminate all threads"""
+        self.done_q.put(('STOP', self.name, reason))
+
+        # wait to be killed by main thread
+        while True:
+            time.sleep(1)
 
     def wait_text(self, text):
         print(self.name, "waiting for text:", text)

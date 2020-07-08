@@ -1,0 +1,14 @@
+# this file uses mostly default options to test different component types
+- label: 1UBQ with two staples
+  base: pdb/basic
+  pdb: 1ubq.pdb
+  # type chain1 rid1 chain2 rid2
+  staples:
+    - RMETA3 PROA 1 PROA 3
+    - META5 PROA 25 PROA 29
+  steps:
+    - wait_text: Manipulate PDB
+    - wait_text: Generate PDB
+      presteps:
+        - set_stapling()
+  final_wait_text: Computed Energy

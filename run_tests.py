@@ -95,7 +95,7 @@ if 'BROWSER_TYPE' in CONFIG:
 WWW_DIR = args.www_dir
 if not 'WWW_DIR' in CONFIG:
     if 'localhost' in BASE_URL.lower():
-        raise ValueError("Missing WWW_DIR from "+args.config)
+        raise ValueError("Missing WWW_DIR from "+args.config.name)
 else:
     WWW_DIR = CONFIG['WWW_DIR']
 
@@ -201,6 +201,18 @@ while pending:
                 todo_queue.put(wait_case)
                 pending += 1
             del wait_cases[done_label]
+    elif result[0] == 'STOP':
+        from signal import SIGINT
+
+        for p in processes:
+            p._popen._send_signal(SIGINT)
+
+        for p in processes:
+            p.join()
+
+        print('Processing has been stopped by', result[1], 'for the following reason:')
+        print('\t',result[2])
+        sys.exit(2)
     else:
         print('Warning: got unknown result:', result)
 
