@@ -1,4 +1,5 @@
 import os
+import re
 import ast
 import time
 from os.path import join as pjoin
@@ -14,6 +15,36 @@ def init_module(test_cases, args):
 class PDBBrowserProcess(CGUIBrowserProcess):
     def __init__(self, todo_q, done_q, **kwargs):
         super(PDBBrowserProcess, self).__init__(todo_q, done_q, **kwargs)
+
+    def set_gpi(self):
+        if not 'gpi' in self.test_case:
+            raise ValueError("Missing gpi options")
+        glyc_button = self.browser.find_by_id("gpi_checked").first
+        if not glyc_button.checked:
+            glyc_button.click()
+        gpi = self.test_case['gpi']
+        self.browser.select("gpi[chain]", gpi['segid'])
+        table = self.browser.find_by_id("id_gpi")
+        table.find_by_value("edit").first.click()
+        self.browser.windows.current = self.browser.windows[1]
+        lipid = ast.literal_eval(gpi['lipid'])
+        self.browser.select("lipid_type", lipid['lipid_type'])
+        self.browser.select("sequence[0][name]", lipid['name'])
+        _d = re.compile('- ')
+        for i,residue in enumerate(gpi['grs'].split('\n')):
+            if not residue.strip(): continue
+            depth = len(_d.findall(residue))
+            linkage, resname = residue.split('- ')[-1].split()
+            idx = resname.find('_')
+            if idx > 0:
+                resname = resname[:idx]
+            if depth > 4:
+                self.browser.find_by_id(str(depth-1)).find_by_css('.add').first.click()
+            self.browser.select("sequence[%d][name]" % (i+1), resname[1:])
+            self.browser.select("sequence[%d][type]" % (i+1), resname[0])
+            self.browser.select("sequence[%d][linkage]" % (i+1), linkage[1])
+        self.browser.execute_script("updateGPI()")
+        self.browser.windows.current = self.browser.windows[0]
 
     def set_glycosylation(self):
         if not 'glycan' in self.test_case:
