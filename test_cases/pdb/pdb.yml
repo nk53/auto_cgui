@@ -1,0 +1,6 @@
+base: pdb/basic
+dict: basic.map.yml
+steps:
+  - wait_text: Manipulate PDB
+  - wait_text: Generate PDB
+  - wait_text: Computed Energy

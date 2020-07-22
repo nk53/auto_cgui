@@ -123,16 +123,6 @@ class PBBrowserProcess(CGUIBrowserProcess):
         jobid = browser.find_by_css(".jobid").first.text.split()[-1]
         self.jobid = jobid
 
-    def handle_step(self, step_info):
-        for elem in step_info['elems']:
-            name = list(elem.keys())[0]
-            value = elem[name]
-            if isinstance(value, bool):
-                if value:
-                    self.browser.find_by_name(name).check()
-            else:
-                self.browser.fill(name, value)
-
     def resume_step(self, jobid, project=None, step=None, link_no=None):
         self.jobid = jobid
         super(PBBrowserProcess, self).resume_step(jobid, link_no=link_no)

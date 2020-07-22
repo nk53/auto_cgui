@@ -1,0 +1,11 @@
+base: pdb/basic
+dict: basic.map.yml
+ion_method: distance
+steps:
+  - module:
+      name: pdb
+      stop: -1
+  - wait_text: Computed Energy
+  - wait_text: Periodic Boundary Condition Options
+  - module:
+      name: input

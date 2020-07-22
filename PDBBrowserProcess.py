@@ -14,6 +14,8 @@ def init_module(test_cases, args):
 
 class PDBBrowserProcess(CGUIBrowserProcess):
     def __init__(self, todo_q, done_q, **kwargs):
+        self.module_title = "PDB Reader"
+        self.module_url = "?doc=input/pdbreader"
         super(PDBBrowserProcess, self).__init__(todo_q, done_q, **kwargs)
 
     def set_gpi(self):
@@ -98,13 +100,14 @@ class PDBBrowserProcess(CGUIBrowserProcess):
                 self.browser.find_by_id(sid).select(value)
 
     def init_system(self, test_case, resume=False):
-        url = self.base_url + "?doc=input/pdbreader"
+        module_title = self.module_title
+        url = self.base_url + self.module_url
         browser = self.browser
-        browser.visit(url)
 
         pdb = self.pdb = test_case['pdb']
 
         if not resume:
+            browser.visit(url)
             # infer as much as possible about the PDB format
             if isinstance(pdb, dict):
                 if 'format' in pdb:
@@ -127,7 +130,7 @@ class PDBBrowserProcess(CGUIBrowserProcess):
                 }[pdb_fmt]
 
             if source and self.name.split('-')[-1] != '1':
-                reason = "Multithreading is not allowed for PDB Reader"+\
+                reason = "Multithreading is not allowed for "+module_title+\
                          " when downloading from RCSB/OPM. Please use an"\
                          " upload option instead."
                 self.stop(reason)

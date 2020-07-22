@@ -1,0 +1,19 @@
+dict: basic.map.yml
+base: components/basic
+# "parent: False" means this has no parent
+parent: False
+solvent_tests: [water+ions]
+steps:
+  - wait_text: Component ID
+    presteps:
+      - select_components()
+    poststeps:
+      - click('size_button', 'Calculated System Size')
+  - wait_text: Solvation Options
+    poststeps:
+      - SOLVENT_TEST_PLACEHOLDER
+      - click_by_attrs(value='Calculate Solvent Composition')
+      - wait_script('is_valid')
+  - wait_text: Periodic Boundary Condition Options
+  - module:
+      name: input

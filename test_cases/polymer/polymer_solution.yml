@@ -62,4 +62,4 @@
         - gns_checked: False
         - dms_checked: False
         - lammps_checked: True
-  final_wait_text: Please download
+    - wait_text: Please download

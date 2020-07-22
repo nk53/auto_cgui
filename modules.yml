@@ -3,3 +3,4 @@ FEP: FEPBrowserProcess
 MCA: MCABrowserProcess
 POLYMER: PBBrowserProcess
 PDB: PDBBrowserProcess
+SOLUTION: SolutionBrowserProcess

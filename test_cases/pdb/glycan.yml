@@ -29,4 +29,4 @@
     - wait_text: Generate PDB
       presteps:
         - set_glycosylation()
-  final_wait_text: Computed Energy
+    - wait_text: Computed Energy

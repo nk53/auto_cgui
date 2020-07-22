@@ -1,0 +1,5 @@
+base: pdb/basic
+dict: basic.map.yml
+steps:
+  - wait_text: Force Field Options
+  - wait_text: "Please download \"download.tgz\""

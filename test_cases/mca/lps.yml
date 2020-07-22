@@ -33,4 +33,4 @@
         - click_by_attrs(value='Calculate Solvent Composition')
         - time.sleep(1)
     - wait_text: Force Field Options
-  final_wait_text: Equilibration Input Notes
+    - wait_text: Equilibration Input Notes

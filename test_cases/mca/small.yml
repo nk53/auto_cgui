@@ -1,0 +1,48 @@
+- label: inheritance test vfrac
+  parent: multicomp_solution_first_page
+  components:
+    1ubq:
+      type: solvated
+      count: 3
+    1vii:
+      type: solvated
+      count: 3
+    3gb1:
+      type: solvated
+      count: 3
+  vfrac: 0.1
+- label: inheritance test z + afrac
+  parent: multicomp_bilayer_first_page
+  components:
+    1ubq:
+      type: solvated
+      count: 3
+    2hac:
+      type: membrane
+      count: 2
+  afrac: 0.3
+  Z: 50
+- label: inheritance test xy + z
+  parent: multicomp_bilayer_first_page
+  components:
+    1ubq:
+      type: solvated
+      count: 3
+    2hac:
+      type: membrane
+      count: 2
+  XY: 60
+  Z: 50
+- label: inheritance test xyz
+  parent: multicomp_solution_first_page
+  components:
+    1ubq:
+      type: solvated
+      count: 3
+    1vii:
+      type: solvated
+      count: 3
+    3gb1:
+      type: solvated
+      count: 3
+  XYZ: 80

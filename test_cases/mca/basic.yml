@@ -27,7 +27,7 @@
         - time.sleep(1)
     - wait_text: Periodic Boundary Condition Options
     - wait_text: Force Field Options
-  final_wait_text: Please download
+  wait_text: Please download
 - label: solvated + custom_solvent
   solvent_tests: [water, ions, water+ions, None]
   base: components/basic
@@ -60,7 +60,7 @@
         - time.sleep(1)
     - wait_text: Periodic Boundary Condition Options
     - wait_text: Force Field Options
-  final_wait_text: Please download
+  wait_text: Please download
 - label: solvated + membrane_only
   base: components/basic
   solvent_tests: [water, water+ions]
@@ -101,7 +101,7 @@
         - click_by_attrs(value='Calculate Solvent Composition')
         - time.sleep(1)
     - wait_text: Force Field Options
-  final_wait_text: Equilibration Input Notes
+  wait_text: Equilibration Input Notes
 - label: membrane_only + custom_solvent
   base: components/basic
   solvent_tests: [water, water+ions]
@@ -135,7 +135,7 @@
         - click_by_attrs(value='Calculate Solvent Composition')
         - time.sleep(1)
     - wait_text: Force Field Options
-  final_wait_text: Equilibration Input Notes
+  wait_text: Equilibration Input Notes
 - label: membrane + custom_solvent
   base: components/basic
   solvent_tests: [water, water+ions]
@@ -173,4 +173,4 @@
         - click_by_attrs(value='Calculate Solvent Composition')
         - time.sleep(1)
     - wait_text: Force Field Options
-  final_wait_text: Equilibration Input Notes
+  wait_text: Equilibration Input Notes

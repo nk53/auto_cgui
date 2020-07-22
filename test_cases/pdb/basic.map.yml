@@ -1,0 +1,8 @@
+staples:
+  step: 2
+  presteps:
+    - set_stapling()
+glycan:
+  step: 2
+  presteps:
+    - set_glycosylation()

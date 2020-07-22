@@ -1,8 +1,31 @@
 # this file uses mostly default options to test different component types
 - label: reader
-  base: components/basic
   pdb: 1l6x
-  steps:
-    - wait_text: Manipulate PDB
-    - wait_text: Generate PDB
-  final_wait_text: Computed Energy
+- label: glycan
+  glycan:
+  -
+    type: n-linked
+    prot: '{"segid":"PROA","resname":"ASN","resid":286}'
+    grs: |
+      1 BGLCNA
+      3 - 14B: BGLCNA
+      4 - - 14B: BMAN
+      5 - - - 13A: AMAN
+      6 - - - - 12B: BGLCNA
+      7 - - - - - 14B: BGAL
+      8 - - - - 14B: BGLCNA
+      9 - - - 16A: AMAN
+      10 - - - - 12B: BGLCNA
+      2 - 16A: AFUC
+  -
+    type: n-linked
+    prot: '{"segid":"PROA","resname":"ASN","resid":276}'
+    grs: |
+      1 BGLCNA
+      2 - 14B: BGLCNA
+      3 - - 14B: BMAN
+- label: 1UBQ with two staples
+  pdb: 1ubq.pdb
+  staples:
+    - RMETA3 PROA 1 PROA 3
+    - META5 PROA 25 PROA 29

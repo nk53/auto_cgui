@@ -51,8 +51,6 @@ parser.add_argument('-t', '--test-name', default='basic',
 parser.add_argument('-n', '--num-threads', type=int, default=1,
         metavar="N",
         help="Number of parallel threads to spawn for testing (default: 1)")
-parser.add_argument('-p', '--pause', action='store_true',
-        help="Pause execution on error")
 parser.add_argument('-i', '--interactive', action='store_true',
         help="Accept commands interactively when complete or on error")
 parser.add_argument('-w', '--www-dir', metavar="PATH",
@@ -66,7 +64,12 @@ parser.add_argument('-l', '--logfile', default='results.log')
 parser.add_argument('--config', type=argparse.FileType('r'),
         default="config.yml", metavar="PATH",
         help="Path to configuration file (default: config.yml)")
+parser.add_argument('--dry-run', action='store_true', help="Don't actually run anything, just print the resulting test cases after preprocessing")
+
 args = parser.parse_args()
+
+# because dictionary unpacking looks cleaner, all kwargs are placed here
+settings = {}
 
 # indicate whether logfile already exists
 LOGFILE = args.logfile
@@ -86,10 +89,12 @@ if 'USER' in CONFIG and 'PASS' in CONFIG:
     BASE_URL = BASE_URL.split('/')
     BASE_URL[2] = CONFIG['USER']+':'+CONFIG['PASS']+'@'+BASE_URL[2]
     BASE_URL = '/'.join(BASE_URL)
+settings['base_url'] = BASE_URL
 
 browser_type = 'chrome'
 if 'BROWSER_TYPE' in CONFIG:
     browser_type = CONFIG['BROWSER_TYPE']
+settings['browser_type'] = browser_type
 
 # validate WWW_DIR as a directory
 WWW_DIR = args.www_dir
@@ -104,6 +109,7 @@ if WWW_DIR != None:
         raise ValueError(WWW_DIR+" does not exist")
     elif not os.path.isdir(WWW_DIR):
         raise ValueError(WWW_DIR+" is not a directory")
+settings['www_dir'] = WWW_DIR
 
 MODULE_NAME = args.module
 if not MODULE_NAME:
@@ -114,6 +120,7 @@ MODULE_NAME = MODULE_NAME.upper()
 if not MODULE_NAME in cgui_modules:
     raise ValueError('Unknown C-GUI module: '+MODULE_NAME)
 MODULE_FILE = cgui_modules[MODULE_NAME]
+settings['cgui_module'] = MODULE_NAME.lower()
 
 # import relevant names from the module file
 module = import_module(MODULE_FILE)
@@ -132,13 +139,16 @@ done_queue = Queue()
 if args.interactive:
     inter_queue = Queue()
     msg_queue = Queue()
-    if args.num_threads > 1:
-        print("Error: --interactive flag is incompatible with 2+ threads")
-        sys.exit(1)
 else:
     inter_queue = None
     msg_queue = None
-processes = [BrowserProcess(todo_queue, done_queue, www_dir=WWW_DIR, base_url=BASE_URL, pause=args.pause, browser_type=browser_type, interactive=args.interactive, inter_q=inter_queue, msg_q=msg_queue) for i in range(args.num_threads)]
+
+settings['dry_run'] = args.dry_run
+settings['interactive'] = args.interactive
+settings['inter_q'] = inter_queue
+settings['msg_q'] = msg_queue
+
+processes = [BrowserProcess(todo_queue, done_queue, **settings) for i in range(args.num_threads)]
 
 # initialize browser processes
 for p in processes:
@@ -170,6 +180,7 @@ while pending:
         print("Exception encountered for job ({})".format(done_case['jobid']))
         print(exc_info)
     elif result[0] == 'INTERACT':
+        "Interacting with {} ({})".format(*result[1:])
         pending += 1
         while True:
             try:

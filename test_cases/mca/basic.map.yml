@@ -1,0 +1,42 @@
+# this file uses mostly default options to test different component types
+XYZ:
+  step: 1
+  elems:
+    - cube_side_length: XYZ
+XY:
+  step: 1
+  elems:
+    - memb_side_length: XY
+Z:
+  step: 1
+  elems:
+    - box_side_length: Z
+afrac:
+  step: 1
+  presteps:
+    - setup_afrac()
+  elems:
+    - area_fraction: afrac
+vfrac:
+  step: 1
+  presteps:
+    - setup_vfrac()
+  elems:
+    - volume_fraction: vfrac
+# bias errors to occur during test case's execution, instead of its initialization
+afrac_novalidate:
+  step: 1
+  presteps:
+    - "setup_afrac(validate=False)"
+  elems:
+    - area_fraction: afrac
+vfrac_novalidate:
+  step: 1
+  presteps:
+    - "setup_vfrac(validate=False)"
+  elems:
+    - volume_fraction: vfrac
+lipids:
+  step: 2
+  presteps:
+    - set_lipid_options()

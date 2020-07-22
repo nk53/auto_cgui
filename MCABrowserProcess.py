@@ -40,7 +40,7 @@ def init_module(test_cases, args):
 def handle_solvent_memb_tests(test_case, do_copy=False):
     """Like handle_solvent_tests(), but for systems with a membrane"""
     if not 'solvent_tests' in test_case:
-        raise ValueError("Missing 'solvent_tests'")
+        raise KeyError("Missing 'solvent_tests'")
     solvent_tests = test_case['solvent_tests']
 
     # find the step containing SOLVENT_TEST_PLACEHOLDER
@@ -57,7 +57,7 @@ def handle_solvent_memb_tests(test_case, do_copy=False):
         if found:
             break
     if not found:
-        raise ValueError("Missing '"+placeholder+"'")
+        raise KeyError("Missing '"+placeholder+"'")
 
     # action to do to *uncheck* an option
     test_map = {
@@ -105,7 +105,7 @@ def handle_solvent_tests(test_case, do_copy=False):
     the solvent_tests list.
     """
     if not 'solvent_tests' in test_case:
-        raise ValueError("Missing 'solvent_tests'")
+        raise KeyError("Missing 'solvent_tests'")
     solvent_tests = test_case['solvent_tests']
 
     # find the step containing SOLVENT_TEST_PLACEHOLDER
@@ -122,7 +122,7 @@ def handle_solvent_tests(test_case, do_copy=False):
         if found:
             break
     if not found:
-        raise ValueError("Missing '"+placeholder+"'")
+        raise KeyError("Missing '"+placeholder+"'")
 
     # action to do to *uncheck* an option
     test_map = {
@@ -188,7 +188,33 @@ class MCABrowserProcess(CGUIBrowserProcess):
             comp_type_elem.fill(comp_info['density'])
 
     def select_components(self):
+        test_case = self.test_case
+
         components = self.components
+        count_types = {
+            'solvated': None,
+            'membrane': None,
+        }
+        radio_names = {
+            'solvated': 'component_type',
+            'membrane': 'memb_comp_type',
+        }
+        radio_values = {
+            'count': 'num_components',
+            'ratio': 'component_ratio',
+        }
+        obj_attrs = {
+            'solvated': 'solv_count_type',
+            'membrane': 'memb_count_type',
+        }
+
+        # initialize count types to None
+        for field in obj_attrs.values():
+            test_case[field] = None
+
+        # need to know whether there are membrane components for some options
+        has_membrane = False
+
         for comp_name, comp_info in components.items():
             row = self.find_comp_row(comp_name, 'molpacking')
             comp_type = comp_info['type']
@@ -198,12 +224,97 @@ class MCABrowserProcess(CGUIBrowserProcess):
             # can't set number of some component types in this step
             if comp_type in ['solvent', 'ion']:
                 continue
+            elif comp_type == 'membrane':
+                has_membrane = True
+
+            count_type = count_types[comp_type]
+            if count_type == None:
+                if 'count' in comp_info:
+                    count_types[comp_type] = count_type = 'count'
+                elif 'ratio' in comp_info:
+                    count_types[comp_type] = count_type = 'ratio'
+                else:
+                    raise KeyError("Must specify either count or ratio for "+comp_name)
+                test_case[obj_attrs[comp_type]] = count_type
+
+                self.click_by_attrs(name=radio_names[comp_type], value=radio_values[count_type])
+            elif not count_type in comp_info:
+                raise ValueError("Can't mix 'count' and 'ratio' for same component type")
 
             # changing component type might change row element
             row = self.find_comp_row(comp_name, 'molpacking')
 
             num_comps = row.find_by_css("[name^=num_components")
             num_comps.fill(comp_info['count'])
+
+        if test_case.get('has_membrane', False) and not has_membrane:
+            # special case for membrane systems without membrane components
+            test_case['solv_membrane'] = True
+            test_case['has_memb_comps'] = False
+        else:
+            test_case['has_membrane'] = has_membrane
+            test_case['has_memb_comps'] = has_membrane
+
+    def setup_afrac(self, validate=True):
+        test_case = self.test_case
+
+        # look in XYZ, then XY, then default to None
+        xy_dim = test_case.get('XYZ', test_case.get('XY', None))
+        count_type = test_case.get('memb_count_type')
+        size_type = test_case.get('memb_size_type', None)
+        if size_type != None: size_type = size_type.lower()
+
+        if validate:
+            if not test_case['has_memb_comps']:
+                raise ValueError("Can't use area fraction without membrane components")
+            if xy_dim != None:
+                if count_type == 'count':
+                    raise ValueError("Can't use mixed size type with component count")
+                elif size_type == None:
+                    raise KeyError("Missing 'memb_size_type'; use one of: 'afrac', 'xy', 'xyz'")
+                elif size_type not in ('xy', 'xyz'):
+                    raise ValueError("Invalid 'memb_size_type'; use one of: 'afrac', 'xy', 'xyz'")
+
+        # set form values
+        if xy_dim == None:
+            self.click_by_attrs(name='memb_size_type', value="area_fraction")
+        else:
+            if size_type == 'afrac':
+                self.click_by_attrs(name='memb_size_type', value="area_fraction")
+            else:
+                # already selected by default, but helps check form/test consistency
+                self.click_by_attrs(name='memb_size_type', value='memb_side_length')
+
+    def setup_vfrac(self, validate=True):
+        test_case = self.test_case
+
+        # look in XYZ, then Z, then default to None
+        z_dim = test_case.get('XYZ', test_case.get('Z', None))
+        count_type = test_case.get('solv_count_type')
+        size_type = test_case.get('solv_size_type', None)
+        if size_type != None: size_type = size_type.lower()
+
+        if validate:
+            if z_dim != None:
+                if count_type == 'count':
+                    raise ValueError("Can't use mixed size type with component count")
+                elif size_type == None:
+                    raise KeyError("Missing 'solv_size_type'; use one of: 'vfrac', 'z', 'xyz'")
+                elif size_type not in ('z', 'xyz'):
+                    raise ValueError("Invalid 'solv_size_type'; use one of: 'vfrac', 'z', 'xyz'")
+
+        # set form values
+        if z_dim == None:
+            self.click_by_attrs(name='size_type', value="volume_fraction")
+        else:
+            if size_type == 'vfrac':
+                self.click_by_attrs(name='size_type', value="volume_fraction")
+            elif test_case['has_membrane']:
+                # already selected by default, but helps check form/test consistency
+                self.click_by_attrs(name='size_type', value='solv_side_length')
+            else:
+                # already selected by default, but helps check form/test consistency
+                self.click_by_attrs(name='size_type', value='cube_side_length')
 
     def init_system(self, test_case, resume=False):
         browser = self.browser
