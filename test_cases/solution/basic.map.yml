@@ -14,17 +14,11 @@ fitedge:
   step: 2
   elems:
     - fitedge: fitedge
-  poststeps:
-    - click_by_value('Calculate number of ions')
-    - wait_script('is_updated')
 # alias for fitedge
 edge:
   step: 2
   elems:
     - fitedge: edge
-  poststeps:
-    - click_by_value('Calculate number of ions')
-    - wait_script('is_updated')
 solvtype:
   step: 2
   elems:
@@ -47,16 +41,10 @@ ion_conc:
   step: 2
   elems:
     - ion_conc: ion_conc
-  poststeps:
-    - click_by_value('Calculate number of ions')
-    - wait_script('is_updated')
 ion_type:
   step: 2
   elems:
     - ion_type: ion_type
-  poststeps:
-    - click_by_value('Calculate number of ions')
-    - wait_script('is_updated')
 ion_method:
   step: 2
   presteps:

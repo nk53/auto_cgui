@@ -11,6 +11,10 @@ Z:
   step: 1
   elems:
     - box_side_length: Z
+solv_membrane:
+  step: 1
+  presteps:
+    - check('solv_membrane_checkbox', 'Calculate membrane area')
 afrac:
   step: 1
   presteps:
@@ -36,7 +40,3 @@ vfrac_novalidate:
     - "setup_vfrac(validate=False)"
   elems:
     - volume_fraction: vfrac
-lipids:
-  step: 2
-  presteps:
-    - set_lipid_options()

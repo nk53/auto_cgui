@@ -1,8 +1,8 @@
 import shutil
 import os.path
-import re
 import requests
 import time
+import utils
 import yaml
 from multiprocessing import Process, Queue
 from os.path import join as pjoin
@@ -25,11 +25,10 @@ class CGUIBrowserProcess(Process):
 
     def __init__(self, todo_q, done_q, **kwargs):
         """Setup Queues, browser settings, and delegate rest to multiprocessing.Process"""
-        self.browser_type = kwargs.pop('browser_type', 'chrome')
+        self.browser_type = kwargs.pop('browser_type', 'firefox')
         self.base_url = kwargs.pop('base_url', 'http://charmm-gui.org/')
         self.www_dir = kwargs.pop('www_dir', None)
         self.interactive = kwargs.pop('interactive', False)
-        self.cgui_module = kwargs.pop('cgui_module')
         self.dry_run = kwargs.pop('dry_run', False)
         self.inter_q = kwargs.pop('inter_q', None)
         self.msg_q = kwargs.pop('msg_q', None)
@@ -44,6 +43,12 @@ class CGUIBrowserProcess(Process):
 
     def _click(self, elem, wait=None):
         elem.click()
+        if wait:
+            self.wait_text(wait)
+
+    def check(self, check_elem_id, wait=None):
+        elem = self.browser.find_by_id(check_elem_id)
+        elem.check()
         if wait:
             self.wait_text(wait)
 
@@ -66,25 +71,6 @@ class CGUIBrowserProcess(Process):
     def click_by_value(self, value, wait=None):
         elem = self.browser.find_by_value(value)
         self._click(elem, wait)
-
-    def click_lipid_category(self, category):
-        """Activate a lipid category in the Membrane Builder lipid selection page"""
-        category_root = self.browser.find_by_text(category)
-        arrow_elem = category_root.find_by_xpath('../img').first
-        table_elem = category_root.find_by_xpath('../table').first
-        cnt = 0
-        # clicking the arrow is somehow not very reliable ....
-        while not arrow_elem.visible:
-            cnt += 1
-            time.sleep(1)
-        arrow_elem.click()
-        cnt = 0
-        while not table_elem.visible:
-            cnt += 1
-            time.sleep(1)
-            if cnt > 5:
-                arrow_elem.click()
-                cnt = 0
 
     def copy_dir(self, ncopy, signal=True):
         """Make `ncopy` copies of the current project directory.
@@ -161,7 +147,10 @@ class CGUIBrowserProcess(Process):
             expr = 'self.'+expr
         return eval(expr)
 
-    def go_next(self, test_text=None):
+    def go_next(self, test_text=None, alert=None):
+        if isinstance(alert, str):
+            alert = alert.lower()
+        assert alert in (None, 'accept', 'dismiss'), "unrecognized alert response: "+str(alert)
         button_elem = self.browser.find_by_id('nextBtn')
         if not button_elem:
             button_elem = self.browser.find_by_id("input_nav").find_by_tag("table")
@@ -170,6 +159,19 @@ class CGUIBrowserProcess(Process):
         while not button_elem.visible:
             time.sleep(1)
         button_elem.click()
+
+        # some modules give warning dialogs that we don't care about
+        if alert:
+            prompt = self.browser.get_alert()
+            if prompt:
+                with prompt:
+                    if alert == 'accept':
+                        prompt.accept()
+                    elif alert == 'dismiss':
+                        prompt.dismiss()
+                    else:
+                        raise NotImplementedError
+
         if test_text:
             print("waiting for", test_text)
             self.wait_text_multi([test_text, self.CHARMM_ERROR])
@@ -186,7 +188,7 @@ class CGUIBrowserProcess(Process):
             # fails if splinter/selenium changes their API
             input_type = elem._element.get_property('type')
             if input_type == "radio":
-                elem = ElementList(filter(lambda e: e.value == value, elem))
+                elem = ElementList(filter(lambda e: e.value == str(value), elem))
                 elem.check()
             elif input_type == "checkbox":
                 if value:
@@ -195,28 +197,6 @@ class CGUIBrowserProcess(Process):
                 elem.select(value)
             else:
                 elem.fill(value)
-
-    def find_test_file(self, filename, module=None):
-        if not module:
-            module = self.cgui_module
-
-        path = pjoin('test_cases', module, filename)
-        if not os.path.isfile(path):
-            path = pjoin('test_cases', filename)
-
-        if not os.path.exists(path):
-            raise FileNotFoundError("No such file or directory: " + path)
-
-        if os.path.isdir(path):
-            path = pjoin(path, os.path.basename(path))
-
-        if not os.path.isfile(path):
-            path += '.yml'
-
-        if not os.path.isfile(path):
-            raise FileNotFoundError("No such file: " + path)
-
-        return path
 
     def init_system(self):
         raise NotImplementedError("This must be implemented in a child class")
@@ -278,7 +258,6 @@ class CGUIBrowserProcess(Process):
     def run_dry(self):
         for test_case in iter(self.todo_q.get, 'STOP'):
             try:
-                test_case = self.setup_custom_options(test_case)
                 self.test_case = test_case
                 print(yaml.dump([test_case]), end='')
                 test_case['jobid'] = -1
@@ -298,7 +277,6 @@ class CGUIBrowserProcess(Process):
             self.step = step_num = -1
             for test_case in iter(self.todo_q.get, 'STOP'):
                 try:
-                    test_case = self.setup_custom_options(test_case)
                     self.test_case = test_case
                     print(self.name, "starting", test_case['label'])
                     start_time = time.time()
@@ -331,17 +309,16 @@ class CGUIBrowserProcess(Process):
                         if self.warn_if_text(self.PHP_MESSAGES) and self.interactive:
                             self.interact()
 
-                        if 'presteps' in step:
-                            for prestep in step['presteps']:
-                                self.eval(prestep)
+                        for prestep in step.get('presteps', []):
+                            self.eval(prestep)
                         if 'elems' in step:
                             self.handle_step(step)
-                        if 'poststeps' in step:
-                            for poststep in step['poststeps']:
-                                self.eval(poststep)
+                        for poststep in step.get('poststeps', []):
+                            self.eval(poststep)
 
                         if step_num < len(steps)-1:
-                            self.go_next()
+                            alert = step.get('alert', None)
+                            self.go_next(alert=alert)
 
                     elapsed_time = time.time() - start_time
 
@@ -371,137 +348,6 @@ class CGUIBrowserProcess(Process):
                         self.interact()
                     self.done_q.put(('EXCEPTION', test_case, step_num, exc_str))
                     if not 'localhost' in self.base_url: self.download()
-
-    def setup_custom_options(self, test_case, module=None):
-        test_case = self.setup_test_inheritance(test_case)
-
-        map_filename = test_case.get('dict')
-        if map_filename:
-            map_filename = self.find_test_file(map_filename, module=module)
-            with open(map_filename) as fh:
-                opt_map = yaml.load(fh.read(), Loader=yaml.FullLoader)
-            for opt, settings in opt_map.items():
-                if opt in test_case:
-                    value = str(test_case[opt])
-                    pattern = r'\b' + opt + r'\b'
-
-                    step = settings.get('step')
-                    assert step, "Error: 'step' must be defined for custom options"
-                    step = int(step) - 1
-
-                    test_step = test_case['steps'][step]
-
-                    presteps = settings.get('presteps')
-                    if presteps:
-                        for ind, step in enumerate(presteps):
-                            presteps[ind] = re.sub(pattern, value, step)
-
-                        test_presteps = test_step.setdefault('presteps', [])
-                        test_presteps += presteps
-
-                    elems = settings.get('elems')
-                    if elems:
-                        for ind, elem in enumerate(elems):
-                            for elem_name, elem_value in elem.items():
-                                elems[ind][elem_name] = re.sub(pattern, value, elem_value)
-
-                        test_elems = test_step.setdefault('elems', [])
-                        test_elems += elems
-
-                    poststeps = settings.get('poststeps')
-                    if poststeps:
-                        for ind, step in enumerate(poststeps):
-                            poststeps[ind] = re.sub(pattern, value, step)
-
-                        test_poststeps = test_step.setdefault('poststeps', [])
-                        test_poststeps += poststeps
-
-        # look for "module" in each step
-        # can't use for loop b/c iteration is nonlinear
-        ind = 0
-        while ind < len(test_case['steps']):
-            step = test_case['steps'][ind]
-            if 'module' in step:
-                module_info = step['module']
-                module_name = module_info['name']
-                module_template = self.find_test_file(module_name, module=module_name)
-
-                with open(module_template) as fh:
-                    test_template = yaml.load(fh.read(), Loader=yaml.FullLoader)
-
-                # get steps and dict from template
-                test_copy = test_case.copy()
-                test_copy['steps'] = test_template['steps']
-                test_copy['dict'] = test_template['dict']
-                test_template = test_copy
-
-                # generate sub-case as though template were the main case
-                test_template = self.setup_custom_options(test_template, module=module_name)
-
-                # obtain user's desired slice of module's steps
-                index = module_info.get('index', None)
-                if index == None:
-                    start = module_info.get('start', None)
-                    stop = module_info.get('stop', None)
-                    step_slice = slice(start, stop)
-                else:
-                    step_slice = index
-                module_steps = test_template['steps'][step_slice]
-
-                # replace module entry with steps
-                before = test_case['steps'][:ind]
-                after = test_case['steps'][ind+1:]
-                test_case['steps'] = before + module_steps + after
-
-                ind += len(module_steps)
-            else:
-                ind += 1
-
-        return test_case
-
-    def setup_test_inheritance(self, child_case, module=None):
-        if module == None:
-            module = self.cgui_module
-
-        if not 'parent' in child_case:
-            child_case['parent'] = module
-
-        lineage = [child_case]
-        filenames = [None]
-        #while 'parent' in child_case:
-        parent = child_case.get('parent', module)
-        while parent != False:
-            # defaults to module name
-            if parent == None:
-                parent = module
-            else:
-                parent = parent
-
-            # break if module has itself as parent
-            parent = self.find_test_file(parent, module=module)
-            if parent == filenames[-1]:
-                break
-
-            with open(parent) as parent_file:
-                parent_case = yaml.load(parent_file.read(), Loader=yaml.FullLoader)
-            lineage.append(parent_case)
-
-            if parent in filenames:
-                filenames.append(parent)
-                errmsg = "Multiple/circular inheritance not allowed; got: "
-                errmsg += repr(filenames)
-                raise NotImplementedError(errmsg)
-            filenames.append(parent)
-
-            child_case = parent_case
-            parent = child_case.get('parent', module)
-
-        parent_case = lineage.pop()
-        while lineage:
-            child_case = lineage.pop()
-            parent_case.update(child_case)
-
-        return parent_case
 
     def stop(self, reason=None):
         """Message main thread to safely terminate all threads"""
@@ -554,3 +400,9 @@ class CGUIBrowserProcess(Process):
         elif self.browser.is_text_present(text):
             print(msg.format(text))
             return text
+
+    def uncheck(self, check_elem_id, wait=None):
+        elem = self.browser.find_by_id(check_elem_id)
+        elem.uncheck()
+        if wait:
+            self.wait_text(wait)

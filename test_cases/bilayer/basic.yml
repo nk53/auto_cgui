@@ -1,0 +1,19 @@
+# this file uses mostly default options to test different component types
+- label: 2HAC in bilayer with 2:1 DOPC and Cholesterol
+  jobid: 9562573932
+  resume_link: 3
+  pdb: 2hac.cif
+  orient_vector:
+    - PROA ASP -3
+    - PROA ARG 26
+  XY: 40
+  lipids:
+    lower:
+      chl1: 1
+      dopc: 2
+    upper:
+      chl1: 1
+      dopc: 2
+  input: openmm
+  hmr: True
+  temperature: 310.15

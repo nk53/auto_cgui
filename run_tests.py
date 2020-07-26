@@ -3,6 +3,7 @@ import argparse
 import os
 import shutil
 import sys
+import utils
 import yaml
 from importlib import import_module
 from multiprocessing import Queue
@@ -10,8 +11,7 @@ from os.path import join as pjoin
 from time import sleep
 
 # module alias (case-insensitive): base filename
-with open('modules.yml') as fh:
-    cgui_modules = yaml.load(fh, Loader=yaml.FullLoader)
+cgui_modules = utils.read_yaml('modules.yml')
 
 def log_exception(case_info, step_num, exc_info):
     global LOGFILE
@@ -80,7 +80,7 @@ else:
 
 # read configuration
 with args.config:
-    CONFIG = yaml.load(args.config, Loader=yaml.FullLoader)
+    CONFIG = yaml.full_load(args.config)
 
 BASE_URL = args.base_url
 if 'BASE_URL' in CONFIG:
@@ -91,7 +91,7 @@ if 'USER' in CONFIG and 'PASS' in CONFIG:
     BASE_URL = '/'.join(BASE_URL)
 settings['base_url'] = BASE_URL
 
-browser_type = 'chrome'
+browser_type = 'firefox'
 if 'BROWSER_TYPE' in CONFIG:
     browser_type = CONFIG['BROWSER_TYPE']
 settings['browser_type'] = browser_type
@@ -100,7 +100,7 @@ settings['browser_type'] = browser_type
 WWW_DIR = args.www_dir
 if not 'WWW_DIR' in CONFIG:
     if 'localhost' in BASE_URL.lower():
-        raise ValueError("Missing WWW_DIR from "+args.config.name)
+        raise KeyError("Missing WWW_DIR from "+args.config.name)
 else:
     WWW_DIR = CONFIG['WWW_DIR']
 
@@ -114,24 +114,27 @@ settings['www_dir'] = WWW_DIR
 MODULE_NAME = args.module
 if not MODULE_NAME:
     if not 'MODULE' in CONFIG:
-        raise ValueError('Missing C-GUI module name, either use -m opt or specify MODULE in config.yml')
+        raise KeyError('Missing C-GUI module name, either use -m opt or specify MODULE in config.yml')
     MODULE_NAME = CONFIG['MODULE']
 MODULE_NAME = MODULE_NAME.upper()
 if not MODULE_NAME in cgui_modules:
     raise ValueError('Unknown C-GUI module: '+MODULE_NAME)
 MODULE_FILE = cgui_modules[MODULE_NAME]
-settings['cgui_module'] = MODULE_NAME.lower()
+cgui_module = MODULE_NAME.lower()
 
 # import relevant names from the module file
 module = import_module(MODULE_FILE)
-init_module = getattr(module, 'init_module')
+init_module = getattr(module, 'init_module', None)
 BrowserProcess = getattr(module, MODULE_FILE)
 
 TEST_CASE_PATH = pjoin('test_cases', MODULE_NAME.lower(), args.test_name+'.yml')
-with open(TEST_CASE_PATH) as fh:
-    test_cases = yaml.load(fh, Loader=yaml.FullLoader)
+test_cases = utils.read_yaml(TEST_CASE_PATH)
 
-base_cases, wait_cases = init_module(test_cases, args)
+base_cases = [utils.setup_custom_options(test_case, cgui_module) for test_case in test_cases]
+if callable(init_module):
+    base_cases, wait_cases = init_module(base_cases, args)
+else:
+    wait_cases = {}
 
 todo_queue = Queue()
 done_queue = Queue()

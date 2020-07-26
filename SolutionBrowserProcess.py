@@ -1,16 +1,12 @@
-import os
 import ast
+import os
 import time
+import yaml
 from os.path import join as pjoin
 from splinter import Browser
 from splinter.exceptions import ElementDoesNotExist
 from PDBBrowserProcess import PDBBrowserProcess
 from InputBrowserProcess import InputBrowserProcess
-import yaml
-
-def init_module(test_cases, args):
-    """Minimalistic placeholder"""
-    return test_cases, {}
 
 class SolutionBrowserProcess(PDBBrowserProcess, InputBrowserProcess):
     def __init__(self, *args, **kwargs):

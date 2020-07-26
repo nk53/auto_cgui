@@ -1,10 +1,10 @@
 import os
+import requests
 import time
 from os.path import join as pjoin
 from splinter import Browser
 from splinter.exceptions import ElementDoesNotExist
 from CGUIBrowserProcess import CGUIBrowserProcess
-import requests
 
 def init_module(test_cases, args):
     """Preprocesses test cases

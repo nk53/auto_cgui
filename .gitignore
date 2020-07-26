@@ -4,6 +4,5 @@ __pycache__/*
 *.xz
 *.tgz
 *.gz
-results.log
 config.yml
 www

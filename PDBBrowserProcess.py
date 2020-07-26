@@ -1,16 +1,12 @@
+import ast
 import os
 import re
-import ast
 import time
+import yaml
 from os.path import join as pjoin
 from splinter import Browser
 from splinter.exceptions import ElementDoesNotExist
 from CGUIBrowserProcess import CGUIBrowserProcess
-import yaml
-
-def init_module(test_cases, args):
-    """Minimalistic placeholder"""
-    return test_cases, {}
 
 class PDBBrowserProcess(CGUIBrowserProcess):
     def __init__(self, todo_q, done_q, **kwargs):

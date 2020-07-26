@@ -1,25 +1,11 @@
 import os
 import time
+import requests
+import yaml
 from os.path import join as pjoin
 from splinter import Browser
 from splinter.exceptions import ElementDoesNotExist
 from CGUIBrowserProcess import CGUIBrowserProcess
-import yaml
-import requests
-
-def init_module(test_cases, args):
-    """Preprocesses test cases
-
-    Returns: (2-tuple)
-    =======
-        base_cases  Cases that can begin immediately
-        wait_cases  Cases that need one of the base cases to complete first
-    """
-    base_cases = []
-    wait_cases = {}
-    for test_case in test_cases:
-        base_cases.append(test_case)
-    return base_cases, wait_cases
 
 class PBBrowserProcess(CGUIBrowserProcess):
     def __init__(self, todo_q, done_q, **kwargs):

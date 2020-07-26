@@ -4,7 +4,8 @@ import time
 from os.path import join as pjoin
 from splinter import Browser
 from splinter.exceptions import ElementDoesNotExist
-from CGUIBrowserProcess import CGUIBrowserProcess
+from BilayerBrowserProcess import BilayerBrowserProcess
+from InputBrowserProcess import InputBrowserProcess
 
 def init_module(test_cases, args):
     """Preprocesses test cases
@@ -61,8 +62,8 @@ def handle_solvent_memb_tests(test_case, do_copy=False):
 
     # action to do to *uncheck* an option
     test_map = {
-        'water': "click('water_checked')",
-        'ions': "click('ion_checked')",
+        'water': "uncheck('water_checked')",
+        'ions': "uncheck('ion_checked')",
     }
 
     cases = []
@@ -158,7 +159,7 @@ def handle_solvent_tests(test_case, do_copy=False):
 
     return cases
 
-class MCABrowserProcess(CGUIBrowserProcess):
+class MCABrowserProcess(BilayerBrowserProcess, InputBrowserProcess):
     def find_comp_row(self, comp_name, step):
         """Returns the row element page corresponding to the given uploaded
         component basename"""
@@ -214,7 +215,7 @@ class MCABrowserProcess(CGUIBrowserProcess):
 
         # need to know whether there are membrane components for some options
         has_membrane = False
-
+        num_non_solvents = 0
         for comp_name, comp_info in components.items():
             row = self.find_comp_row(comp_name, 'molpacking')
             comp_type = comp_info['type']
@@ -226,6 +227,7 @@ class MCABrowserProcess(CGUIBrowserProcess):
                 continue
             elif comp_type == 'membrane':
                 has_membrane = True
+            num_non_solvents += 1
 
             count_type = count_types[comp_type]
             if count_type == None:
@@ -247,13 +249,23 @@ class MCABrowserProcess(CGUIBrowserProcess):
             num_comps = row.find_by_css("[name^=num_components")
             num_comps.fill(comp_info['count'])
 
-        if test_case.get('has_membrane', False) and not has_membrane:
+        if test_case.get('lipids', False) and not has_membrane:
             # special case for membrane systems without membrane components
             test_case['solv_membrane'] = True
             test_case['has_memb_comps'] = False
+
+            self.check('solv_membrane_checkbox', 'Calculate membrane area using')
         else:
-            test_case['has_membrane'] = has_membrane
+            # TODO: can this be done more transparently?
+            ps = test_case['steps'][0].setdefault('poststeps', [])
+            ps.insert(0, "click('size_button', 'Calculated System Size')")
+
             test_case['has_memb_comps'] = has_membrane
+
+        test_case['has_membrane'] = has_membrane
+        if num_non_solvents:
+            ps = test_case['steps'][0].setdefault('poststeps', [])
+            ps.insert(0, "click('size_button', 'Calculated System Size')")
 
     def setup_afrac(self, validate=True):
         test_case = self.test_case
