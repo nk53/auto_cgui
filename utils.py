@@ -107,13 +107,8 @@ def setup_custom_options(test_case, module):
 
             test_template = read_yaml(module_template)
 
-            ## get steps and dict from template
             # inherit options from test_template
             test_copy = test_case.copy()
-
-            #test_copy['steps'] = test_template['steps']
-            #test_copy['dict'] = test_template['dict']
-            #test_copy['parent'] = test_template.get('parent')
 
             # default to test_copy's options except for steps/dict/parent
             del test_copy['steps']
@@ -121,7 +116,6 @@ def setup_custom_options(test_case, module):
             del test_copy['parent']
             test_template.update(test_copy)
 
-            #import pdb; pdb.set_trace()
             test_template = test_copy
 
             # generate sub-case as though template were the main case
@@ -140,7 +134,6 @@ def setup_custom_options(test_case, module):
             # replace module entry with steps
             before = test_case['steps'][:ind]
             after = test_case['steps'][ind+1:]
-            #test_case['steps'] = before + module_steps + after
             test_template['steps'] = before + module_steps + after
             test_case = test_template
 
@@ -151,13 +144,11 @@ def setup_custom_options(test_case, module):
     return test_case
 
 def setup_test_inheritance(child_case, module):
-    #import pdb; pdb.set_trace()
     if not 'parent' in child_case:
         child_case['parent'] = module
 
     lineage = [child_case]
     filenames = [None]
-    #while 'parent' in child_case:
     parent = child_case.get('parent', module)
     while parent != False:
         # defaults to module name
@@ -167,9 +158,7 @@ def setup_test_inheritance(child_case, module):
             parent = parent
 
         # break if module has itself as parent
-        #import pdb; pdb.set_trace()
         parent = find_test_file(parent, module=module)
-        #print(parent)
         if parent == filenames[-1]:
             break
 
