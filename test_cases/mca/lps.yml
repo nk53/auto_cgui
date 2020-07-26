@@ -2,7 +2,7 @@
 - label: custom solvent + membrane_only w/ LPS
   parent: multicomp_bilayer
   base: components/basic
-  #solvent_tests: [water, water+ions]
+  solvent_tests: [water, water+ions]
   components:
     tolu:
       type: solvent
