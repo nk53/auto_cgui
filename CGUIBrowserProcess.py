@@ -193,7 +193,7 @@ class CGUIBrowserProcess(Process):
             elif input_type == "checkbox":
                 if value:
                     elem.check()
-            elif input_type == "select":
+            elif "select" in input_type:
                 elem.select(value)
             else:
                 elem.fill(value)

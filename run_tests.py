@@ -164,6 +164,7 @@ for case in base_cases:
     todo_queue.put(case)
     pending += 1
 
+stopped = False # set to True after STOP sent to all threads
 # main communication loop
 while pending:
     result = done_queue.get()
@@ -230,9 +231,10 @@ while pending:
     else:
         print('Warning: got unknown result:', result)
 
-# signal to stop
-for p in processes:
-    todo_queue.put('STOP')
+    if not stopped and not wait_cases:
+        for p in processes:
+            todo_queue.put('STOP')
+        stopped = True
 
 # clean up
 for p in processes:
