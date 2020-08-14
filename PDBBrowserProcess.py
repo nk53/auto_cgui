@@ -60,8 +60,14 @@ class PDBBrowserProcess(CGUIBrowserProcess):
             cols = rows.find_by_tag("td")[4]
             cols.find_by_value("edit").last.click()
             self.browser.windows.current = self.browser.windows[1]
-            self.browser.find_by_value("Upload GRS").first.click()
-            self.browser.find_by_id("upload_GRS").first.fill(g['grs'])
+
+            GRS_button = self.browser.find_by_value("Upload GRS").first
+            GRS_field = self.browser.find_by_id("upload_GRS").first
+            while not GRS_field.visible:
+                GRS_button.click()
+                time.sleep(1)
+
+            GRS_field.fill(g['grs'])
             prot = ast.literal_eval(g['prot'])
             self.browser.select("sequence[0][name]", prot['segid'])
             self.browser.select("sequence[0][name2]", prot['resname'])

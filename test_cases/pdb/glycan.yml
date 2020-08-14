@@ -24,9 +24,3 @@
       1 BGLCNA
       2 - 14B: BGLCNA
       3 - - 14B: BMAN
-  steps:
-    - wait_text: Manipulate PDB
-    - wait_text: Generate PDB
-      presteps:
-        - set_glycosylation()
-    - wait_text: Computed Energy

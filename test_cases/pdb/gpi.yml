@@ -19,4 +19,4 @@
     - wait_text: Generate PDB
       presteps:
         - set_gpi()
-  final_wait_text: Computed Energy
+    - wait_text: Computed Energy
