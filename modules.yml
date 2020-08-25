@@ -5,3 +5,4 @@ MCA: MCABrowserProcess
 POLYMER: PBBrowserProcess
 PDB: PDBBrowserProcess
 SOLUTION: SolutionBrowserProcess
+NMM: NMMBrowserProcess
