@@ -1,5 +1,7 @@
+import code
 import shutil
 import os.path
+import re
 import requests
 import time
 import utils
@@ -135,7 +137,7 @@ class CGUIBrowserProcess(Process):
         *OR* to a global function.
         """
         if expr == 'INTERACT' and self.interactive:
-            self.interact()
+            self.interact(locals())
             return
         try:
             # isolate the function name
@@ -201,20 +203,35 @@ class CGUIBrowserProcess(Process):
     def init_system(self):
         raise NotImplementedError("This must be implemented in a child class")
 
-    def interact(self):
+    def interact(self, local={}):
+        """Provide piped instructions to a new Python interpreter"""
         test_case = getattr(self, 'test_case', {})
         jobid = test_case.get('jobid', -1)
 
         self.done_q.put(('INTERACT', self.name, jobid))
+
+        it = iter(self.inter_q.get, 'STOP')
+
+        assign_pattern = re.compile('[^=\'"]+=[^=]')
+        need_more = False
+        did_assignment = False
+        shell = code.InteractiveInterpreter(locals=local)
         for cmd in iter(self.inter_q.get, 'STOP'):
-            try:
-                result = eval(cmd)
-                self.msg_q.put(result)
-            except Exception as e:
-                import sys, traceback
-                # give the full exception string
-                exc_str = ''.join(traceback.format_exception(*sys.exc_info()))
-                self.msg_q.put(exc_str)
+            if need_more:
+                prefix = ''
+            else:
+                prefix = '_ = '
+
+            need_more = shell.runsource(prefix+cmd)
+            did_assignment = did_assignment or assign_pattern.match(cmd)
+
+            if not need_more:
+                if not did_assignment:
+                    shell.runcode('if _ != None: print(_)')
+                did_assignment = False
+
+            # tell parent we're ready for next input
+            self.msg_q.put(None)
 
     def resume_step(self, jobid, project=None, step=None, link_no=None):
         """Uses Job Retriever to return to the given step.
@@ -268,7 +285,7 @@ class CGUIBrowserProcess(Process):
                 exc_str = ''.join(traceback.format_exception(*sys.exc_info()))
                 print(exc_str)
                 if self.interactive:
-                    self.interact()
+                    self.interact(locals())
                 self.done_q.put(('EXCEPTION', test_case, -1, exc_str))
 
     def run_full(self):
@@ -307,7 +324,7 @@ class CGUIBrowserProcess(Process):
 
                         # Check for PHP errors, warnings, and notices
                         if self.warn_if_text(self.PHP_MESSAGES) and self.interactive:
-                            self.interact()
+                            self.interact(locals())
 
                         for prestep in step.get('presteps', []):
                             self.eval(prestep)
@@ -345,7 +362,7 @@ class CGUIBrowserProcess(Process):
                     exc_str = ''.join(traceback.format_exception(*sys.exc_info()))
                     print(exc_str)
                     if self.interactive:
-                        self.interact()
+                        self.interact(locals())
                     self.done_q.put(('EXCEPTION', test_case, step_num, exc_str))
                     if not 'localhost' in self.base_url: self.download()
 
