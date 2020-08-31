@@ -1,0 +1,7 @@
+- label: 3ltq  with lbt-loops
+  base: pdb/basic
+  pdb: 3ltq.pdb
+  llps:
+    - PROA SER LTICO 52
+    - PROA LYS LTICO 55
+

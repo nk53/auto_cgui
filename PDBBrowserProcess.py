@@ -101,6 +101,186 @@ class PDBBrowserProcess(CGUIBrowserProcess):
                 sid = id_fmt.format(name, staple_no)
                 self.browser.find_by_id(sid).select(value)
 
+    def set_term(self):
+        if not 'terms' in self.test_case:
+            raise ValueError("Missing terminal group ptaching")
+        
+        terms = self.test_case['terms']
+        id_fmt = 'terminal[{}][{}]'
+        terms_fmt = ['first', 'last']
+        for term in terms:
+            patchs = []
+            term = term.split()
+            patchs.append(term[0])
+            if len(term) != 3:
+                raise ValueError("Invaild terminal group patching format") 
+            for name,value in zip(terms_fmt,term[1:]):
+                for patch in patchs:
+                    tname = id_fmt.format(patch, name)
+                    self.browser.find_by_name(tname).select(value)
+
+    def set_lipid_tail(self):
+        if not 'lipid_tails' in self.test_case:
+            raise ValueError("Missing lipid tails")
+
+        lipid_tails = self.test_case['lipid_tails']
+        self.click('ltl_checked', 'Lipid-tail')
+        add_btn = self.browser.find_by_value("Add Lipid-tail")
+        for lipid_tail in lipid_tails[1:]:
+            add_btn.click()
+
+        ltl_fmt = 'patch', 'chain', 'res', 'rid'
+        id_fmt = 'ltl_{}_{}'
+        for ltl_no, lipid_tail in enumerate(lipid_tails):
+            lipid_tail = lipid_tail.split()
+            if len(lipid_tail) != 4:
+                raise ValueError("Invaild lipid tail format")
+
+            for name, value in zip(ltl_fmt, lipid_tail):
+                lid = id_fmt.format(name, ltl_no)
+                self.browser.find_by_id(lid).select(value) 
+
+    def set_fluo_label(self):
+        if not 'fluo_labels' in self.test_case:
+            raise ValueError("Missing fluorophore labels")
+
+        fluo_labels = self.test_case['fluo_labels']
+        self.click('ret_checked', 'Fluorophore label')
+        add_btn = self.browser.find_by_value("Add fluorophore label")
+        for fluo_label in fluo_labels[1:]:
+            add_btn.click()
+
+        fluo_fmt = 'patch', 'chain', 'res', 'rid'
+        id_fmt = 'ret_{}_{}'
+        for ret_no, fluo_label in enumerate(fluo_labels):
+            fluo_label = fluo_label.split()
+            if len(fluo_label) != 4:
+                raise ValueError("Invalid fluorophore labels format")
+
+            for name, value in zip(fluo_fmt, fluo_label):
+               rid = id_fmt.format(name, ret_no)
+               self.browser.find_by_id(rid).select(value)
+
+    def set_llp(self):
+        if not 'llps' in self.test_case:
+            raise ValueError("Missing lbt-loops")
+        llps = self.test_case['llps']
+        self.click('lbt_checked', 'SEGID')
+        add_btn = self.browser.find_by_value("Add Tb-binding site")
+        for llp in llps[1:]:
+            add_btn.click()
+        llp_fmt = 'chain', 'res', 'atom', 'rid'
+        id_fmt = 'lbt_{}_0_{}'
+        for lbt_no, llp in enumerate(llps):
+            llp = llp.split()
+            if len(llp) != 4:
+                raise ValueError("Invaild lbt-loops format") 
+
+            for name, value in zip(llp_fmt, llp):
+                lid = id_fmt.format(name, lbt_no)
+                self.browser.find_by_id(lid).select(value)
+
+    def set_mts_nitride(self):
+        if not 'mts_nitrides' in self.test_case:
+            raise ValueError("Missing MTS regents: nitroxide spin labels")
+
+        mts_nitrides = self.test_case['mts_nitrides']
+        self.click('epr_checked', 'Spin label')
+        add_btn = self.browser.find_by_value("Add spin label")
+        for mts_nitride in mts_nitrides[1:]:
+            add_btn.click()
+
+        epr_fmt ='patch', 'chain', 'res', 'rid'
+        id_fmt = 'epr_{}_{}'
+        for epr_no, mts_nitride in enumerate(mts_nitrides):
+            mts_nitride = mts_nitride.split()
+            if len(mts_nitride) != 4:
+                raise ValueError("Invalid MTS reagents (nitroxide) format") 
+            for name, value in zip(epr_fmt, mts_nitride):
+                eid = id_fmt.format(name, epr_no)
+                self.browser.find_by_id(eid).select(value)
+
+    def set_mts_modifier(self):
+        if not 'mts_modifiers' in self.test_case:
+            raise ValueError("Missing MTS regents: chemical modifier")
+
+        mts_modifiers = self.test_case['mts_modifiers']
+        self.click('mts_checked', 'MTS reagent')
+        add_btn = self.browser.find_by_value("Add MTS reagent")
+        for mts_modifier in mts_modifiers[1:]:
+            add_btn.click()
+
+        mts_fmt ='patch', 'chain', 'res', 'rid'
+        id_fmt = 'mts_{}_{}'
+        for mts_no, mts_modifier in enumerate(mts_modifiers):
+            mts_modifier = mts_modifier.split()
+            if len(mts_modifier) != 4:
+                raise ValueError("Invalid MTS reagents (modifier) format") 
+            for name, value in zip(mts_fmt, mts_modifier):
+                mid = id_fmt.format(name, mts_no)
+                self.browser.find_by_id(mid).select(value)
+
+    def set_uaa(self):
+        if not 'uaas' in self.test_case:
+            raise ValueError("Missing Unnatural amino acid substitution")
+
+        uaas = self.test_case['uaas']
+        self.click('uaa_checked', 'Unnatural amino acid')
+        add_btn = self.browser.find_by_value("more substitution")
+        for uaa in uaas[1:]:
+            add_btn.click()
+
+        uaa_fmt ='patch', 'chain', 'res', 'rid'
+        id_fmt = 'uaa_{}_{}'
+        for uaa_no, uaa in enumerate(uaas):
+            uaa = uaa.split()
+            if len(uaa) != 4:
+                raise ValueError("Invalid unnatural amino acid format") 
+            for name, value in zip(uaa_fmt, uaa):
+                uid = id_fmt.format(name, uaa_no)
+                self.browser.find_by_id(uid).select(value)
+
+    def set_bio(self):
+        click_btn = self.browser.find_by_value("biomat_checked")
+        click_btn.click()
+
+    def set_crystal_packing(self):
+        click_btn = self.browser.find_by_value("crystal_checked")
+        click_btn.click()
+
+    def set_unit_cell(self):
+        click_btn = self.browser.find_by_value("unitcell_checked")
+        click_btn.click()
+
+    def rid_select(self):
+        if not 'rids' in self.test_case:
+            raise ValueError("Missing residue id")
+
+        rids = self.test_case['rids']
+        name_fmt = 'chains[{}][{}]'
+        terms_fmt = ['first', 'last']
+        for rid in rids:
+            chain_ids = []
+            rid = rid.split()
+            chain_ids.append(rid[0])
+            if len(rid) != 3:
+                raise ValueError("Invaild residue id selection format")
+            for term, value in zip(terms_fmt, rid[1:]):
+                for i in chain_ids:
+                    tname = name_fmt.format(i, term)
+                    self.browser.find_by_name(tname).fill(value)           
+
+    def chain_select(self):
+        if not 'chains' in self.test_case:
+            raise ValueError("Missing chains")
+
+        chains = self.test_case['chains']
+        name_fmt = 'chains[{}][checked]'
+        for chain in chains:
+            name_chain = name_fmt.format(chain)
+            click_btn = self.browser.find_by_name(name_chain)
+            click_btn.click()
+
     def init_system(self, test_case, resume=False):
         module_title = self.module_title
         url = self.base_url + self.module_url
