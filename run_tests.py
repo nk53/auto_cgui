@@ -160,7 +160,8 @@ for p in processes:
 # put regular cases in the task queue
 pending = 0
 for case in base_cases:
-    sleep(0.1 * pending)
+    if not args.dry_run:
+        sleep(0.1 * pending)
     todo_queue.put(case)
     pending += 1
 
