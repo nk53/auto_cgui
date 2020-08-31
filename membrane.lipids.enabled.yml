@@ -455,11 +455,35 @@ default:
       lipids:
         - sds
     type6:
+      name: Cetrimonium Bromide
+      lipids:
+        - ctb10
+        - ctb11
+        - ctb12
+        - ctb13
+        - ctb14
+        - ctb15
+        - ctb16
+    type7:
+      name: Glycerol
+      lipids:
+        - gms1
+        - gms2
+        - mln1
+        - mln2
+    type8:
+      name: GTM
+      lipids:
+        - mgtm10
+        - egtm10
+        - mgtm11
+        - egtm11
+    type9:
       name: Phosphotidylglycerols
       lipids:
         - lmpg
         - lppg
-    type7:
+    type10:
       name: Amine Hydroxyls
       lipids:
         - ddaop
@@ -468,7 +492,7 @@ default:
         - lapaop
         - trpaop
   # Detergents (Non-ionic)
-    type8:
+    type11:
       name: Alkyl PEG
       lipids:
         - c6eg3
@@ -490,7 +514,7 @@ default:
         - nidp40
         - tx100
         - tx114
-    type9:
+    type12:
       name: Glucosides
       lipids:
         - aog
@@ -505,7 +529,7 @@ default:
         - bcy3g
         - amhcg
         - bmhcg
-    type10:
+    type13:
       name: Maltosides
       lipids:
         - aom
@@ -536,14 +560,14 @@ default:
         - bcy6m
         - acy7m
         - bcy7m
-    type11:
+    type14:
       name: Acyclic Glucosides
       lipids:
         - nheg
         - dheg
         - nmg
         - dmg
-    type12:
+    type15:
       name: Neopentyl Glycols
       lipids:
         - smdd
@@ -556,14 +580,14 @@ default:
         - bdmng
         - c5mng
         - c6mng
-    type13:
+    type16:
       name: Thio Glucosides
       lipids:
         - ahtg
         - bhtg
         - aotg
         - botg
-    type14:
+    type17:
       name: Thio Maltosides
       lipids:
         - aotm
@@ -626,11 +650,35 @@ micelle:
     lipids:
       - sds
   type6:
+    name: Cetrimonium Bromide
+    lipids:
+      - ctb10
+      - ctb11
+      - ctb12
+      - ctb13
+      - ctb14
+      - ctb15
+      - ctb16
+  type7:
+    name: Glycerol
+    lipids:
+      - gms1
+      - gms2
+      - mln1
+      - mln2
+  type8:
+    name: GTM
+    lipids:
+      - mgtm10
+      - egtm10
+      - mgtm11
+      - egtm11
+  type9:
     name: Phosphotidylglycerols
     lipids:
       - lmpg
       - lppg
-  type7:
+  type10:
     name: Amine Hydroxyls
     lipids:
       - ddaop
@@ -639,7 +687,7 @@ micelle:
       - lapaop
       - trpaop
   # Detergents (Non-ionic)
-  type8:
+  type11:
     name: Alkyl PEG
     lipids:
       - c6eg3
@@ -661,7 +709,7 @@ micelle:
       - nidp40
       - tx100
       - tx114
-  type9:
+  type12:
     name: Glucosides
     lipids:
       - aog
@@ -676,7 +724,7 @@ micelle:
       - bcy3g
       - amhcg
       - bmhcg
-  type10:
+  type13:
     name: Maltosides
     lipids:
       - aom
@@ -707,14 +755,14 @@ micelle:
       - bcy6m
       - acy7m
       - bcy7m
-  type11:
+  type14:
     name: Acyclic Glucosides
     lipids:
       - nheg
       - dheg
       - nmg
       - dmg
-  type12:
+  type15:
     name: Neopentyl Glycols
     lipids:
       - smdd
@@ -727,14 +775,14 @@ micelle:
       - bdmng
       - c5mng
       - c6mng
-  type13:
+  type16:
     name: Thio Glucosides
     lipids:
       - ahtg
       - bhtg
       - aotg
       - botg
-  type14:
+  type17:
     name: Thio Maltosides
     lipids:
       - aotm
@@ -747,7 +795,7 @@ micelle:
       - budtm
       - addtm
       - bddtm
-  type15:
+  type18:
     name: Cholesteryl HemiSuccinate
     lipids:
       - chsd
