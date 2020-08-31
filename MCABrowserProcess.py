@@ -223,7 +223,7 @@ class MCABrowserProcess(BilayerBrowserProcess, InputBrowserProcess):
             comp_type_elem.select(comp_type)
 
             # can't set number of some component types in this step
-            if comp_type in ['solvent', 'ion']:
+            if comp_type in ['solvent', 'ion', 'periodic']:
                 continue
             elif comp_type == 'membrane':
                 has_membrane = True
@@ -256,10 +256,6 @@ class MCABrowserProcess(BilayerBrowserProcess, InputBrowserProcess):
 
             self.check('solv_membrane_checkbox', 'Calculate membrane area using')
         else:
-            # TODO: can this be done more transparently?
-            ps = test_case['steps'][0].setdefault('poststeps', [])
-            ps.insert(0, "click('size_button', 'Calculated System Size')")
-
             test_case['has_memb_comps'] = has_membrane
 
         test_case['has_membrane'] = has_membrane
@@ -337,10 +333,16 @@ class MCABrowserProcess(BilayerBrowserProcess, InputBrowserProcess):
             browser.visit(url)
 
             # attach files for this test case
-            for comp_name in self.components.keys():
+            for comp_name, comp_info in self.components.items():
                 comp_name = pjoin(self.base, comp_name)
                 browser.attach_file("files[]", comp_name+'.crd')
                 browser.attach_file("files[]", comp_name+'.psf')
+                other_files = comp_info.get('files')
+                if other_files:
+                    if not isinstance(other_files, (list, tuple)):
+                        other_files = [other_files]
+                    for fn in other_files:
+                        browser.attach_file("files[]", pjoin(self.base, fn))
 
             self.go_next(test_case['steps'][0]['wait_text'])
 

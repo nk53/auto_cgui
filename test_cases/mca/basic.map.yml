@@ -11,6 +11,22 @@ Z:
   step: 1
   elems:
     - box_side_length: Z
+PBCX:
+  step: 1
+  elems:
+    - pbc_x: PBCX
+PBCY:
+  step: 1
+  elems:
+    - pbc_y: PBCY
+PBCZ:
+  step: 1
+  elems:
+    - pbc_z: PBCZ
+exclude_length:
+  step: 1
+  elems:
+    - exclude_length: exclude_length
 solv_membrane:
   step: 1
   presteps:
