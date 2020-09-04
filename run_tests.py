@@ -186,23 +186,28 @@ while pending:
         print(exc_info)
     elif result[0] == 'INTERACT':
         "Interacting with {} ({})".format(*result[1:])
+        prompt = '>>> '
         pending += 1
         while True:
             try:
-                cmd = input('>>> ')
+                cmd = input(prompt)
             except EOFError:
                 inter_queue.put('STOP')
                 break
             if cmd == 'quit()' or cmd.startswith('sys.exit('):
                 cmd = 'STOP'
-            if cmd.strip() == '':
-                continue
             inter_queue.put(cmd)
             if cmd == 'STOP':
                 break
-            result = msg_queue.get()
-            if result != None:
-                print(result)
+            need_more = msg_queue.get()
+            if bool(need_more) != need_more:
+                exc_str = need_more
+                print(exc_str)
+                need_more = False
+            if need_more:
+                prompt = '... '
+            else:
+                prompt = '>>> '
     elif result[0] == 'CONTINUE':
         pending += 1
         done_case = result[1]

@@ -212,26 +212,62 @@ class CGUIBrowserProcess(Process):
 
         it = iter(self.inter_q.get, 'STOP')
 
+        # handle automatic printing of last command's uncaptured return value
+        print_last = "\n".join(["try:","{}","\tif _ != None: print(repr(_))","except:","\traise", ""])
+
         assign_pattern = re.compile('[^=\'"]+=[^=]')
         need_more = False
-        did_assignment = False
         shell = code.InteractiveInterpreter(locals=local)
+        cmd_lines = []
+        prefix = '_ = '
         for cmd in iter(self.inter_q.get, 'STOP'):
-            if need_more:
-                prefix = ''
-            else:
-                prefix = '_ = '
+            # obtain potentailly multi-line command
+            cmd_lines.append(cmd)
+            cmd = "\n".join(cmd_lines)
+            n_lines = len(cmd_lines)
+            assigned = (n_lines == 1) and assign_pattern.match(cmd)
 
-            need_more = shell.runsource(prefix+cmd)
-            did_assignment = did_assignment or assign_pattern.match(cmd)
+            # check that prefix+cmd is valid Python code
+            if n_lines == 1:
+                use_prefix = True
+                try:
+                    code_obj = code.compile_command(prefix+cmd)
+                    source = prefix+cmd
+                except SyntaxError: # complain and continue normally
+                    use_prefix = False
+                    source = cmd
+            else:
+                source = cmd
+                use_prefix = False
+
+            # any SyntaxError at this point is user's fault
+            try:
+                code_obj = code.compile_command(source)
+            except SyntaxError: # abort this command
+                import sys, traceback
+                exc_str = ''.join(traceback.format_exception(*sys.exc_info()))
+                self.msg_q.put(exc_str)
+
+                cmd_lines = []
+                need_more = False
+                continue
+
+            need_more = (code_obj == None)
+
+            # intelligently prints _, if doing so would not cause error
+            if use_prefix and not need_more and not assigned:
+                cmd_lines[0] = prefix + cmd_lines[0]
+                cmd_lines = ["\t" + line for line in cmd_lines]
+                cmd = "\n".join(cmd_lines)
+                cmd = print_last.format(cmd)
+                code_obj = code.compile_command(cmd)
 
             if not need_more:
-                if not did_assignment:
-                    shell.runcode('if _ != None: print(_)')
-                did_assignment = False
+                shell.runcode(code_obj)
+                cmd_lines = []
 
             # tell parent we're ready for next input
-            self.msg_q.put(None)
+            self.msg_q.put(need_more)
 
     def resume_step(self, jobid, project=None, step=None, link_no=None):
         """Uses Job Retriever to return to the given step.
@@ -383,23 +419,15 @@ class CGUIBrowserProcess(Process):
     def wait_text(self, text):
         print(self.name, "waiting for text:", text)
         while True:
-            try:
-                if self.browser.is_text_present(text, wait_time=1):
-                    break
-            except TimeoutException:
-                print(self.name, "timed out receiving message from renderer")
+            if self.browser.is_text_present(text, wait_time=1):
+                break
 
     def wait_text_multi(self, texts):
-        wait_time = None
+        wait_time = 1
         while True:
             for text in texts:
-                try:
-                    if self.browser.is_text_present(text, wait_time):
-                        return text
-                except TimeoutException:
-                    print(self.name, "timed out receiving message from renderer")
-                wait_time = None
-            wait_time = 1
+                if self.browser.is_text_present(text, wait_time):
+                    return text
 
     def warn_if_text(self, text):
         msg = "Warning: {} ({}) found '{{}}' on step {}"
