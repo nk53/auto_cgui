@@ -1,7 +1,6 @@
 # this file uses mostly default options to test different component types
-- label: reader
-  pdb: 1l6x
 - label: glycan
+  pdb: 1l6x.cif
   glycan:
   -
     type: n-linked
@@ -30,7 +29,7 @@
     - RMETA3 PROA 1 PROA 3
     - META5 PROA 25 PROA 29
 - label: 1KDX with default phosphorylations
-  pdb: 1kdx.cif
+  pdb: 1kdx.pdb
   phosphorylation:
     - PROB SER 133 SP2
 - label: 2KLU with 3 added phosphorylations
