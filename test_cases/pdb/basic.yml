@@ -29,3 +29,13 @@
   staples:
     - RMETA3 PROA 1 PROA 3
     - META5 PROA 25 PROA 29
+- label: 1KDX with default phosphorylations
+  pdb: 1kdx.cif
+  phosphorylation:
+    - PROB SER 133 SP2
+- label: 2KLU with 3 added phosphorylations
+  pdb: 2klu.cif
+  phosphorylation:
+    - PROA SER 394 SP1
+    - PROA SER 415 SP1
+    - PROA SER 431 SP1

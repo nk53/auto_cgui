@@ -76,10 +76,10 @@ class PDBBrowserProcess(CGUIBrowserProcess):
             self.browser.windows.current = self.browser.windows[0]
 
     def set_stapling(self):
-        if not 'staples' in self.test_case:
+        staples = self.test_case.get('staples')
+        if staples == None:
             raise ValueError("Missing stapling options")
 
-        staples = self.test_case['staples']
         # open stapling menu
         self.click('stapling_checked', 'Stapling Method')
 
@@ -99,6 +99,34 @@ class PDBBrowserProcess(CGUIBrowserProcess):
 
             for name, value in zip(staple_fmt, staple):
                 sid = id_fmt.format(name, staple_no)
+                self.browser.find_by_id(sid).select(value)
+
+    def set_phosphorylation(self):
+        phos = self.test_case.get('phosphorylation')
+        if phos == None:
+            raise ValueError("Missing phosphorylation options")
+
+        phos_checked_elem = self.browser.find_by_id('phos_checked')
+        phos_button = self.browser.find_by_value('Add Phosphorylation')
+
+        # open phosphorylation menu
+        phos_checked_elem.check()
+
+        # add as many phosphorylations as needed
+        for p in phos[1:]:
+            phos_button.click()
+
+        # set phosphorylation options; continue iteration as necessary
+        phos_fmt = 'chain', 'res', 'rid', 'patch'
+        id_fmt = 'phos_{}_{}'
+        for phos_no, p in enumerate(phos):
+            p = p.upper().split()
+
+            if len(p) != len(phos_fmt):
+                raise ValueError("Invalid phosphorylation format")
+
+            for name, value in zip(phos_fmt, p):
+                sid = id_fmt.format(name, phos_no)
                 self.browser.find_by_id(sid).select(value)
 
     def init_system(self, test_case, resume=False):

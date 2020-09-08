@@ -6,3 +6,7 @@ glycan:
   step: 2
   presteps:
     - set_glycosylation()
+phosphorylation:
+  step: 2
+  presteps:
+    - set_phosphorylation()
