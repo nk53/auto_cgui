@@ -2,6 +2,9 @@
   base: pdb/basic
   pdb: 3ltq.pdb
   llps:
-    - PROA SER LTICO 52
-    - PROA LYS LTICO 55
-
+    - PROA GLU LTICO 53L
+    - PROA GLU LTICO 53O
+    - PROA ASP LTICO 53D
+    - PROA ASP LTICO 53H
+    - PROA TRP LTICO 53J
+    - PROA ASN LTICO 53F
