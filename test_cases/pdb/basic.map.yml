@@ -10,3 +10,51 @@ phosphorylation:
   step: 2
   presteps:
     - set_phosphorylation()
+terms:
+  step: 2
+  presteps:
+    - set_term()
+rids:
+  step: 1
+  presteps:
+    - rid_select()
+chains:
+  step: 1
+  presteps:
+    - chain_select()
+lipid_tails:
+  step: 2
+  presteps:
+    - set_lipid_tail()
+llps:
+  step: 2
+  presteps:
+    - set_llp()
+fluo_labels:
+  step: 2
+  presteps:
+    - set_fluo_label()
+mts_nitrides:
+  step: 2
+  presteps:
+    - set_mts_nitride()
+mts_modifiers:
+  step: 2
+  presteps:
+    - set_mts_modifier()
+uaas:
+  step: 2
+  presteps:
+    - set_uaa()
+bios:
+  step: 2
+  presteps:
+    - set_bio()
+crystal_packings:
+  step: 2
+  presteps:
+    - set_crystal_packing()
+unit_cells:
+  step: 2
+  presteps:
+    - set_unit_cell()

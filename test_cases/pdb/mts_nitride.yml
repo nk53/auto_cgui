@@ -1,0 +1,6 @@
+- label: 2omf with MTS reagents
+  base: pdb/basic
+  pdb: 2omf.pdb
+  mts_nitrides:
+    - CYR1 PROA GLU 29
+    - CYR1 PROA GLY 72

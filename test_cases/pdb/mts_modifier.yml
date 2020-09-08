@@ -1,0 +1,5 @@
+- label: 3k2r with MTS modifier
+  base: pdb/basic
+  pdb: 3k2r.pdb
+  mts_modifiers:
+    - MT3 PROA ASN 55

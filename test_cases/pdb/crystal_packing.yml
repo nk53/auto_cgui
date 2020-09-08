@@ -1,0 +1,14 @@
+- label: 1y26 with crystal packing
+  base: pdb/basic
+  pdb: 1y26.pdb
+  crystal_packings:
+
+- label: 1p7b with crystal packing
+  base: pdb/basic
+  pdb: 1p7b.pdb
+  crystal_packings:
+
+- label: 1hrc with crystal packing
+  base: pdb/basic
+  pdb: 1hrc.pdb
+  crystal_packings:
