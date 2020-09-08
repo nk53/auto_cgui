@@ -1,0 +1,166 @@
+# this file uses mostly default options to test different component types
+#- label: solvated (0.4 vfrac; rep 1)
+#  base: components/basic
+#  parent: first_page_solution
+#  packing_method: aamcs
+#  components:
+#    1ubq:
+#      type: solvated
+#      count: 33
+#    1vii:
+#      type: solvated
+#      count: 33
+#    3gb1:
+#      type: solvated
+#      count: 33
+#  XYZ: 118.98
+#- label: solvated (0.4 vfrac; rep 2)
+#  base: components/basic
+#  parent: first_page_solution
+#  packing_method: aamcs
+#  components:
+#    1ubq:
+#      type: solvated
+#      count: 33
+#    1vii:
+#      type: solvated
+#      count: 33
+#    3gb1:
+#      type: solvated
+#      count: 33
+#  XYZ: 118.98
+#- label: solvated (0.4 vfrac; rep 3)
+#  base: components/basic
+#  parent: first_page_solution
+#  packing_method: aamcs
+#  components:
+#    1ubq:
+#      type: solvated
+#      count: 33
+#    1vii:
+#      type: solvated
+#      count: 33
+#    3gb1:
+#      type: solvated
+#      count: 33
+#  XYZ: 118.98
+- label: solvated (0.3 vfrac; rep 1)
+  base: components/basic
+  parent: first_page_solution
+  packing_method: aamcs
+  components:
+    1ubq:
+      type: solvated
+      count: 25
+    1vii:
+      type: solvated
+      count: 25
+    3gb1:
+      type: solvated
+      count: 25
+  XYZ: 119.38
+- label: solvated (0.3 vfrac; rep 2)
+  base: components/basic
+  parent: first_page_solution
+  packing_method: aamcs
+  components:
+    1ubq:
+      type: solvated
+      count: 25
+    1vii:
+      type: solvated
+      count: 25
+    3gb1:
+      type: solvated
+      count: 25
+  XYZ: 119.38
+- label: solvated (0.3 vfrac; rep 3)
+  base: components/basic
+  parent: first_page_solution
+  packing_method: aamcs
+  components:
+    1ubq:
+      type: solvated
+      count: 25
+    1vii:
+      type: solvated
+      count: 25
+    3gb1:
+      type: solvated
+      count: 25
+  XYZ: 119.38
+- label: membrane mix (.3 vfrac, .5 afrac) (rep 1)
+  base: components/basic
+  parent: first_page_bilayer
+  packing_method: aamcs
+  components:
+    1ubq:
+      type: solvated
+      count: 38
+    1vii:
+      type: solvated
+      count: 38
+    3gb1:
+      type: solvated
+      count: 38
+    2hac:
+      type: membrane
+      count: 3
+    2maf:
+      type: membrane
+      count: 3
+    lptd_e:
+      type: membrane
+      count: 3
+  XY: 136.46
+  Z: 69.44
+- label: membrane mix (.3 vfrac, .5 afrac) (rep 2)
+  base: components/basic
+  parent: first_page_bilayer
+  packing_method: aamcs
+  components:
+    1ubq:
+      type: solvated
+      count: 38
+    1vii:
+      type: solvated
+      count: 38
+    3gb1:
+      type: solvated
+      count: 38
+    2hac:
+      type: membrane
+      count: 3
+    2maf:
+      type: membrane
+      count: 3
+    lptd_e:
+      type: membrane
+      count: 3
+  XY: 136.46
+  Z: 69.44
+- label: membrane mix (.3 vfrac, .5 afrac) (rep 3)
+  base: components/basic
+  parent: first_page_bilayer
+  packing_method: aamcs
+  components:
+    1ubq:
+      type: solvated
+      count: 38
+    1vii:
+      type: solvated
+      count: 38
+    3gb1:
+      type: solvated
+      count: 38
+    2hac:
+      type: membrane
+      count: 3
+    2maf:
+      type: membrane
+      count: 3
+    lptd_e:
+      type: membrane
+      count: 3
+  XY: 136.46
+  Z: 69.44

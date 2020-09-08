@@ -1,0 +1,8 @@
+dict: basic.map.yml
+base: components/basic
+parent: False
+steps:
+  - wait_text: Component ID
+    presteps:
+      - select_components()
+  - wait_text: Calculated Cross Sectional Area
