@@ -3,7 +3,7 @@ import time
 from os.path import join as pjoin
 from splinter import Browser
 from splinter.exceptions import ElementDoesNotExist
-from CGUIBrowserProcess import CGUIBrowserProcess
+from SolutionBrowserProcess import SolutionBrowserProcess
 from selenium.common.exceptions import UnexpectedAlertPresentException, ElementNotInteractableException
 
 def init_module(test_cases, args):
@@ -20,53 +20,7 @@ def init_module(test_cases, args):
         base_cases.append(test_case)
     return base_cases, wait_cases
 
-class NMMBrowserProcess(CGUIBrowserProcess):
-#    def find_comp_row(self, comp_name, step):
-#        """Returns the row element page corresponding to the given uploaded
-#        component basename"""
-#        selectors = {
-#            'molpacking': lambda: self.browser.find_by_css(".component_list table tr:not(:first-child) td:nth-child(2)"),
-#            'solvent options': lambda: self.browser.find_by_text("Component ID").find_by_xpath('../..').find_by_css("tr:not(:first-child) td:nth-child(2)")
-#        }
-#        rows = selectors[step]()
-#        found = False
-#        for row in rows:
-#            if row.text == comp_name:
-#                found = True
-#                break
-#        if not found:
-#            raise ElementDoesNotExist("Could not find component: "+comp_name)
-#        comp_row = row.find_by_xpath('..')
-#        return comp_row
-#
-#    def set_component_density(self):
-#        components = self.components
-#        for comp_name, comp_info in components.items():
-#            if not 'density' in comp_info:
-#                continue
-#            row = self.find_comp_row(comp_name, 'solvent options')
-#            comp_type = comp_info['type']
-#            comp_type_elem = row.find_by_css("[id^=solv_density]")
-#            comp_type_elem.fill(comp_info['density'])
-#
-#    def select_components(self):
-#        components = self.components
-#        for comp_name, comp_info in components.items():
-#            row = self.find_comp_row(comp_name, 'molpacking')
-#            comp_type = comp_info['type']
-#            comp_type_elem = row.find_by_css("[name^=type_component")
-#            comp_type_elem.select(comp_type)
-#
-#            # can't set number of some component types in this step
-#            if comp_type in ['solvent', 'ion']:
-#                continue
-#
-#            # changing component type might change row element
-#            row = self.find_comp_row(comp_name, 'molpacking')
-#
-#            num_comps = row.find_by_css("[name^=num_components")
-#            num_comps.fill(comp_info['count'])
-
+class NMMBrowserProcess(SolutionBrowserProcess):
     def click_by_text(self, text, wait=None):
         self.browser.find_by_text(text).click()
         if wait:
@@ -617,39 +571,8 @@ class NMMBrowserProcess(CGUIBrowserProcess):
         if sys == 'vac':
             browser.find_by_id('vacuum_systype').click()
 
-        self.go_next(None)
-        
-        # Waterbox and Ion options
-#        browser.find_by_id('nextBtn').click()
-        self.wait_text('Waterbox Size Options:')
-
-#        # Solvation
-        browser.find_by_id('nextBtn').click()
-        
-#        # PBC Setup
-        self.wait_text('System Size:')
-        browser.find_by_id('nextBtn').click()
-        
-#        # Input Generation
-        self.wait_text('Input Generation Options:')
-        prog = test_case['nanomaterial_type']['simpkg']
-        if prog == 'namd':
-            browser.find_by_name('namd_checked').click()
-        if prog == 'gromacs':
-            browser.find_by_name('gmx_checked').click()
-        if prog == 'openmm':
-            browser.find_by_name('omm_checked').click()
-        if prog == 'lampps':
-            browser.find_by_name('lampps_checked').click()
-        browser.find_by_id('nextBtn').click()
-        
-        # Input Download
-        self.wait_text('PBC Setup PDB:')
-        browser.find_by_css("div#input [class=download]").click()
-        time.sleep(10)
+        self.go_next(test_case['steps'][0]['wait_text'])
 
         jobid = browser.find_by_css(".jobid").first.text.split()[-1]
         test_case['jobid'] = jobid
         self.jobid = jobid
-        if 'output' in test_case:
-            self.output = test_case['output']

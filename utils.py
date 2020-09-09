@@ -111,9 +111,10 @@ def setup_custom_options(test_case, module):
             test_copy = test_case.copy()
 
             # default to test_copy's options except for steps/dict/parent
-            del test_copy['steps']
-            del test_copy['dict']
-            del test_copy['parent']
+            for key in ('steps', 'dict', 'parent'):
+                if key in test_copy:
+                    del test_copy[key]
+
             test_template.update(test_copy)
 
             test_template = test_copy

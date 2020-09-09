@@ -1,7 +1,5 @@
 - label: goldtest
   base: components/basic
-  parent: False
-  steps:
   nanomaterial_type:
 
 ############################### TEMPLATE FOR OTHER MATERIALS  ##################################
