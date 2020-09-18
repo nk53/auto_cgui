@@ -75,6 +75,183 @@ class PDBBrowserProcess(CGUIBrowserProcess):
             self.browser.execute_script("seqUpdate()")
             self.browser.windows.current = self.browser.windows[0]
 
+    def set_csml(self):
+        if not 'hcr' in self.test_case:
+            raise ValueError("Missing Hetero Chain options")
+        hcrs = self.test_case['hcr']
+        hid_fmt = "rename[{}]"
+        csmlb_fmt = "openCSMLSearch('{}')"
+
+        for csml_no, csml in enumerate(hcrs):
+            hcr,name = csml.split()
+            hid = hid_fmt.format(hcr)
+            antc_fmt = "//input[@name='rename[{}]' and @value='antechamber']"
+            cgen_fmt = "//input[@name='rename[{}]' and @value='cgenff']"
+            sdf_fmt = "//input[@name='rename_option[{}][{}]' and @value='sdf']"
+            mol2_fmt = "//input[@name='rename_option[{}][{}]' and @value='mol2']"
+            molup_fmt = "mol2_{}[{}]"
+            sdfup_fmt = "sdf_{}[{}]"
+            mfile_fmt = "{}.mol2"
+            sfile_fmt = "{}.sdf"
+            ligfile = os.path.abspath(pjoin('files', self.test_case['ligand']))
+            self.ligfile = ligfile
+ 
+            if name == 'charmm':
+                cgenid = cgen_fmt.format(hcr)
+                self.browser.find_by_xpath(cgenid).first.click()
+            elif name == 'antc':
+                antcid = antc_fmt.format(hcr)
+                self.browser.find_by_xpath(antcid).first.click()
+            elif name == 'charmm_mol':
+                cgen_opt = 'cgenff'
+                cgenid = cgen_fmt.format(hcr)
+                mol2id = mol2_fmt.format(cgen_opt, hcr)
+                molupid = molup_fmt.format(cgen_opt, hcr)
+                mfileid = mfile_fmt.format(hcr)
+                molpath = pjoin(self.ligfile, mfileid)
+                self.browser.find_by_xpath(cgenid).first.click()
+                self.browser.find_by_xpath(mol2id).first.click()
+                self.browser.attach_file(molupid, molpath)
+            elif name == 'charmm_sdf':
+                cgen_opt = 'cgenff'
+                cgenid = cgen_fmt.format(hcr)
+                sdfid = sdf_fmt.format(cgen_opt, hcr)
+                sdfupid = sdfup_fmt.format(cgen_opt, hcr)
+                sfileid = sfile_fmt.format(hcr)
+                sdfpath = pjoin(self.ligfile, sfileid)
+                self.browser.find_by_xpath(cgenid).first.click()
+                self.browser.find_by_xpath(sdfid).first.click()
+                self.browser.attach_file(sdfupid, sdfpath)
+            elif name == 'antc_mol':
+                cgen_opt = 'antechamber'
+                antcid = antc_fmt.format(hcr)
+                mol2id = mol2_fmt.format(cgen_opt, hcr)
+                molupid = molup_fmt.format(cgen_opt, hcr)
+                mfileid = mfile_fmt.format(hcr)
+                molpath = pjoin(self.ligfile, mfileid)
+                self.browser.find_by_xpath(antcid).first.click()
+                self.browser.find_by_xpath(mol2id).first.click()
+                self.browser.attach_file(molupid, molpath)
+            elif name == 'antc_sdf':
+                cgen_opt = 'antechamber'
+                antcid = antc_fmt.format(hcr)
+                sdfid = sdf_fmt.format(cgen_opt, hcr)
+                sdfupid = sdfup_fmt.format(cgen_opt, hcr)
+                sfileid = sfile_fmt.format(hcr)
+                sdfpath = pjoin(self.ligfile, sfileid)
+                self.browser.find_by_xpath(antcid).first.click()
+                self.browser.find_by_xpath(sdfid).first.click()
+                self.browser.attach_file(sdfupid, sdfpath)
+            else:
+                hid_button = self.browser.find_by_name(hid)
+                if not hid_button.checked:
+                    hid_button.click()
+                cid = csmlb_fmt.format(hcr)
+                cid_button = self.browser.execute_script(cid)
+                self.browser.windows.current = self.browser.windows[1]
+                self.browser.find_by_value(name).first.click()
+                self.browser.find_by_id("nextBtn").first.click()
+                self.browser.windows.current = self.browser.windows[0]
+
+    def set_sdf(self):
+        if not 'sdf' in self.test_case:
+            raise ValueError("Missing sdf options")
+        sdfid_fmt = "//input[@name='rename[{}]' and @value='cgenff']"
+        rcsb_fmt = "//input[@name='rename_option[cgenff][{}]' and @value='rcsb']"
+
+        for sdf in self.test_case['sdf']:
+            sdfid = sdfid_fmt.format(sdf)
+            sdf_button = self.browser.find_by_xpath(sdfid)
+            if not sdf_button.checked:
+                sdf_button.click()
+            rcsb = rcsb_fmt.format(sdf)
+            rcsb_button = self.browser.find_by_xpath(rcsb)
+            if not rcsb_button.checked:
+                rcsb_button.click()
+
+    def set_symop(self):
+        if not 'symop' in self.test_case:
+            raise ValueError("Missing Symmetry options")
+        symop_fmt = "{}_checked"
+
+        for option in self.test_case['symop']:
+            symop = symop_fmt.format(option)
+            symop_button = self.browser.find_by_value(symop).first
+            if not symop_button.checked:
+               symop_button.click()
+
+    def set_pstate(self):
+        if not 'pstate' in self.test_case:
+            raise ValueError("Missing Protonation State options")
+
+        pstates = self.test_case['pstate']
+        pstate_button = self.browser.find_by_id("prot_checked").first
+        if not pstate_button.checked:
+            pstate_button.click()
+            add_btn = self.browser.find_by_value("Add Protonation")
+            for pstate in pstates[1:]:
+                add_btn.click()
+
+        # set pstate options
+        pstate_fmt = 'chain', 'res', 'rid', 'patch'
+        id_fmt = 'prot_{}_{}'
+        for pstate_no, pstate in enumerate(pstates):
+            pstate = pstate.split()
+
+            if len(pstate) != 4:
+                raise ValueError("Invalid pstate format")
+
+            for name, value in zip(pstate_fmt, pstate):
+                psid = id_fmt.format(name, pstate_no)
+                self.browser.find_by_id(psid).select(value)
+
+    def set_ssbonds(self):
+        if not 'ssbonds' in self.test_case:
+            raise ValueError("Missing ssbond options")
+
+        ssbonds = self.test_case['ssbonds']
+        ssbond_button = self.browser.find_by_id("ssbonds_checked").first
+        if not ssbond_button.checked:
+            ssbond_button.click()
+            add_btn = self.browser.find_by_value("Add Bonds")
+            for ssbond in ssbonds[1:]:
+                add_btn.click()
+
+        # set ssbond options
+        ssbond_fmt = 'chain1', 'resid1', 'chain2', 'resid2'
+        id_fmt = 'ssbond_{}_{}'
+        for ssbond_no, ssbond in enumerate(ssbonds):
+            ssbond = ssbond.split()
+
+            if len(ssbond) != 4:
+                raise ValueError("Invalid sbond format")
+
+            for name, value in zip(ssbond_fmt, ssbond):
+                ssid = id_fmt.format(name, ssbond_no)
+                self.browser.find_by_id(ssid).select(value)
+
+    def set_hcoor(self):
+        if not 'hcoor' in self.test_case:
+            raise ValueError("Missing hcoor options")
+
+        hcoors = self.test_case['hcoor']
+        hcoor_button = self.browser.find_by_id("heme_checked").first
+        if not hcoor_button.checked:
+            hcoor_button.click()
+
+        # set ssbond options
+        hcoor_fmt = 'chain', 'res', 'rid'
+        name_fmt = 'heme[{}][{}][]'
+        for hcoor_no, hcoor in enumerate(hcoors):
+            hcoor = hcoor.split()
+
+            if len(hcoor) != 3:
+                raise ValueError("Invalid hcoor format")
+
+            for name, value in zip(hcoor_fmt, hcoor):
+                hcname = name_fmt.format(hcoor_no, name)
+                self.browser.find_by_name(hcname).select(value)
+
     def set_stapling(self):
         staples = self.test_case.get('staples')
         if staples == None:
@@ -335,6 +512,7 @@ class PDBBrowserProcess(CGUIBrowserProcess):
             if pdb_fmt:
                 pdb_fmt = {
                     'pdb': 'PDB',
+                    'pqr': 'PDB',
                     'cif': 'mmCIF',
                     'charmm': 'CHARMM',
                 }[pdb_fmt]

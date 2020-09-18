@@ -1,0 +1,34 @@
+- label: 6XR3
+  base: pdb/basic
+  pdb: 6xr3.pdb
+  # chain 
+  chains:
+    - HETA
+  # resname 
+  sdf:
+    - V7G
+  # symoption
+  symop:
+    - biomat
+  steps:
+    - wait_text: Manipulate PDB
+    - wait_text: Generate PDB
+    - wait_text: Computed Energy
+
+- label: 4W53
+  base: pdb/basic
+  pdb: 4w53.pdb
+  # chain 
+  chains:
+    - HETA
+    - HETB
+  # resname 
+  sdf:
+    - MBN
+    - EPE
+  steps:
+    - wait_text: Manipulate PDB
+    - wait_text: Generate PDB
+    - wait_text: Computed Energy
+
+

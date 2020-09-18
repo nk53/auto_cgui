@@ -58,3 +58,27 @@ unit_cells:
   step: 2
   presteps:
     - set_unit_cell()
+hcr:
+  step: 2
+  presteps:
+    - set_csml()
+ssbonds:
+  step: 2
+  presteps:
+    - set_ssbonds()
+hcoor:
+  step: 2
+  presteps:
+    - set_hcoor()
+pstate:
+  step: 2
+  presteps:
+    - set_pstate()
+sdf:
+  step: 2
+  presteps:
+    - set_sdf()
+symop:
+  step: 2
+  presteps:
+    - set_symop()

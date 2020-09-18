@@ -1,0 +1,29 @@
+- label: 1ABS
+  base: pdb/basic
+  pdb: 1abs.pdb
+  chains:
+    - HETB
+  # chain res rid
+  hcoor:
+    - PROA TYR 103
+  steps:
+    - wait_text: Manipulate PDB
+    - wait_text: Generate PDB
+    - wait_text: Computed Energy
+
+- label: 3ELL
+  base: pdb/basic
+  pdb: 3ell.pdb
+  chains:
+    - HETA
+    - HETB
+  # chain res rid
+  hcoor:
+    - PROA TYR 7
+    - PROA TYR 7
+  steps:
+    - wait_text: Manipulate PDB
+    - wait_text: Generate PDB
+    - wait_text: Computed Energy
+
+
