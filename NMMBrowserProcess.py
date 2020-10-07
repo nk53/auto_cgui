@@ -571,7 +571,7 @@ class NMMBrowserProcess(SolutionBrowserProcess):
         if sys == 'vac':
             browser.find_by_id('vacuum_systype').click()
 
-        self.go_next(test_case['steps'][0]['wait_text'])
+        self.go_next(test_case['steps'][2]['wait_text'])
 
         jobid = browser.find_by_css(".jobid").first.text.split()[-1]
         test_case['jobid'] = jobid

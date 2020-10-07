@@ -1,0 +1,4 @@
+dict: basic.map.yml
+parent: False
+steps:
+  - wait_text: Determine System Size
