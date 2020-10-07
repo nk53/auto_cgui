@@ -6,3 +6,5 @@ POLYMER: PBBrowserProcess
 PDB: PDBBrowserProcess
 SOLUTION: SolutionBrowserProcess
 NMM: NMMBrowserProcess
+LPS: LPSBrowserProcess
+GLYCOLIPID: GlycolipidBrowserProcess

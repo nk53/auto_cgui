@@ -1,4 +1,4 @@
-# this file uses mostly default options to test different component types
+#this file uses mostly default options to test different component types
 - label: 1UBQ with two staples in solution
   staples:
     - RMETA3 PROA 1 PROA 3
@@ -6,3 +6,26 @@
   pdb: 1ubq.pdb
   input: openmm
   hmr: True
+- label: 186L modified
+  base: pdb/basic
+  pdb: 186l_modified.charmm
+  ligand: ligands/basic
+  chains:
+    - HETA
+    - HETB
+    - HETC
+    - HETD
+    - WATA
+  hcr:
+    - CLA CLA
+    - HED charmm
+    - LIG ctop_upload
+- label: 2OI0_modified parameterized
+  base: pdb/basic
+  pdb: 2oi0_modified.pdb
+  ligand: ligands/basic
+  chains:
+    - HETA
+  hcr:
+    - LIG param
+

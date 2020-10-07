@@ -6,70 +6,70 @@
     - PROB 1171 1273
     - PROC 1171 1273
   chains:
-    - CARA 
+    - CARA
     - CARB
-    - CARG 
+    - CARG
     - CARC
     - CARD
     - CARE
     - CARF
     - CARI
-    - CARJ 
+    - CARJ
     - CARK
     - CARL
-    - CARO 
+    - CARO
     - CARP
     - CARM
-    - CARN 
+    - CARN
     - CARQ
     - CARR
     - CARS
     - CART
     - CARU
-    - CARV 
+    - CARV
     - CARW
     - CARH
-    - CAAE 
+    - CAAE
     - CAAF
     - CAAG
-    - CAAH 
+    - CAAH
     - CAAI
     - CAAJ
     - CAAK
     - CAAL
     - CAAM
-    - CAAN 
+    - CAAN
     - CAAO
     - CAAP
-    - CAAD 
+    - CAAD
     - CAAQ
     - CAAR
-    - CARZ 
+    - CARZ
     - CAAC
     - CAAA
     - CAAS
     - CAAB
     - CAAT
     - CARX
-    - CARY 
+    - CARY
     - CAAU
     - CAAV
     - CAAW
     - CAAX
     - CAAY
-    - CAAZ 
+    - CAAZ
     - CABA
     - CABB
     - CABC
     - CABD
     - CABE
-    - CABF 
+    - CABF
     - CABG
     - CABH
-    - CABI 
+    - CABI
     - CABJ
     - CABK
-    - CABL 
+    - CABL
     - CABM
     - CABN
     - CABO
@@ -77,10 +77,10 @@
     - CABQ
 
   lipid_tails:
-    - CYSP PROA CYS 1236 
-    - CYSP PROA CYS 1241 
-    - CYSP PROB CYS 1236 
-    - CYSP PROB CYS 1241 
-    - CYSP PROC CYS 1236 
-    - CYSP PROC CYS 1241 
+    - CYSP PROA CYS 1236
+    - CYSP PROA CYS 1241
+    - CYSP PROB CYS 1236
+    - CYSP PROB CYS 1241
+    - CYSP PROC CYS 1236
+    - CYSP PROC CYS 1241
 

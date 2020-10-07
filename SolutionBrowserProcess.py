@@ -67,3 +67,14 @@ class SolutionBrowserProcess(PDBBrowserProcess, InputBrowserProcess):
 
                 # prevents set_xyz() from doing anything more than once
                 self.test_case[dim] = False
+
+    def chain_select(self):
+        if not 'chains' in self.test_case:
+            raise ValueError("Missing chains")
+
+        chains = self.test_case['chains']
+        name_fmt = 'chains[{}][checked]'
+        for chain in chains:
+            name_chain = name_fmt.format(chain)
+            click_btn = self.browser.find_by_name(name_chain)
+            click_btn.click()

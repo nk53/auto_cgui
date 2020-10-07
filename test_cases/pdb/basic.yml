@@ -38,3 +38,23 @@
     - PROA SER 394 SP1
     - PROA SER 415 SP1
     - PROA SER 431 SP1
+- label: 186L with BBEN
+  base: pdb/basic
+  pdb: 186l.pdb
+  ligand: ligands/basic
+  chains:
+    - HETA
+    - HETB
+    - HETC
+    - WATA
+  hcr:
+    - HED charmm
+    - N4B BBEN
+- label: 2OI0_modified parameterized
+  base: pdb/basic
+  pdb: 2oi0_modified.pdb
+  ligand: ligands/basic
+  chains:
+    - HETA
+  hcr:
+    - LIG param

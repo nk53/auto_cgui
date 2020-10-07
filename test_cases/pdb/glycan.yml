@@ -3,7 +3,7 @@
   base: components/basic
   pdb: 1l6x
   glycan:
-  - 
+  -
     type: n-linked
     prot: '{"segid":"PROA","resname":"ASN","resid":286}'
     grs: |
@@ -17,7 +17,7 @@
       9 - - - 16A: AMAN
       10 - - - - 12B: BGLCNA
       2 - 16A: AFUC
-  - 
+  -
     type: n-linked
     prot: '{"segid":"PROA","resname":"ASN","resid":276}'
     grs: |

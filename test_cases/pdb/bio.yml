@@ -13,31 +13,31 @@
   pdb: 5fyl.pdb
   chains:
     - CARC
-    - CARU 
+    - CARU
     - CARV
-#    - PROB 
+#    - PROB
     - PROC
     - CARD
-    - CARE 
+    - CARE
     - CARF
-    - CARG 
+    - CARG
     - CARH
     - CARI
-    - CARJ 
+    - CARJ
     - CARK
-    - CARL 
+    - CARL
     - CARM
-    - CARN 
+    - CARN
     - CARO
     - CARP
-    - CARQ 
+    - CARQ
     - CARR
-    - CARS 
+    - CARS
     - CARA
     - CARB
-    - PROE 
+    - PROE
     - CART
-    - PROF 
+    - PROF
     - PROD
     - PROA
   bios:
