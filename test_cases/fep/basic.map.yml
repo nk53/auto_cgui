@@ -1,0 +1,4 @@
+drags:
+  step: 4
+  presteps:
+    - set_upload_mol2()

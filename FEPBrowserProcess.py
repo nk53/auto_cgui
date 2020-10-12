@@ -1,10 +1,14 @@
+import ast
 import os
 import requests
 import time
+import yaml
 from os.path import join as pjoin
 from splinter import Browser
 from splinter.exceptions import ElementDoesNotExist
-from CGUIBrowserProcess import CGUIBrowserProcess
+from InputBrowserProcess import InputBrowserProcess
+from PDBBrowserProcess import PDBBrowserProcess
+from SolutionBrowserProcess import SolutionBrowserProcess
 
 def init_module(test_cases, args):
     """Preprocesses test cases
@@ -61,11 +65,7 @@ def handle_solvator_tests(test_case, do_copy=False):
 
     return cases
 
-class FEPBrowserProcess(CGUIBrowserProcess):
-    def __init__(self, todo_q, done_q, **kwargs):
-        self.jobid = None
-        self.output = None # charmm-gui-jobid.tgz
-        super(FEPBrowserProcess, self).__init__(todo_q, done_q, **kwargs)
+class FEPBrowserProcess(SolutionBrowserProcess):
 
     def select(self, name, value):
         self.browser.select(name, value)
@@ -79,40 +79,75 @@ class FEPBrowserProcess(CGUIBrowserProcess):
     def click_by_name(self, name):
         self.browser.find_by_name(name).click()
 
-    def init_system(self, test_case):
+    def set_upload_mol2(self):
+        if not 'drags' in self.test_case:
+            raise ValueError("Missing drag mol2 files")
+        drags = self.test_case['drags']
+        for drag in drags:
+            ligfile = os.path.abspath(pjoin('files', self.test_case['ligand']))
+            self.ligfile = ligfile
+            lig_path = pjoin(self.ligfile, drag)
+            self.browser.attach_file('files[]', lig_path)
+
+    def init_system(self, test_case, resume=False):
         url = self.base_url + test_case['url_ym']
         browser = self.browser
-        browser.visit(url)
 
-        # attach files for this test case
-        browser.attach_file('files[]', pjoin(self.base, 'lig1.mol2'))
-        browser.attach_file('files[]', pjoin(self.base, 'lig2.mol2'))
-        browser.attach_file('files[]', pjoin(self.base, 'lig3.mol2'))
+        if resume:
+            return
 
-        self.go_next(test_case['steps'][0]['wait_text'])
+        binding_urls = '?doc=input/afes.rbinding', '?doc=input/afes.abinding'
+        solvating_urls = '?doc=input/rsolvating', '?doc=input/asolvating'
+        if test_case['url_ym'] in binding_urls:
+            pdb = self.pdb = test_case['pdb']
+            browser.visit(url)
+            # infer as much as possible about the PDB format
+            if isinstance(pdb, dict):
+                if 'format' in pdb:
+                    pdb_fmt = pdb['format']
+                else:
+                    pdb_fmt = pdb['name'].split('.')[-1]
 
-        jobid = browser.find_by_css(".jobid").first.text.split()[-1]
-        test_case['jobid'] = jobid
-        self.jobid = jobid
-        if 'output' in test_case:
-            self.output = test_case['output']
+                source = 'source' in pdb and pdb['source']
+                pdb_name = test_case['pdb']['name']
+            else:
+                pdb_name = test_case['pdb']
+                pdb_fmt = '.' in pdb_name and pdb_name.split('.')[-1]
+                source = not pdb_fmt and 'RCSB'
 
-    def download(self, saveas):
-        url = "{url}?doc=input/download&jobid={jobid}".format(url=self.base_url, jobid=self.jobid)
-        print("downloading %s to %s" % (url, saveas))
+            if pdb_fmt:
+                pdb_fmt = {
+                    'pdb': 'PDB',
+                    'pqr': 'PDB',
+                    'cif': 'mmCIF',
+                    'charmm': 'CHARMM',
+                }[pdb_fmt]
 
-        user_agent = 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'
-        headers = {'User-Agent': user_agent}
+            if source and self.name.split('-')[-1] != '1':
+                reason = "Multithreading is not allowed for "+module_title+\
+                         " when downloading from RCSB/OPM. Please use an"\
+                         " upload option instead."
+                self.stop(reason)
 
-        user, password = 'testing', 'lammps'
-        r = requests.get(url, headers=headers, auth=(user, password))
-        open(saveas, "wb").write(r.content)
-        fsize = float(os.stat(saveas).st_size) / (1024.0 * 1024.0)
-        print("download complete, file size is %5.2f MB" % fsize)
+            if source:
+                browser.fill('pdb_id', pdb_name)
+            else:
+                pdb_path = pjoin(self.base, pdb_name)
+                browser.attach_file("file", pdb_path)
+                browser.find_by_value(pdb_fmt).click()
 
-    def run(self):
-        super(FEPBrowserProcess, self).run()
-        if self.output:
-            self.download(self.output + '.tgz')
-        else:
-            self.download('charmm-gui-%s.tgz' % str(self.jobid))
+            self.go_next(test_case['steps'][0]['wait_text'])
+            jobid = browser.find_by_css(".jobid").first.text.split()[-1]
+            test_case['jobid'] = jobid
+        elif test_case['url_ym'] in solvating_urls:
+            browser.visit(url)
+            drags = self.test_case['drags']
+            for drag in drags:
+                lig_path = pjoin(self.base, drag)
+                self.browser.attach_file('files[]', lig_path)
+
+            self.go_next(test_case['steps'][0]['wait_text'])
+            jobid = browser.find_by_css(".jobid").first.text.split()[-1]
+            test_case['jobid'] = jobid
+
+

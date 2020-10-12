@@ -8,7 +8,6 @@ import yaml
 from multiprocessing import Queue
 from os.path import join as pjoin
 
-#from 
 from FEPBrowserProcess import FEPBrowserProcess
 
 LOGFILE = 'fep_results.log'
@@ -128,7 +127,7 @@ for test_case in test_cases:
         base_cases.append(test_case)
     else:
         do_copy = args.copy
-        cases = handle_solvator_tests(test_case, do_copy) 
+        cases = handle_solvator_tests(test_case, do_copy)
 
         if 'localhost' in BASE_URL and do_copy:
             base_case = cases[0]
@@ -142,7 +141,7 @@ done_queue = Queue()
 processes = [FEPBrowserProcess(todo_queue, done_queue, www_dir=WWW_DIR, base_url=BASE_URL, pause=args.pause) for i in range(args.num_threads)]
 #initialize browser processes
 for p in processes:
-    p.start() 
+    p.start()
 
 #put regular cases in the task queue
 pending = 0

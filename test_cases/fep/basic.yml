@@ -1,17 +1,28 @@
-# this file uses mostly default options to test different component types
-- label: solvator
-  base: ligands/basic
-  ligands:
-    lig1:
-      type: solvator
-    lig2:
-      type: solvator
-    lig3:
-      type: solvator
-  steps:
-    - wait_text: Set Pair Options
-      presteps:
-        - select_ligands()
-    - wait_text: Waterbox Size Option
-    - wait_text: Please download
-
+- label: absolute ligand binder
+  parent: abinding
+  pdb: thrombin.pdb
+  ligand: ligands/basic
+  hcr:
+    - UNL antc_mol
+  drags:
+    - ligand1.mol2
+    - ligand2.mol2
+- label: absolute ligand solvation
+  parent: asolv
+  drags:
+    - ligand1.mol2
+    - ligand2.mol2
+- label: relative ligand binder
+  parent: rbinding
+  pdb: thrombin.pdb
+  ligand: ligands/basic
+  hcr:
+    - UNL antc_mol
+  drags:
+    - ligand1.mol2
+    - ligand2.mol2
+- label: relative ligand solvation
+  parent: rsolv
+  drags:
+    - ligand1.mol2
+    - ligand2.mol2
