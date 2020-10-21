@@ -375,6 +375,9 @@ class CGUIBrowserProcess(Process):
 
                     elapsed_time = time.time() - start_time
 
+                    if self.interactive:
+                        self.interact(locals())
+
                     # early failure?
                     if failure:
                         self.done_q.put(('FAILURE', test_case, step_num, elapsed_time))
@@ -387,8 +390,6 @@ class CGUIBrowserProcess(Process):
                     if found_text == self.CHARMM_ERROR:
                         self.done_q.put(('FAILURE', test_case, step_num, elapsed_time))
                         failure = False
-                    elif self.interactive:
-                        self.done_q.put(('SUCCESS', test_case, elapsed_time))
                     else:
                         self.done_q.put(('SUCCESS', test_case, elapsed_time))
                     if not 'localhost' in self.base_url: self.download()
