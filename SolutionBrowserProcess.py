@@ -25,7 +25,7 @@ class SolutionBrowserProcess(PDBBrowserProcess, InputBrowserProcess):
         self.browser.select('ion_method', ion_method)
 
     def set_xyz(self):
-        dims = 'XYZxyz'
+        dims = 'xyz'
         boxtype_names = 'boxtype', 'solvtype'
 
         # user must set at least one dimension when calling this function
@@ -37,24 +37,26 @@ class SolutionBrowserProcess(PDBBrowserProcess, InputBrowserProcess):
                     return
                 found = True
                 break
+            elif dim.upper() in self.test_case:
+                self.test_case[dim] = self.test_case.pop(dim.upper())
+                found = True
 
         if not found:
             raise ValueError("Must specify at least one XYZ dimension")
 
+        self.click_by_attrs(name="solvate_option", value="explicit")
         # the fact that this alert appears is a bug in Solution Builder
         # that I am too lazy to fix
-        with self.browser.get_alert() as alert:
-            alert.accept()
+        alert = self.browser.get_alert()
+        if alert:
+            with alert:
+                alert.accept()
 
-        solvtype = None
+        solvtype = 'rect'
         for name in boxtype_names:
             if name in self.test_case:
                 solvtype = self.test_case[name][:4].lower()
                 break
-
-        # default to rectangle boxtype
-        if not found:
-            solvtype = 'rect'
 
         name_tpl = "box[{}][{}]"
         for dim in dims:
