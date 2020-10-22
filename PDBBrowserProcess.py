@@ -177,6 +177,7 @@ class PDBBrowserProcess(CGUIBrowserProcess):
                 cid = csmlb_fmt.format(hcr)
                 cid_button = self.browser.execute_script(cid)
                 self.browser.windows.current = self.browser.windows[1]
+                self.wait_text('residue name')
                 self.browser.find_by_value(name).first.click()
                 self.browser.find_by_id("nextBtn").first.click()
                 self.browser.windows.current = self.browser.windows[0]
