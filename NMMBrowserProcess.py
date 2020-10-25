@@ -323,7 +323,7 @@ class NMMBrowserProcess(SolutionBrowserProcess):
         # Other metals
 
         mshape = test_case['nanomaterial_type']['shape']
-        if matName == 'alm' or matName == 'cum' or matName == 'aum' or matName == 'pbm' or matName == 'nim' or  matName == 'pdm' or matName == 'ptm' or matName == 'agm':
+        if matName == 'acm' or matName == 'agm' or matName == 'alm' or  matName == 'aum' or  matName == 'cem' or  matName == 'cum' or  matName == 'esm' or  matName == 'fem' or  matName == 'irm' or  matName == 'nim' or  matName == 'pbm' or matName == 'pdm' or matName == 'ptm' or matName == 'rhm' or  matName == 'srm' or matName == 'thm' or matName == 'ybm':
             browser.select('shape', mshape)
             if mshape == 'sphere':
                 rsphere = test_case['nanomaterial_type']['radius']
@@ -571,7 +571,7 @@ class NMMBrowserProcess(SolutionBrowserProcess):
         if sys == 'vac':
             browser.find_by_id('vacuum_systype').click()
 
-        self.go_next(test_case['steps'][2]['wait_text'])
+        self.go_next(test_case['steps'][0]['wait_text'])
 
         jobid = browser.find_by_css(".jobid").first.text.split()[-1]
         test_case['jobid'] = jobid
