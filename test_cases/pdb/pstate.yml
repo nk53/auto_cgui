@@ -16,8 +16,3 @@
     - PROA 140 PROA 159
     - PROA 230 PROA 248
     - PROA 586 PROA 620
-  steps:
-    - wait_text: Manipulate PDB
-    - wait_text: Generate PDB
-    - wait_text: Computed Energy
-

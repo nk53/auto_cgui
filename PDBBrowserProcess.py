@@ -509,11 +509,22 @@ class PDBBrowserProcess(CGUIBrowserProcess):
             raise ValueError("Missing chains")
 
         chains = self.test_case['chains']
-        name_fmt = 'chains[{}][checked]'
-        for chain in chains:
-            name_chain = name_fmt.format(chain)
-            click_btn = self.browser.find_by_name(name_chain)
-            click_btn.click()
+        print(chains)
+
+        # shortcut for selecting all chains
+        if isinstance(chains, str) and chains.lower() == 'all':
+            # returns all unchecked chain selection buttons
+            pattern = 'input[type=checkbox][name$="[checked]"]:not(:checked)'
+            buttons = self.browser.find_by_css(pattern)
+
+            for button in buttons:
+                button.check()
+        else:
+            name_fmt = 'chains[{}][checked]'
+            for chain in chains:
+                name_chain = name_fmt.format(chain)
+                click_btn = self.browser.find_by_name(name_chain)
+                click_btn.click()
 
     def init_system(self, test_case, resume=False):
         module_title = self.module_title

@@ -82,6 +82,7 @@ def setup_custom_options(test_case, module):
                 if elems:
                     for ind, elem in enumerate(elems):
                         for elem_name, elem_value in elem.items():
+                            elem_value = str(elem_value)
                             elems[ind][elem_name] = re.sub(pattern, value, elem_value)
 
                     test_elems = test_step.setdefault('elems', [])
