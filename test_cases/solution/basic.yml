@@ -28,4 +28,30 @@
     - HETA
   hcr:
     - LIG param
-
+- label: solvation 5JY6
+  base: pdb/basic
+  pdb: 5jy6.pdb
+  ligand: ligands/basic
+  chains:
+    - HETA
+    - HETB
+    - HETC
+    - HETD
+    - HETE
+    - HETF
+    - HETG
+    - HETH
+    - WATA
+    - WATB
+    - WATC
+    - WATD
+  # resname charmm-name
+  hcr:
+    - NAD NAD
+- label: solvation 4HG6
+  base: pdb/basic
+  pdb: 4hg6.pdb
+  ligand: ligands/basic
+  # chain1 resid1 chain2 resid2
+  ssbonds:
+    - PROB 163 PROB 430

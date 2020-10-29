@@ -14,6 +14,31 @@ class PDBBrowserProcess(CGUIBrowserProcess):
         self.module_url = "?doc=input/pdbreader"
         super(PDBBrowserProcess, self).__init__(todo_q, done_q, **kwargs)
 
+    def set_mutation(self):
+        if not 'mutations' in self.test_case:
+            raise ValueError("Missing stapling options")
+
+        mutations = self.test_case['mutations']
+        # open stapling menu
+        self.click('mutation_checked', 'Mutant')
+
+        # add as many mutations as needed
+        add_btn = self.browser.find_by_value("Add Mutation")
+        for mutation in mutations[1:]:
+            add_btn.click()
+
+        # set stapling options
+        mutation_fmt = 'chain', 'rid', 'res', 'patch'
+        id_fmt = 'mutation_{}_{}'
+        for mutation_no, mutation in enumerate(mutations):
+            mutation = mutation.split()
+            if len(mutation) != 4:
+                raise ValueError("Invalid mutation format")
+
+            for name, value in zip(mutation_fmt, mutation):
+                sid = id_fmt.format(name, mutation_no)
+                self.browser.find_by_id(sid).select(value)
+
     def set_gpi(self):
         if not 'gpi' in self.test_case:
             raise ValueError("Missing gpi options")

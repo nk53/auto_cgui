@@ -7,6 +7,7 @@ from splinter import Browser
 from splinter.exceptions import ElementDoesNotExist
 from PDBBrowserProcess import PDBBrowserProcess
 from InputBrowserProcess import InputBrowserProcess
+import pdb
 
 class SolutionBrowserProcess(PDBBrowserProcess, InputBrowserProcess):
     def __init__(self, *args, **kwargs):
@@ -23,6 +24,22 @@ class SolutionBrowserProcess(PDBBrowserProcess, InputBrowserProcess):
         ion_method = ion_method == 'd' and 'dist' or 'mc'
 
         self.browser.select('ion_method', ion_method)
+
+
+    def set_ion_type(self):
+        if not 'ion_type' in self.test_case:
+            raise ValueError("Missing ion_type")
+
+        # map ion type in case-insensitive manner
+        ion_type = str(self.test_case['ion_type']).lower()
+        ion_type = {
+            'kcl': 'KCl',
+            'nacl': 'NaCl',
+            'mgcl2': 'MgCl2',
+            'cacl2': 'CaCl2',
+        }[ion_type]
+
+        self.browser.select('ion_type', ion_type)
 
     def set_xyz(self):
         dims = 'xyz'

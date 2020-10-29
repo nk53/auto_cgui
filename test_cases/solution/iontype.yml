@@ -1,0 +1,14 @@
+- label: changing ion type and ion concentration
+  base: pdb/basic
+  pdb: 5u4j
+  ion_method: mc
+  ion_type: NaCl
+  ion_conc: 0.15
+
+- label: changing ion type and ion concentration
+  base: pdb/basic
+  pdb: 1l6x
+  ion_method: mc
+  ion_type: CaCl2
+  ion_conc: 0.2
+
