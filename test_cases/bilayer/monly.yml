@@ -1,0 +1,25 @@
+# this file uses mostly default options to test different component types
+- label: C. jejuni with 1:1 GM1-mimicry, GD1a-mimicry inner-ratio and 8:2 POPE, POPG outer-ratio
+  parent: monly_bilayer.yml
+  msize_method: nlipid
+  msize: number
+  water_mthickness: 40
+  mlipids:
+    lower:
+      pope: 138
+      popg: 34
+    upper:
+      lpsa:
+        cj_1:
+           lip:
+             - lipa
+           core:
+             - O19a, 30
+        cj_2:
+           lip:
+             - lipa
+           core:
+             - O19b, 30
+  input: openmm
+  hmr: True
+  temperature: 310.15

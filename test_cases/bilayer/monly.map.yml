@@ -80,54 +80,29 @@ size_method:
   step: 3
   presteps:
     - click_by_attrs(name='hetero_xy_option', value='size_method')
-area_calc:
-  step: 2
-  presteps:
-    - click_by_attrs(name='fill_checked', value='1')
-pdb_orientation:
-  step: 2
-  presteps:
-    - click_by_attrs(name='align_option', value='1')
 lipids:
   step: 3
   presteps:
     - select_lipids()
-ions_checked:
-  step: 4
-  elems:
-    - ions_checked: ions_checked
-# alias for ions_checked
-ions:
-  step: 4
-  elems:
-    - ions_checked: ions
-ion_conc:
-  step: 4
-  elems:
-    - ion_conc: ion_conc
-ion_type:
-  step: 4
-  elems:
-    - ion_type: ion_type
-ion_method:
-  step: 4
-  presteps:
-    - set_ion_method()
 water_mthickness:
-  step: 3
+  step: 1
   presteps:
     - click_by_value('wdist')
   elems:
     - hetero_wdist: water_mthickness
 msize_method:
-  step: 3
+  step: 1
   presteps:
     - click_by_attrs(name='hetero_xy_option', value='msize_method')
 mXY:
-  step: 3
+  step: 1
   elems:
     - hetero_lx: mXY
 mlipids:
-  step: 3
+  step: 1
   presteps:
     - select_mlipids()
+mion_method:
+  step: 2
+  presteps:
+    - set_mion_method()

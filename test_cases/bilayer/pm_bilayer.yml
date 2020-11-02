@@ -1,0 +1,27 @@
+base: pdb/basic
+dict: basic.map.yml
+# indicate ion_method for bilayer, even if using default, to prevent
+# alert on the solvent options page
+ion_method: distance
+steps:
+  - module:
+      name: pdb
+      stop: -1
+  - wait_text: Computed Energy
+  - wait_text: Lipid Type
+    poststeps:
+      - calc_msize()
+    alert: accept
+  # solvent options are similar to solution builder, but we still handle
+  # them separately
+  - wait_text: Component Building Options
+    poststeps:
+      - click_by_value('Calculate number of ions')
+      - wait_script('is_updated')
+  - wait_text: Building Ion and Waterbox
+  - wait_text: Assemble Generated Components
+  - module:
+      name: input
+      stop: -1
+  # membrane wait text differs from input's default
+  - wait_text: Equilibration Input Notes

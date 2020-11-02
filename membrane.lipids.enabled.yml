@@ -600,6 +600,35 @@ default:
         - budtm
         - addtm
         - bddtm
+  lps:
+    name: LPS (lipopolysaccharides)
+    lipids:
+      - lpsa
+      - lpsb
+      - lpsc
+      - lpsd
+      - lpse
+      - lpsf
+      - lpsg
+      - lpsh
+      - lpsi
+      - lpsj
+      - lpsk
+      - lpsl
+      - lpsm
+      - lpsn
+      - lpso
+      - lpsp
+      - lpsq
+      - lpsr
+      - lpss
+      - lpst
+      - lpsu
+      - lpsv
+      - lpsw
+      - lpsx
+      - lpsy
+      - lpsz
 micelle:
   # Detergents (Zwitterionic)
   type1:
@@ -800,4 +829,3 @@ micelle:
     lipids:
       - chsd
       - chsp
-

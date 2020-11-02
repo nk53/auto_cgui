@@ -15,3 +15,30 @@
   input: openmm
   hmr: True
   temperature: 310.15
+
+- label: BtuB in E. coli, 38 E. coli LPS in upper and 75 PPPE, 20 PVPG, and 5 PVCL2 in lower
+  parent: pm_bilayer.yml
+  pdb: 1nqe.pdb
+  pdb_orientation: True
+  area_calc: True
+  water_thickness: 30
+  msize_method: nlipid
+  msize: number
+  mlipids:
+    lower:
+      pvcl2: 5
+      pppe: 70
+      pvpg: 20
+    upper:
+      lpsa:
+        ec:
+          lip:
+            - lipa
+          core:
+            - K12, 38
+          oanti:
+            - O6, 2
+  input: openmm
+  hmr: True
+  temperature: 310.15
+
