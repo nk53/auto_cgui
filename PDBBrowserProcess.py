@@ -29,18 +29,33 @@ class PDBBrowserProcess(CGUIBrowserProcess):
         self.browser.select("lipid_type", lipid['lipid_type'])
         self.browser.select("sequence[0][name]", lipid['name'])
         _d = re.compile('- ')
+        nchem = 1
         for i,residue in enumerate(gpi['grs'].split('\n')):
             if not residue.strip(): continue
             depth = len(_d.findall(residue))
             linkage, resname = residue.split('- ')[-1].split()
             idx = resname.find('_')
+            chemod = None
             if idx > 0:
+                chemod = resname[idx+1:].split('_')
                 resname = resname[:idx]
             if depth > 4:
                 self.browser.find_by_id(str(depth-1)).find_by_css('.add').first.click()
             self.browser.select("sequence[%d][name]" % (i+1), resname[1:])
             self.browser.select("sequence[%d][type]" % (i+1), resname[0])
             self.browser.select("sequence[%d][linkage]" % (i+1), linkage[1])
+            if chemod:
+                for chm in chemod:
+                    if chm == '6PEA' and i == 3: continue
+                    self.browser.execute_script("add_chem()")
+                    match = re.match('[0-9]+', chm)
+                    site = match.group()
+                    patch = chm[match.end():]
+                    self.browser.select("chem[%d][residue]" % nchem, resname[1:])
+                    self.browser.select("chem[%d][resid]" % nchem, i+1)
+                    self.browser.select("chem[%d][site]" % nchem, site)
+                    self.browser.select("chem[%d][patch]" % nchem, patch)
+                    nchem += 1
         self.browser.execute_script("updateGPI()")
         self.browser.windows.current = self.browser.windows[0]
 
@@ -68,10 +83,12 @@ class PDBBrowserProcess(CGUIBrowserProcess):
                 time.sleep(1)
 
             GRS_field.fill(g['grs'])
-            prot = ast.literal_eval(g['prot'])
-            self.browser.select("sequence[0][name]", prot['segid'])
-            self.browser.select("sequence[0][name2]", prot['resname'])
-            self.browser.select("sequence[0][name3]", prot['resid'])
+            self.browser.find_by_id('apply_GRS').click()
+            if g['type'] in ['n-linked', 'o-linked']:
+                prot = ast.literal_eval(g['prot'])
+                self.browser.select("sequence[0][name]", prot['segid'])
+                self.browser.select("sequence[0][name2]", prot['resname'])
+                self.browser.select("sequence[0][name3]", prot['resid'])
             self.browser.execute_script("seqUpdate()")
             self.browser.windows.current = self.browser.windows[0]
 
@@ -525,6 +542,15 @@ class PDBBrowserProcess(CGUIBrowserProcess):
                 name_chain = name_fmt.format(chain)
                 click_btn = self.browser.find_by_name(name_chain)
                 click_btn.click()
+    def test_glycosylation(self):
+        if 'reference' in self.test_case:
+            print('pdbid: %s' % self.pdb)
+            reference = self.test_case['reference']
+            for ref in reference:
+                segid = ref['segid']
+                grs = ref['grs'].strip()
+                value = self.browser.find_by_name('glycan[%s][grs]' % segid).value
+                assert grs == value, "{segid} GRS value is not correct during benchmark test, grs:{grs}, value:{value}".format(segid=segid, grs=str([grs]), value=str(value))
 
     def init_system(self, test_case, resume=False):
         module_title = self.module_title
@@ -565,6 +591,7 @@ class PDBBrowserProcess(CGUIBrowserProcess):
 
             if source:
                 browser.fill('pdb_id', pdb_name)
+                browser.select('source', 'RCSB')
             else:
                 pdb_path = pjoin(self.base, pdb_name)
                 browser.attach_file("file", pdb_path)

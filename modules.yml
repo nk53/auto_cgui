@@ -8,3 +8,4 @@ MCA: MCABrowserProcess
 POLYMER: PBBrowserProcess
 PDB: PDBBrowserProcess
 SOLUTION: SolutionBrowserProcess
+GLYCAN: GlycanOnlyBrowserProcess

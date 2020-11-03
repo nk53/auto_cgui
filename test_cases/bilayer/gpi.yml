@@ -1,6 +1,5 @@
 # this file uses mostly default options to test different component types
-- label: reader
-  base: components/basic
+- label: see video demo
   pdb: 1cdr
   gpi:
     lipid: '{"lipid_type":"PIDAG","name":"PI-DAG-DM"}'
@@ -12,5 +11,16 @@
       5 - - - - - 14A: AMAN
       6 - - - - - - 13A: AMAN
       7 - - - - - - 16A: AMAN
-      8 - - - - - - - 14A: AMAN
+      8 - - - - - - - 14A: AMAN_6SUF
     segid: PROA
+  XY: 70
+  lipids:
+    lower:
+      chl1: 1
+      dopc: 2
+    upper:
+      chl1: 1
+      dopc: 2
+  input: openmm
+  hmr: True
+  temperature: 310.15
