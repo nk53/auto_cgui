@@ -37,16 +37,36 @@ class GlycanOnlyBrowserProcess(CGUIBrowserProcess):
             raise ValueError("Missing glycan options")
         glycan = self.test_case['glycan']
         _d = re.compile('- ')
+        chemod_init = False
+        nchem = 0
         for i,residue in enumerate(glycan['grs'].split('\n')):
             if not residue.strip(): continue
             depth = len(_d.findall(residue))
             linkage, resname = residue.split('- ')[-1].split()
-            #idx = resname.find('_') ... chemical modification
+            idx = resname.find('_') #... chemical modification
+            chemod = None
+            if idx > 0:
+                chemod = resname[idx+1:].split('_')
+                resname = resname[:idx]
             if i > 0:
                 self.browser.find_by_id(str(depth)).find_by_css('.add').first.click()
                 self.browser.select("sequence[%d][linkage]" % (i+1), linkage[1])
                 self.browser.select("sequence[%d][type]" % (i+1), resname[0])
             self.browser.select("sequence[%d][name]" % (i+1), resname[1:])
+            if chemod:
+                for chm in chemod:
+                    if not chemod_init:
+                        self.browser.find_by_id("chem_checked").first.click()
+                        chemod_init = True
+                    else:
+                        self.browser.execute_script("add_chem()")
+                    match = re.match('[0-9]+', chm)
+                    site = match.group()
+                    patch = chm[match.end():]
+                    self.browser.select("chem[%d][resid]" % nchem, i+1)
+                    self.browser.select("chem[%d][patch]" % nchem, patch)
+                    self.browser.select("chem[%d][site]" % nchem, site)
+                    nchem += 1
         self.go_next(self.test_case['steps'][0]['wait_text'])
 
 
