@@ -3,6 +3,7 @@
 #endcap - none, methyl, hydroxy
 #
 - label: solution #single solution melt
+  parent: False
   #jobid: 9045659047
   #resume_link: 3
   base: components/basic
