@@ -365,7 +365,7 @@ class PDBBrowserProcess(CGUIBrowserProcess):
             phos_button.click()
 
         # set phosphorylation options; continue iteration as necessary
-        phos_fmt = 'chain', 'res', 'rid', 'patch'
+        phos_fmt = 'chain', 'res', 'patch', 'rid'
         id_fmt = 'phos_{}_{}'
         for phos_no, p in enumerate(phos):
             p = p.upper().split()

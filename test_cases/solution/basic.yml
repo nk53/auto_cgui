@@ -55,3 +55,28 @@
   # chain1 resid1 chain2 resid2
   ssbonds:
     - PROB 163 PROB 430
+- label: 1KDX with terminal patching and phosphorylation
+  pdb: 1kdx.pdb
+  phosphorylation:
+    - PROB SER SP1 133
+  input: openmm
+  hmr: true 
+- label: 5TCT with two scml
+  pdb: 5tct.pdb
+  ligand: ligands/basic
+  chains:
+    - PROB
+    - PROC
+    - PROD
+    - PROE
+    - PROF
+    - DNAB
+    - HETA
+    - HETB
+    - HETE
+  hcr:
+    - ADP ADP
+    - MN ZN2
+  input: openmm
+  hmr: true
+
