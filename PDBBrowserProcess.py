@@ -195,6 +195,7 @@ class PDBBrowserProcess(CGUIBrowserProcess):
                 cid = csmlb_fmt.format(hcr)
                 cid_button = self.browser.execute_script(cid)
                 self.browser.windows.current = self.browser.windows[1]
+                self.wait_text('parameterize ligand')
                 self.browser.find_by_css("div#options input[type=radio]").first.click()
                 self.browser.find_by_id("nextBtn").first.click()
                 self.browser.windows.current = self.browser.windows[0]
@@ -365,7 +366,10 @@ class PDBBrowserProcess(CGUIBrowserProcess):
             phos_button.click()
 
         # set phosphorylation options; continue iteration as necessary
-        phos_fmt = 'chain', 'res', 'patch', 'rid'
+        phos_fmt = 'chain', 'res', 'rid', 'patch'
+        # fields are given in different order from how they should be filled
+        phos_order = 'chain', 'res', 'patch', 'rid'
+
         id_fmt = 'phos_{}_{}'
         for phos_no, p in enumerate(phos):
             p = p.upper().split()
@@ -373,8 +377,15 @@ class PDBBrowserProcess(CGUIBrowserProcess):
             if len(p) != len(phos_fmt):
                 raise ValueError("Invalid phosphorylation format")
 
+            # set name/value pairs so they can be used in arbitrary order
+            format_map = {f:None for f in phos_fmt}
             for name, value in zip(phos_fmt, p):
                 sid = id_fmt.format(name, phos_no)
+                format_map[name] = sid, value
+
+            # write fields in order that C-GUI requires
+            for name in phos_order:
+                sid, value = format_map[name]
                 self.browser.find_by_id(sid).select(value)
 
     def set_term(self):

@@ -58,9 +58,9 @@
 - label: 1KDX with terminal patching and phosphorylation
   pdb: 1kdx.pdb
   phosphorylation:
-    - PROB SER SP1 133
+    - PROB SER 133 SP1
   input: openmm
-  hmr: true 
+  hmr: true
 - label: 5TCT with two scml
   pdb: 5tct.pdb
   ligand: ligands/basic
