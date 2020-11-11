@@ -600,6 +600,35 @@ default:
         - budtm
         - addtm
         - bddtm
+  glp:
+    name: Glycolipids
+    lipids:
+      - glpa
+      - glpb
+      - glpc
+      - glpd
+      - glpe
+      - glpf
+      - glpg
+      - glph
+      - glpi
+      - glpj
+      - glpk
+      - glpl
+      - glpm
+      - glpn
+      - glpo
+      - glpp
+      - glpq
+      - glpr
+      - glps
+      - glpt
+      - glpu
+      - glpv
+      - glpw
+      - glpx
+      - glpy
+      - glpz
   lps:
     name: LPS (lipopolysaccharides)
     lipids:

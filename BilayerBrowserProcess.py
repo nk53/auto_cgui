@@ -205,7 +205,9 @@ class BilayerBrowserProcess(SolutionBrowserProcess, InputBrowserProcess):
         lipid_elems = list()
         categories = set() # the categories we need to activate
         name_tpl = "lipid_"+size_method+"[{}][{}]"
-
+        ch = 'a'
+        Uch = 'A'
+        inc_num = 0
         for layer in self.test_case['mlipids']:
             for mlipid in self.test_case['mlipids'][layer]:
                 if mlipid == "lpsa":
@@ -213,9 +215,6 @@ class BilayerBrowserProcess(SolutionBrowserProcess, InputBrowserProcess):
                     Ulipid = "LPSA"
                     lps_preface = "lps"
                     Ulps_preface = "LPS"
-                    ch = 'a'
-                    Uch = 'A'
-                    inc_num = 0
                     self.browser.driver.implicitly_wait(10);
                     self.browser.driver.set_script_timeout(10000);
                     self.browser.driver.set_page_load_timeout(10000);
@@ -252,6 +251,75 @@ class BilayerBrowserProcess(SolutionBrowserProcess, InputBrowserProcess):
                             self.browser.find_by_id(oanti).first.click()
                             self.browser.find_by_name('lps[nounit]').first.fill(ocount)
                         self.browser.execute_script("updateLPS();")
+                        self.browser.windows.current = self.browser.windows[0]
+                        lipid_tup = name_tpl.format(layer, lipid), count
+                        lipid_elems.append(lipid_tup)
+                        inc_num += 1
+                elif mlipid == "glycolipid":
+                    lipid = "glpa"
+                    Ulipid = "GLPA"
+                    glp_preface = "glp"
+                    Uglp_preface = "GLP"
+                    pglyc_fmt = "//span[.='{}']"
+                    sub2_fmt = "//input[@value='{}']"
+                    sub3_fmt = "//input[@value='{}']"
+                    self.browser.driver.implicitly_wait(10);
+                    self.browser.driver.set_script_timeout(10000);
+                    self.browser.driver.set_page_load_timeout(10000);
+                    category = self.lipid_map[lipid]
+                    categories.add(category)
+                    self.activate_mlipid_category(category)
+                    glp_count = (len(self.test_case['mlipids']['upper'][mlipid]) + len(self.test_case['mlipids']['upper'][mlipid]) - 1 - inc_num)
+                    for i in range(glp_count):
+                        self.browser.execute_script('addGlycolipid()')
+                    for species in self.test_case['mlipids'][layer][mlipid]:
+                        glp_letter = chr(ord(ch) + inc_num)
+                        Uglp_letter = chr(ord(Uch) + inc_num)
+                        lipid = (glp_preface + glp_letter)
+                        Ulipid = (Uglp_preface + Uglp_letter)
+                        try:
+                            speciesn,speciesc = species.split('_')
+                        except:
+                            speciesn = species
+                        for sub2n, sub2 in enumerate(self.test_case['mlipids'][layer][mlipid][species]['sub2']):
+                            try:
+                                sub2name, sub2id, count = sub2.split(', ')
+                                sub2 = str(sub2id)
+                            except:
+                                sub2 = str(sub2)
+                                msub3 = self.test_case['mlipids'][layer][mlipid][species]['sub2'][sub2]
+                                for sub3 in msub3:
+                                    sub3name,sub3id, count = sub3.split(', ')
+                                    sub3 = str(sub3id)
+                        nlipid_root = self.browser.find_by_id('hetero_xy_option_nlipid')
+                        nlipid_root.find_by_value(Ulipid).first.click()
+                        time.sleep(5)
+                        self.browser.windows.current = self.browser.windows[1]
+                        try:
+                            pglyc_id = pglyc_fmt.format(speciesn)
+                            sub2_id = pglyc_fmt.format(sub2)
+                            sub3_id = sub3_fmt.format(sub3)
+                            self.browser.execute_script("$('sub1').toggle()")
+                            time.sleep(1)
+                            self.browser.find_by_xpath(pglyc_id).click()
+                            time.sleep(1)
+                            sub2_sibling = self.browser.find_by_xpath(sub2_id)
+                            sub2_sibling.find_by_xpath("./..").click()
+                            time.sleep(1)
+                            sub3_sibling = self.browser.find_by_xpath(sub3_id)
+                            sub3_sibling.find_by_xpath("./..").click()
+                            time.sleep(1)
+                        except:
+                            pglyc_id = pglyc_fmt.format(speciesn)
+                            sub2_id = sub2_fmt.format(sub2)
+                            self.browser.execute_script("$('sub1').toggle()")
+                            time.sleep(1)
+                            self.browser.find_by_xpath(pglyc_id).click()
+                            time.sleep(1)
+                            sub2_sibling = self.browser.find_by_xpath(sub2_id)
+                            sub2_sibling.find_by_xpath("./..").click()
+                            time.sleep(1)
+                        self.browser.execute_script("updateGlycolipid();")
                         self.browser.windows.current = self.browser.windows[0]
                         lipid_tup = name_tpl.format(layer, lipid), count
                         lipid_elems.append(lipid_tup)

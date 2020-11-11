@@ -23,3 +23,25 @@
   input: openmm
   hmr: True
   temperature: 310.15
+
+- label: Glycoglycerolipid and Ganglio-series bilayer
+  parent: monly_bilayer.yml
+  msize_method: nlipid
+  msize: number
+  water_mthickness: 40
+  mlipids:
+    lower:
+      glycolipid:
+        Glycoglycerolipids:
+           sub2:
+             - MGDG, Gc001, 20
+    upper:
+      glycolipid:
+        Ganglio-series:
+           sub2:
+             0-series:
+               - GA2, Gg001, 20
+  input: openmm
+  hmr: True
+  temperature: 310.15
+

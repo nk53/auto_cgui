@@ -1,7 +1,7 @@
 # Fill this file with specific test cases to perform
-#- label: Glucocerebrosides all options
-#  download: no
-#  glycolipid: Glucocerebrosides
+- label: Glucocerebrosides all options
+  download: no
+  glycolipid: Glucocerebrosides
 - label: Glycoglycerolipids MGDG and DGDG
   download: no
   glycolipid: Glycoglycerolipids
