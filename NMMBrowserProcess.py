@@ -69,7 +69,7 @@ class NMMBrowserProcess(SolutionBrowserProcess):
 
         mat_type = list(test_case['nanomaterial_type'].keys())[0]
         mat_name = test_case['nanomaterial_type'][mat_type]
-        
+
         self.click_by_text('Nanomaterial Type')
         self.select_type(mat_type)
         self.select_material(mat_name)
@@ -116,7 +116,7 @@ class NMMBrowserProcess(SolutionBrowserProcess):
             if qadd > 2:
                 nadd = qadd - 2
                 for iadd in range(0, nadd):
-                    self.select_by_attrs('type','button') 
+                    self.select_by_attrs('type','button')
                 self.select_by_attrs('class','polymer_menu_widget xbutton')
                 iname = test_case['nanomaterial_type']['first_spacer'][1]['name']
                 browser.find_by_value(iname).click()
@@ -322,9 +322,12 @@ class NMMBrowserProcess(SolutionBrowserProcess):
 
         # Other metals
 
-        mshape = test_case['nanomaterial_type']['shape']
         if matName == 'acm' or matName == 'agm' or matName == 'alm' or  matName == 'aum' or  matName == 'cem' or  matName == 'cum' or  matName == 'esm' or  matName == 'fem' or  matName == 'irm' or  matName == 'nim' or  matName == 'pbm' or matName == 'pdm' or matName == 'ptm' or matName == 'rhm' or  matName == 'srm' or matName == 'thm' or matName == 'ybm':
+            mshape = test_case['nanomaterial_type']['shape']
             browser.select('shape', mshape)
+            if mshape == 'box':
+                milidx = test_case['nanomaterial_type']['mindex'][0]
+                browser.select('mindex', milidx)
             if mshape == 'sphere':
                 rsphere = test_case['nanomaterial_type']['radius']
                 browser.fill('radius', rsphere)
@@ -373,7 +376,7 @@ class NMMBrowserProcess(SolutionBrowserProcess):
                 browser.find_by_value(ions_type).click()
 
             if matName == 'gs':
-                if mshape == 'box':    
+                if mshape == 'box':
                     milidx = test_case['nanomaterial_type']['mindex'][0]
                     browser.select('mindex', milidx)
                 if mshape == 'wulff':
@@ -524,38 +527,41 @@ class NMMBrowserProcess(SolutionBrowserProcess):
                     if pbc_z == False:
                         browser.find_by_id('pbc_z').uncheck()
 
-        if matName != 'gp':
-            if matName != 'gi':
-                if mshape == 'box':    
-                    # Box Length
-                    xlen = test_case['nanomaterial_type']['lx']
-                    print(xlen)
-                    browser.fill('lx', xlen)
-    
-                    ylen = test_case['nanomaterial_type']['ly']
-                    browser.fill('ly', ylen)
-    
-                    zlen = test_case['nanomaterial_type']['lz']
-                    browser.fill('lz', zlen)
+        #if matName == 'aum_nanocluster' or matName == 'aum_nanoparticle' or matName == 'aum_surface':
+        ligandmaterials = ['aum_nanocluster','aum_nanoparticle','aum_surface']
+        if not matName in ligandmaterials:
+            if matName != 'gp':
+                if matName != 'gi':
+                    if mshape == 'box':
+                        # BOx Length
+                        xlen = test_case['nanOmaterial_type']['lx']
+                        print(xlen)
+                        browser.fill('lx', xlen)
 
-                    # PBC
-                    pbc_x = test_case['nanomaterial_type']['xpbc']
-                    if pbc_x == True:
-                        browser.find_by_id('pbc_x').check()
-                    if pbc_x == False:
-                        browser.find_by_id('pbc_x').uncheck()
-                    
-                    pbc_y = test_case['nanomaterial_type']['ypbc']
-                    if pbc_y == True:
-                        browser.find_by_id('pbc_y').check()
-                    if pbc_y == False:
-                        browser.find_by_id('pbc_y').uncheck()
-                    
-                    pbc_z = test_case['nanomaterial_type']['zpbc']
-                    if pbc_z == True:
-                        browser.find_by_id('pbc_z').check()
-                    if pbc_z == False:
-                        browser.find_by_id('pbc_z').uncheck()
+                        ylen = test_case['nanomaterial_type']['ly']
+                        browser.fill('ly', ylen)
+
+                        zlen = test_case['nanomaterial_type']['lz']
+                        browser.fill('lz', zlen)
+
+                        # PBC
+                        pbc_x = test_case['nanomaterial_type']['xpbc']
+                        if pbc_x == True:
+                            browser.find_by_id('pbc_x').check()
+                        if pbc_x == False:
+                            browser.find_by_id('pbc_x').uncheck()
+
+                        pbc_y = test_case['nanomaterial_type']['ypbc']
+                        if pbc_y == True:
+                            browser.find_by_id('pbc_y').check()
+                        if pbc_y == False:
+                            browser.find_by_id('pbc_y').uncheck()
+
+                        pbc_z = test_case['nanomaterial_type']['zpbc']
+                        if pbc_z == True:
+                            browser.find_by_id('pbc_z').check()
+                        if pbc_z == False:
+                            browser.find_by_id('pbc_z').uncheck()
 
             # Exception: cristobalite only
             if matName == 'cr':

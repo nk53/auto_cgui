@@ -1,0 +1,41 @@
+- label: goldtest
+  base: components/basic
+  nanomaterial_type:
+    metals: fem        # alm, cum, aum, pbm, nim, pdm, ptm, agm
+
+    shape: box         # sphere, cylinder, rod, polygon, box, wulff
+    radius: 10         # for sphere, cylinder, rod, wulff
+    height: 50         # for cylinder, rod, polygon
+    edgeLength: 10     # for polygon
+    numEdge: 3         # for polygon
+    mindex: ['210']    # mindex for Box, wmindex for Wulff
+    wmindex: ['210', '310', '332']
+    lx: 30             # box size or Height of cylinder/rod
+    ly: 30             # box size
+    lz: 30             # box size
+    xpbc: yes          # pbc: yes, no
+    ypbc: yes
+    zpbc: no 
+    system: sol        # sol, vac (if pbc is set to xyz, system becomes "vaccum")
+  input: gmx
+
+#- label: goldtest
+#  base: components/basic
+#  nanomaterial_type:
+#    metals: esm        # alm, cum, aum, pbm, nim, pdm, ptm, agm
+#
+#    shape: box         # sphere, cylinder, rod, polygon, box, wulff
+#    radius: 10         # for sphere, cylinder, rod, wulff
+#    height: 50         # for cylinder, rod, polygon
+#    edgeLength: 10     # for polygon
+#    numEdge: 3         # for polygon
+#    mindex: ['311']    # mindex for Box, wmindex for Wulff
+#    wmindex: ['210', '310', '332']
+#    lx: 30             # box size or Height of cylinder/rod
+#    ly: 30             # box size
+#    lz: 30             # box size
+#    xpbc: yes          # pbc: yes, no
+#    ypbc: yes
+#    zpbc: yes
+#    system: vac        # sol, vac (if pbc is set to xyz, system becomes "vaccum")
+#  input: gmx

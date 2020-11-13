@@ -1,0 +1,89 @@
+- label: goldtest
+  base: components/basic
+  nanomaterial_type:
+
+#################################### TEMPLATE FOR METALS #######################################
+#    metals: fem        # alm, cum, aum, pbm, nim, pdm, ptm, agm
+#
+#    shape: box         # sphere, cylinder, rod, polygon, box, wulff
+#    radius: 10         # for sphere, cylinder, rod, wulff
+#    height: 50         # for cylinder, rod, polygon
+#    edgeLength: 10     # for polygon
+#    numEdge: 3         # for polygon
+#    mindex: ['001']    # mindex for Box, wmindex for Wulff
+#    wmindex: ['210', '310', '332']
+#    lx: 30             # box size or Height of cylinder/rod
+#    ly: 30             # box size
+#    lz: 30             # box size
+#    xpbc: yes          # pbc: yes, no
+#    ypbc: yes
+#    zpbc: yes
+#    system: vac        # sol, vac (if pbc is set to xyz, system becomes "vaccum")
+#  input: gmx
+###    simpkg: gromacs    # namd, gromacs, openmm, lammps
+###############################################################################################
+
+
+
+######################### TEMPLATE FOR LIGAND PROTECTED NANOSTRUCTURES #########################
+    metals: aum_surface    # Options for ligand protected gold nanoparticle systems:
+                           # aum_nanoparticle, aum_nanocluster, aum_surface
+                           #
+
+    # For Ligand-protected Au models
+    numligand: 1
+    lig_systype: vac
+
+    first_linker: THDLK        # THSLK or THDLK
+    first_spacer:
+    - numspacer: 4
+    - name: ETKTR
+      numrepeat: 3
+    - name: PROR
+      numrepeat: 2
+    first_functional: TMAET
+
+    second_linker: THDLK        # THSLK or THDLK
+    second_spacer:
+    - numspacer: 10
+    - name: ETHY
+      numrepeat: 5
+    - name: PROR
+      numrepeat: 2
+    second_functional: TMAET
+
+    nano_structure:
+    - cluster:
+      core_type: au102
+      ligand_distribution: random   # random, strip, janus
+      ratio_ligand1: 4              # option for ramdom
+      ratio_ligand2: 3              # option for ramdom
+      num_strips: 4                 # option for strip
+
+    - particle:
+      core_type: cube        # icosahedron, cube
+      attach_type: staple+bridge    # option for icosahedron (staple or staple+bridge)
+      chirality: S                  # option for icosahedron (R or S)
+      radius: 20                    # option for icosahedron
+      cube_xlen: 33                 # option for Cube
+      cube_ylen: 33                 # option for Cube
+      cube_zlen: 33                 # option for Cube
+      ligand_distribution: random   # random, janus
+      ratio_ligand1: 7              # option for random
+      ratio_ligand2: 2              # option for random
+      coverage: 10                  # option for random and janus
+
+    - surface:
+      ligand_distribution: strip   # random, strip
+      ratio_ligand1: 7              # option for random
+      ratio_ligand2: 2              # option for random
+      num_strips_x: 6               # option for strip along X
+      num_strips_y: 4               # option for strip along Y
+      coverage: 10                  # option for random and janus
+      surf_midx: ['100']            # ['100'] or ['111']
+      surf_xlen: 30                 # Box length X
+      surf_ylen: 30                 # Box length Y
+      surf_zlen: 30                 # Box length Z
+
+################################################################################################
+
