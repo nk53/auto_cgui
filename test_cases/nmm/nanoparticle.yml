@@ -1,0 +1,41 @@
+- label: nanoparticle generation
+  base: components/basic
+  parent: vac
+  nanomaterial_type:
+    metals: aum_nanoparticle
+
+    numligand: 2
+    system: vac
+
+    first_linker: THDLK        # THSLK or THDLK
+    first_spacer:
+    - numspacer: 2
+    - name: ETKTR
+      numrepeat: 2
+    - name: PROR
+      numrepeat: 2
+    first_functional: TMAET
+
+    second_linker: THDLK        # THSLK or THDLK
+    second_spacer:
+    - numspacer: 1
+    - name: ETHY
+      numrepeat: 3
+    - name: PROR
+      numrepeat: 2
+    second_functional: TMAET
+
+    nano_structure:
+    - particle:
+      core_type: icosahedron        # icosahedron, cube
+      attach_type: staple+bridge    # option for icosahedron (staple or staple+bridge)
+      chirality: S                  # option for icosahedron (R or S)
+      radius: 20                    # option for icosahedron
+      cube_xlen: 33                 # option for Cube
+      cube_ylen: 33                 # option for Cube
+      cube_zlen: 33                 # option for Cube
+      ligand_distribution: random   # random, janus
+      ratio_ligand1: 7              # option for random
+      ratio_ligand2: 2              # option for random
+      coverage: 10                  # option for random and janus
+    input: gmx
