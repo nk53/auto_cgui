@@ -1,0 +1,42 @@
+- label: surface generation
+  base: components/basic
+  parent: vac
+  nanomaterial_type:
+    metals: aum_surface
+    shape: box
+
+    numligand: 2
+    system: vac
+
+    first_linker: THDLK        # THSLK or THDLK
+    first_spacer:
+    - numspacer: 2
+    - name: ETKTR
+      numrepeat: 2
+    - name: PROR
+      numrepeat: 2
+    first_functional: TMAET
+
+    second_linker: THDLK        # THSLK or THDLK
+    second_spacer:
+    - numspacer: 1
+    - name: ETHY
+      numrepeat: 3
+    - name: PROR
+      numrepeat: 2
+    second_functional: TMAET
+
+    nano_structure:
+    - surface:
+      ligand_distribution: random   # random, strip
+      ratio_ligand1: 7              # option for random
+      ratio_ligand2: 2              # option for random
+      num_strips_x: 6               # option for strip along X
+      num_strips_y: 4               # option for strip along Y
+      coverage: 10                  # option for random and janus
+      surf_midx: ['100']            # ['100'] or ['111']
+      surf_xlen: 30                 # Box length X
+      surf_ylen: 30                 # Box length Y
+      surf_zlen: 30                 # Box length Z
+      system: vac                   # sol, vac
+    input: gmx

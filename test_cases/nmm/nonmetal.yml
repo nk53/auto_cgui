@@ -1,0 +1,42 @@
+- label: nonmetal
+  base: components/basic
+  parent: sol
+  nanomaterial_type:
+    transition_metal_chalcogenitides:  md
+                                     # clay_minerals: matname                      (matname: kn, mm)
+                                     # mica: matname                               (matname: mc)
+                                     # calcium_sulfates: matname                   (matname: gs, hh, ah)
+                                     # cement_minerals: matname                    (matname: ta, ts)
+                                     # silcate_minerals: matname                   (matname: cr, qz)
+                                     # other_minerals: matname                     (matname: ha)
+                                     # carbon_materials: matname                   (matname: tube, gp, gi)
+                                     # transition_metal_chalcogenitides: matname   (matname: md)
+
+    shape: box                       # box: all materials/ wulff: gs, ts, ha / sphere: cr, qz
+    mindex: ['001']                  # miller index of box. Usage: ['mindex1', 'mindex2, 'mindex3']
+    lx: 30                           # box size x, y, z
+    ly: 30                           #
+    lz: 30                           #
+    rdefect: '0.33'                  # option for Montmorillonite. Usage: 'value'
+    ion_option: SOD                  # option for Montmorillonite: SOD, POT
+    radius: 20                       # option for Wulff, Sphere
+    hydration: wet                   # option for Cement materials: hyd, wet
+    degree_ionization: '10.0'        # option for silicate minerals. Useage: 'value'
+    surf_concentration: '6.0'        # option for Cristobalite, when xy-pbc. Usage: 'value'
+    environment_pH: ha_stbasic       # option for Hydroxyapatite: ha_stbasic, ha_basic, ha_acidic
+                                     # ha_stbasic: pH > 14 / ha_basic: pH ~ 10 / ha_acidic: pH ~ 5
+    wmindex: ['010', '001', '101', '020']   # option for Wulff Miller Indices
+                                     # Usage: ['wmindex1', 'wmindex2, 'wmindex3', ...]
+                                     # Possible number of wmindex / Possible miller indices
+                                     # gs:                      3 / '010', '120', '011', '-111'
+                                     # ts:                      3 / '001', '010', '100'
+                                     # ha:            2 or 3 or 4 / '001', '010', '020', '101'
+    chirality_n: 5                   # Program crashes if n+m > 25 or n+m < 3
+    chirality_m: 6
+    cell_copies: '10'                # option for CNT. Usage: 'value'
+    percent_defect: '10'             # option for graphene or graphite. Usage: 'value'
+    xpbc: yes                        # pbc: yes, no
+    ypbc: yes
+    zpbc: no
+    system: sol                      # sol, vac (if pbc is set to xyz, system becomes "vaccum")
+  input: gmx

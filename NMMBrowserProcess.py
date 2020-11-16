@@ -86,7 +86,7 @@ class NMMBrowserProcess(SolutionBrowserProcess):
             browser.select('num_ligands', nligand)
 
             # Solvation or Vacuum
-            sys = test_case['nanomaterial_type']['lig_systype']
+            sys = test_case['nanomaterial_type']['system']
             if sys == 'sol':
                 browser.find_by_id('solv_systype').click()
             if sys == 'vac':
@@ -222,44 +222,44 @@ class NMMBrowserProcess(SolutionBrowserProcess):
                         rligSecond_elem = browser.find_by_id('ligand_ratio_2')
                         rligSecond_elem.fill(lig_ratio_second)
 
-                if ilig_distrb == 'strip':
-                    nstrip = test_case['nanomaterial_type']['nano_structure'][0]['num_strips']
-                    nstrip_elem = browser.find_by_id('strip')
-                    nstrip_elem.fill(nstrip)
+                    if ilig_distrb == 'strip':
+                        nstrip = test_case['nanomaterial_type']['nano_structure'][0]['num_strips']
+                        nstrip_elem = browser.find_by_id('strip')
+                        nstrip_elem.fill(nstrip)
 
             if matName == 'aum_nanoparticle':
                 # Core Type Selection
-                core_type = test_case['nanomaterial_type']['nano_structure'][1]['core_type']
+                core_type = test_case['nanomaterial_type']['nano_structure'][0]['core_type']
                 browser.find_by_value(core_type).click()
 
                 if core_type == 'icosahedron':
-                    attach_type = test_case['nanomaterial_type']['nano_structure'][1]['attach_type']
+                    attach_type = test_case['nanomaterial_type']['nano_structure'][0]['attach_type']
                     browser.find_by_value(attach_type).click()
 
-                    chirality = test_case['nanomaterial_type']['nano_structure'][1]['chirality']
+                    chirality = test_case['nanomaterial_type']['nano_structure'][0]['chirality']
                     browser.find_by_value(chirality).click()
 
-                    radius = test_case['nanomaterial_type']['nano_structure'][1]['radius']
+                    radius = test_case['nanomaterial_type']['nano_structure'][0]['radius']
                     radius_elem = browser.find_by_id('core_radius')
                     radius_elem.fill(radius)
                 if core_type == 'cube':
-                    core_x = test_case['nanomaterial_type']['nano_structure'][1]['cube_xlen']
-                    core_y = test_case['nanomaterial_type']['nano_structure'][1]['cube_ylen']
-                    core_z = test_case['nanomaterial_type']['nano_structure'][1]['cube_zlen']
+                    core_x = test_case['nanomaterial_type']['nano_structure'][0]['cube_xlen']
+                    core_y = test_case['nanomaterial_type']['nano_structure'][0]['cube_ylen']
+                    core_z = test_case['nanomaterial_type']['nano_structure'][0]['cube_zlen']
                     browser.find_by_id('core_x').fill(core_x)
                     browser.find_by_id('core_y').fill(core_y)
                     browser.find_by_id('core_z').fill(core_z)
 
                 # Ligand Morphology
                 if nligand == 2:
-                    ilig_distrb = test_case['nanomaterial_type']['nano_structure'][1]['ligand_distribution']
+                    ilig_distrb = test_case['nanomaterial_type']['nano_structure'][0]['ligand_distribution']
 
                     if ilig_distrb == 'random':
                         lig_distrb = browser.find_by_xpath("//*[@id='ligand_pattern']/option[1]")
                         lig_distrb.click()
 
-                        lig_ratio_first = test_case['nanomaterial_type']['nano_structure'][1]['ratio_ligand1']
-                        lig_ratio_second = test_case['nanomaterial_type']['nano_structure'][1]['ratio_ligand2']
+                        lig_ratio_first = test_case['nanomaterial_type']['nano_structure'][0]['ratio_ligand1']
+                        lig_ratio_second = test_case['nanomaterial_type']['nano_structure'][0]['ratio_ligand2']
 
                         rligFirst_elem = browser.find_by_id('ligand_ratio_1')
                         rligFirst_elem.fill(lig_ratio_first)
@@ -272,19 +272,19 @@ class NMMBrowserProcess(SolutionBrowserProcess):
                         lig_distrb.click()
 
                 # Coverage
-                coverage = test_case['nanomaterial_type']['nano_structure'][1]['coverage']
+                coverage = test_case['nanomaterial_type']['nano_structure'][0]['coverage']
                 browser.find_by_id('coverage').fill(coverage)
 
             if matName == 'aum_surface':
                 if nligand == 2:
-                    ilig_distrb = test_case['nanomaterial_type']['nano_structure'][2]['ligand_distribution']
+                    ilig_distrb = test_case['nanomaterial_type']['nano_structure'][0]['ligand_distribution']
 
                     if ilig_distrb == 'random':
                         lig_distrb = browser.find_by_xpath("//*[@id='ligand_pattern']/option[1]")
                         lig_distrb.click()
 
-                        lig_ratio_first = test_case['nanomaterial_type']['nano_structure'][2]['ratio_ligand1']
-                        lig_ratio_second = test_case['nanomaterial_type']['nano_structure'][2]['ratio_ligand2']
+                        lig_ratio_first = test_case['nanomaterial_type']['nano_structure'][0]['ratio_ligand1']
+                        lig_ratio_second = test_case['nanomaterial_type']['nano_structure'][0]['ratio_ligand2']
 
                         rligFirst_elem = browser.find_by_id('ligand_ratio_1')
                         rligFirst_elem.fill(lig_ratio_first)
@@ -296,8 +296,8 @@ class NMMBrowserProcess(SolutionBrowserProcess):
                         lig_distrb = browser.find_by_xpath("//*[@id='ligand_pattern']/option[2]")
                         lig_distrb.click()
 
-                        nstrips_x = test_case['nanomaterial_type']['nano_structure'][2]['num_strips_x']
-                        nstrips_y = test_case['nanomaterial_type']['nano_structure'][2]['num_strips_y']
+                        nstrips_x = test_case['nanomaterial_type']['nano_structure'][0]['num_strips_x']
+                        nstrips_y = test_case['nanomaterial_type']['nano_structure'][0]['num_strips_y']
 
                         nstrips_x_elem = browser.find_by_id('strip_x')
                         nstrips_x_elem.fill(nstrips_x)
@@ -306,28 +306,27 @@ class NMMBrowserProcess(SolutionBrowserProcess):
                         nstrips_y_elem.fill(nstrips_y)
 
                 # Coverage
-                coverage = test_case['nanomaterial_type']['nano_structure'][2]['coverage']
+                coverage = test_case['nanomaterial_type']['nano_structure'][0]['coverage']
                 browser.find_by_id('coverage').fill(coverage)
 
                 # Box Options
-                surf_milidx = test_case['nanomaterial_type']['nano_structure'][2]['surf_midx']
+                surf_milidx = test_case['nanomaterial_type']['nano_structure'][0]['surf_midx']
                 milindex = surf_milidx[0]
                 browser.select('mindex', milindex)
-                surf_x = test_case['nanomaterial_type']['nano_structure'][2]['surf_xlen']
-                surf_y = test_case['nanomaterial_type']['nano_structure'][2]['surf_ylen']
-                surf_z = test_case['nanomaterial_type']['nano_structure'][2]['surf_zlen']
+                surf_x = test_case['nanomaterial_type']['nano_structure'][0]['surf_xlen']
+                surf_y = test_case['nanomaterial_type']['nano_structure'][0]['surf_ylen']
+                surf_z = test_case['nanomaterial_type']['nano_structure'][0]['surf_zlen']
                 browser.find_by_id('x_length').fill(surf_x)
                 browser.find_by_id('y_length').fill(surf_y)
                 browser.find_by_id('z_length').fill(surf_z)
 
         # Other metals
+        ligandmaterials = ['aum_nanocluster','aum_nanoparticle','aum_surface']
+        if not matName in ligandmaterials:
+            mshape = test_case['nanomaterial_type']['shape']
 
         if matName == 'acm' or matName == 'agm' or matName == 'alm' or  matName == 'aum' or  matName == 'cem' or  matName == 'cum' or  matName == 'esm' or  matName == 'fem' or  matName == 'irm' or  matName == 'nim' or  matName == 'pbm' or matName == 'pdm' or matName == 'ptm' or matName == 'rhm' or  matName == 'srm' or matName == 'thm' or matName == 'ybm':
-            mshape = test_case['nanomaterial_type']['shape']
             browser.select('shape', mshape)
-            if mshape == 'box':
-                milidx = test_case['nanomaterial_type']['mindex'][0]
-                browser.select('mindex', milidx)
             if mshape == 'sphere':
                 rsphere = test_case['nanomaterial_type']['radius']
                 browser.fill('radius', rsphere)
@@ -434,7 +433,7 @@ class NMMBrowserProcess(SolutionBrowserProcess):
                     milidx = test_case['nanomaterial_type']['mindex'][0]
                     browser.select('mindex', milidx)
                 if mshape == 'wulff':
-                    browser.select('shape', mshape)
+                    browser.select('shape', m)
                     rsphere = test_case['nanomaterial_type']['radius']
                     browser.fill('radius', rsphere)
                     qadd = len(test_case['nanomaterial_type']['wmindex'])
@@ -514,13 +513,13 @@ class NMMBrowserProcess(SolutionBrowserProcess):
                         browser.find_by_id('pbc_x').check()
                     if pbc_x == False:
                         browser.find_by_id('pbc_x').uncheck()
-                    
+
                     pbc_y = test_case['nanomaterial_type']['ypbc']
                     if pbc_y == True:
                         browser.find_by_id('pbc_y').check()
                     if pbc_y == False:
                         browser.find_by_id('pbc_y').uncheck()
-                    
+
                     pbc_z = test_case['nanomaterial_type']['zpbc']
                     if pbc_z == True:
                         browser.find_by_id('pbc_z').check()
@@ -534,7 +533,7 @@ class NMMBrowserProcess(SolutionBrowserProcess):
                 if matName != 'gi':
                     if mshape == 'box':
                         # BOx Length
-                        xlen = test_case['nanOmaterial_type']['lx']
+                        xlen = test_case['nanomaterial_type']['lx']
                         print(xlen)
                         browser.fill('lx', xlen)
 
