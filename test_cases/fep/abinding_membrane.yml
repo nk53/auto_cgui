@@ -5,13 +5,14 @@ url_ym: ?doc=input/afes.abinding
 ion_method: distance
 steps:
   - module:
-      name: solution
-      stop: 4
+      name: bilayer
+      stop: 7
   - wait_text: FEP/TI simulation
   - wait_text: drag
   - wait_text: Force Field Options
     presteps:
       - fill('lfitedge', 10)    # Waterbox Size
+
   - module:
       name: input
       start: 1
