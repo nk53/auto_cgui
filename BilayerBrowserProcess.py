@@ -207,7 +207,8 @@ class BilayerBrowserProcess(SolutionBrowserProcess, InputBrowserProcess):
         name_tpl = "lipid_"+size_method+"[{}][{}]"
         ch = 'a'
         Uch = 'A'
-        inc_num = 0
+        linc_num = 0
+        ginc_num = 0
         for layer in self.test_case['mlipids']:
             for mlipid in self.test_case['mlipids'][layer]:
                 if mlipid == "lpsa":
@@ -221,12 +222,16 @@ class BilayerBrowserProcess(SolutionBrowserProcess, InputBrowserProcess):
                     category = self.lipid_map[lipid]
                     categories.add(category)
                     self.activate_mlipid_category(category)
-                    lps_count = (len(self.test_case['mlipids'][layer][mlipid]) - 1)
+                    if 'lpsa' in self.test_case['mlipids']['upper'] and 'lpsa' in self.test_case['mlipids']['lower']:
+                        lps_count = ((len(self.test_case['mlipids']['upper'][mlipid]) + len(self.test_case['mlipids']['lower'][mlipid])) - 1)
+                    else:
+                        lps_count = (len(self.test_case['mlipids'][layer][mlipid]) - 1)
                     for i in range(lps_count):
-                        self.browser.execute_script('addLPS()')
+                        if linc_num == 0:
+                            self.browser.execute_script('addLPS()')
                     for species in self.test_case['mlipids'][layer][mlipid]:
-                        lps_letter = chr(ord(ch) + inc_num)
-                        Ulps_letter = chr(ord(Uch) + inc_num)
+                        lps_letter = chr(ord(ch) + linc_num)
+                        Ulps_letter = chr(ord(Uch) + linc_num)
                         lipid = (lps_preface + lps_letter)
                         Ulipid = (Ulps_preface + Ulps_letter)
                         try:
@@ -254,7 +259,7 @@ class BilayerBrowserProcess(SolutionBrowserProcess, InputBrowserProcess):
                         self.browser.windows.current = self.browser.windows[0]
                         lipid_tup = name_tpl.format(layer, lipid), count
                         lipid_elems.append(lipid_tup)
-                        inc_num += 1
+                        linc_num += 1
                 elif mlipid == "glycolipid":
                     lipid = "glpa"
                     Ulipid = "GLPA"
@@ -269,12 +274,16 @@ class BilayerBrowserProcess(SolutionBrowserProcess, InputBrowserProcess):
                     category = self.lipid_map[lipid]
                     categories.add(category)
                     self.activate_mlipid_category(category)
-                    glp_count = (len(self.test_case['mlipids']['upper'][mlipid]) + len(self.test_case['mlipids']['upper'][mlipid]) - 1 - inc_num)
+                    if 'glycolipid' in self.test_case['mlipids']['upper'] and 'glycolipid' in self.test_case['mlipids']['lower']:
+                        glp_count = ((len(self.test_case['mlipids']['upper'][mlipid]) + len(self.test_case['mlipids']['lower'][mlipid])) - 1)
+                    else:
+                        glp_count = (len(self.test_case['mlipids'][layer][mlipid]) - 1)
                     for i in range(glp_count):
-                        self.browser.execute_script('addGlycolipid()')
+                        if ginc_num == 0:
+                            self.browser.execute_script('addGlycolipid()')
                     for species in self.test_case['mlipids'][layer][mlipid]:
-                        glp_letter = chr(ord(ch) + inc_num)
-                        Uglp_letter = chr(ord(Uch) + inc_num)
+                        glp_letter = chr(ord(ch) + ginc_num)
+                        Uglp_letter = chr(ord(Uch) + ginc_num)
                         lipid = (glp_preface + glp_letter)
                         Ulipid = (Uglp_preface + Uglp_letter)
                         try:
@@ -323,16 +332,17 @@ class BilayerBrowserProcess(SolutionBrowserProcess, InputBrowserProcess):
                         self.browser.windows.current = self.browser.windows[0]
                         lipid_tup = name_tpl.format(layer, lipid), count
                         lipid_elems.append(lipid_tup)
-                        inc_num += 1
+                        ginc_num += 1
                 else:
                     for lipid, count in lipids[layer].items():
                         lipid = lipid.lower()
-                        category = self.lipid_map[lipid]
-                        categories.add(category)
+                        if not (lipid == "glycolipid" or lipid == "lpsa"):
+                            category = self.lipid_map[lipid]
+                            categories.add(category)
 
-                        # browser.fill() needs both name and count
-                        lipid_tup = name_tpl.format(layer, lipid), count
-                        lipid_elems.append(lipid_tup)
+                            # browser.fill() needs both name and count
+                            lipid_tup = name_tpl.format(layer, lipid), count
+                            lipid_elems.append(lipid_tup)
         # activate all categories
         for category in categories:
             self.activate_mlipid_category(category)

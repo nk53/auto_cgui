@@ -8,6 +8,12 @@
     lower:
       pope: 138
       popg: 34
+      lpsa:
+        cj:
+           lip:
+             - lipa
+           core:
+             - O19a, 30
     upper:
       lpsa:
         cj_1:
@@ -31,6 +37,8 @@
   water_mthickness: 40
   mlipids:
     lower:
+      chl1: 1
+      popc: 1
       glycolipid:
         Glycoglycerolipids:
            sub2:
