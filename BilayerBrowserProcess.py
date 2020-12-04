@@ -290,49 +290,83 @@ class BilayerBrowserProcess(SolutionBrowserProcess, InputBrowserProcess):
                             speciesn,speciesc = species.split('_')
                         except:
                             speciesn = species
-                        for sub2n, sub2 in enumerate(self.test_case['mlipids'][layer][mlipid][species]['sub2']):
+                        if (species == 'CER' or species == 'PICER' or species == 'DAG' or species == 'PIDAG' or species == 'ACYL'):
+                            nlipid_root = self.browser.find_by_id('hetero_xy_option_nlipid')
+                            nlipid_root.find_by_value(Ulipid).first.click()
+                            time.sleep(5)
+                            self.browser.windows.current = self.browser.windows[1]
+                            for modn, mod in enumerate(self.test_case['mlipids'][layer][mlipid][species]):
+                                modnum, modid, count = mod.split(', ')
+                                mod = str(modid)
+                                self.browser.find_by_value(species).click()
+                                time.sleep(1)
+                                self.browser.find_by_value(modid).click()
+                                time.sleep(1)
+                            self.browser.execute_script("updateGlycolipid();")
+                            self.browser.windows.current = self.browser.windows[0]
+                            lipid_tup = name_tpl.format(layer, lipid), count
+                            lipid_elems.append(lipid_tup)
+                            ginc_num += 1
+                        else:
+                            for sub2n, sub2 in enumerate(self.test_case['mlipids'][layer][mlipid][species]['sub2']):
+                                try:
+                                    sub2name, sub2id, count = sub2.split(', ')
+                                    sub2 = str(sub2id)
+                                except:
+                                    sub2 = str(sub2)
+                                    msub3 = self.test_case['mlipids'][layer][mlipid][species]['sub2'][sub2]
+                                    for sub3 in msub3:
+                                        sub3name,sub3id, count = sub3.split(', ')
+                                        sub3 = str(sub3id)
+                            nlipid_root = self.browser.find_by_id('hetero_xy_option_nlipid')
+                            nlipid_root.find_by_value(Ulipid).first.click()
+                            time.sleep(5)
+                            self.browser.windows.current = self.browser.windows[1]
                             try:
-                                sub2name, sub2id, count = sub2.split(', ')
-                                sub2 = str(sub2id)
+                                pglyc_id = pglyc_fmt.format(speciesn)
+                                sub2_id = pglyc_fmt.format(sub2)
+                                sub3_id = sub3_fmt.format(sub3)
+                                self.browser.execute_script("$('sub1').toggle()")
+                                time.sleep(1)
+                                self.browser.find_by_xpath(pglyc_id).click()
+                                time.sleep(1)
+                                sub2_sibling = self.browser.find_by_xpath(sub2_id)
+                                sub2_sibling.find_by_xpath("./..").click()
+                                time.sleep(1)
+                                sub3_sibling = self.browser.find_by_xpath(sub3_id)
+                                sub3_sibling.find_by_xpath("./..").click()
+                                time.sleep(1)
                             except:
-                                sub2 = str(sub2)
-                                msub3 = self.test_case['mlipids'][layer][mlipid][species]['sub2'][sub2]
-                                for sub3 in msub3:
-                                    sub3name,sub3id, count = sub3.split(', ')
-                                    sub3 = str(sub3id)
-                        nlipid_root = self.browser.find_by_id('hetero_xy_option_nlipid')
-                        nlipid_root.find_by_value(Ulipid).first.click()
-                        time.sleep(5)
-                        self.browser.windows.current = self.browser.windows[1]
-                        try:
-                            pglyc_id = pglyc_fmt.format(speciesn)
-                            sub2_id = pglyc_fmt.format(sub2)
-                            sub3_id = sub3_fmt.format(sub3)
-                            self.browser.execute_script("$('sub1').toggle()")
-                            time.sleep(1)
-                            self.browser.find_by_xpath(pglyc_id).click()
-                            time.sleep(1)
-                            sub2_sibling = self.browser.find_by_xpath(sub2_id)
-                            sub2_sibling.find_by_xpath("./..").click()
-                            time.sleep(1)
-                            sub3_sibling = self.browser.find_by_xpath(sub3_id)
-                            sub3_sibling.find_by_xpath("./..").click()
-                            time.sleep(1)
-                        except:
-                            pglyc_id = pglyc_fmt.format(speciesn)
-                            sub2_id = sub2_fmt.format(sub2)
-                            self.browser.execute_script("$('sub1').toggle()")
-                            time.sleep(1)
-                            self.browser.find_by_xpath(pglyc_id).click()
-                            time.sleep(1)
-                            sub2_sibling = self.browser.find_by_xpath(sub2_id)
-                            sub2_sibling.find_by_xpath("./..").click()
-                            time.sleep(1)
-                        self.browser.execute_script("updateGlycolipid();")
-                        self.browser.windows.current = self.browser.windows[0]
-                        lipid_tup = name_tpl.format(layer, lipid), count
-                        lipid_elems.append(lipid_tup)
-                        ginc_num += 1
+                                sub2_fmt = "//span[.='{}']/../ul/li/label/input[@value='{}']"
+                                pglyc_id = pglyc_fmt.format(speciesn)
+                                sub2_id = sub2_fmt.format(speciesn, sub2)
+                                self.browser.execute_script("$('sub1').toggle()")
+                                time.sleep(1)
+                                self.browser.find_by_xpath(pglyc_id).click()
+                                time.sleep(1)
+                                sub2_sibling = self.browser.find_by_xpath(sub2_id)
+                                sub2_sibling.find_by_xpath("./..").click()
+                                time.sleep(1)
+                            try:
+                                for modn, mod in enumerate(self.test_case['mlipids'][layer][mlipid][species]['modification']):
+                                    modnum, modtype, modid = mod.split(', ')
+                                    modtype = str(modtype)
+                                    modid = str(modid)
+                                    self.browser.find_by_value(modtype).click()
+                                    time.sleep(1)
+                                    self.browser.find_by_value(modid).click()
+                                    time.sleep(1)
+                                self.browser.execute_script("updateGlycolipid();")
+                                self.browser.windows.current = self.browser.windows[0]
+                                lipid_tup = name_tpl.format(layer, lipid), count
+                                lipid_elems.append(lipid_tup)
+                                ginc_num += 1
+                            except:
+                                self.browser.execute_script("updateGlycolipid();")
+                                self.browser.windows.current = self.browser.windows[0]
+                                lipid_tup = name_tpl.format(layer, lipid), count
+                                lipid_elems.append(lipid_tup)
+                                ginc_num += 1
                 else:
                     for lipid, count in lipids[layer].items():
                         lipid = lipid.lower()

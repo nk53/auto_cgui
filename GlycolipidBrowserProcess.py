@@ -53,8 +53,9 @@ class GlycolipidBrowserProcess(CGUIBrowserProcess):
             sub3_sibling.find_by_xpath("./..").click()
             time.sleep(1)
         else:
+            sub2_fmt = "//span[.='{}']/../ul/li/label/input[@value='{}']"
             pglyc_id = pglyc_fmt.format(pglycolipid)
-            sub2_id = sub2_fmt.format(sub2)
+            sub2_id = sub2_fmt.format(pglycolipid, sub2)
             browser.execute_script("$('sub1').toggle()")
             time.sleep(1)
             browser.find_by_xpath(pglyc_id).click()

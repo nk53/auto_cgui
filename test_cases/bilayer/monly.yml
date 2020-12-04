@@ -53,3 +53,47 @@
   hmr: True
   temperature: 310.15
 
+- label: Axonal Membrane
+  parent: monly_bilayer.yml
+  msize_method: nlipid
+  msize: number
+  water_mthickness: 40
+  mlipids:
+    lower:
+      chl1: 119
+      popc: 47
+      sope: 46
+      pops: 7
+      popi: 10
+      ssm: 7
+    upper:
+      chl1: 66
+      popc: 26
+      sope: 25
+      pops: 4
+      popi: 5
+      ssm: 4
+      glycolipid:
+        CER:
+          - 0, CER180, 86
+        Sulfoglycolipids:
+           sub2:
+             - Sulfatide, Ga002, 17
+           modification:
+             - 0, CER, CER180
+        Ganglio-series_1:
+           sub2:
+             a-series:
+               - GM1a(GM1), Gg014, 4
+           modification:
+             - 0, CER, CER180
+        Ganglio-series_2:
+           sub2:
+             a-series:
+               - GD1a, Gg026, 4
+           modification:
+             - 0, CER, CER180
+  input: openmm
+  hmr: True
+  temperature: 310.15
+
