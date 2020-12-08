@@ -10,7 +10,7 @@ steps:
   - wait_text: Computed Energy
   - wait_text: Lipid Type
     poststeps:
-      - calc_msize()
+      - calc_size()
     alert: accept
   # solvent options are similar to solution builder, but we still handle
   # them separately

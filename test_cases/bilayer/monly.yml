@@ -1,10 +1,9 @@
 # this file uses mostly default options to test different component types
 - label: C. jejuni with 1:1 GM1-mimicry, GD1a-mimicry inner-ratio and 8:2 POPE, POPG outer-ratio
   parent: monly_bilayer.yml
-  msize_method: nlipid
-  msize: number
-  water_mthickness: 40
-  mlipids:
+  size_method: nlipid
+  water_thickness: 40
+  lipids:
     lower:
       pope: 138
       popg: 34
@@ -32,10 +31,9 @@
 
 - label: Glycoglycerolipid and Ganglio-series bilayer
   parent: monly_bilayer.yml
-  msize_method: nlipid
-  msize: number
-  water_mthickness: 40
-  mlipids:
+  size_method: nlipid
+  water_thickness: 40
+  lipids:
     lower:
       chl1: 1
       popc: 1
@@ -55,10 +53,9 @@
 
 - label: Axonal Membrane
   parent: monly_bilayer.yml
-  msize_method: nlipid
-  msize: number
-  water_mthickness: 40
-  mlipids:
+  size_method: nlipid
+  water_thickness: 40
+  lipids:
     lower:
       chl1: 119
       popc: 47

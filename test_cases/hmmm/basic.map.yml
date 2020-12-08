@@ -113,3 +113,30 @@ ion_method:
   step: 4
   presteps:
     - set_ion_method()
+water_mthickness:
+  step: 3
+  presteps:
+    - click_by_value('wdist')
+  elems:
+    - hetero_wdist: water_mthickness
+msize_method:
+  step: 3
+  presteps:
+    - click_by_attrs(name='hetero_xy_option', value='msize_method')
+mXY:
+  step: 3
+  elems:
+    - hetero_lx: mXY
+mlipids:
+  step: 3
+  presteps:
+    - select_mlipids()
+# HMMM-specific options
+scaling_factor:
+  step: 3
+  elems:
+    - hetero_sf: scaling_factor
+terminal_carbon:
+  step: 3
+  elems:
+    - hetero_cc: terminal_carbon

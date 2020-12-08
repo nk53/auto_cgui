@@ -11,7 +11,11 @@ from os.path import join as pjoin
 from splinter import Browser
 from splinter.exceptions import ElementDoesNotExist
 from splinter.element_list import ElementList
+#from splinter.driver.webdriver import WebDriverElement
 from selenium.common.exceptions import TimeoutException
+#from selenium.webdriver.common.by import By
+#from selenium.webdriver.support.ui import WebDriverWait
+#from selenium.webdriver.support import expected_conditions as EC
 
 class CGUIBrowserProcess(Process):
     """Usage: subclass this class and write an init_system() method.
@@ -148,6 +152,12 @@ class CGUIBrowserProcess(Process):
             # make it a method call
             expr = 'self.'+expr
         return eval(expr)
+
+    def first_visible(self, elems):
+        if not isinstance(elems, ElementList):
+            elems = ElementList([elems])
+
+        return ElementList(filter(lambda elem: elem.visible, elems))
 
     def go_next(self, test_text=None, alert=None):
         if isinstance(alert, str):
@@ -411,24 +421,85 @@ class CGUIBrowserProcess(Process):
         while True:
             time.sleep(1)
 
+    def switch_to_window(self, index, wait=60, poll_frequency=.5):
+        """Waits up to `wait` seconds for a new window, then switches to it"""
+        # warn if we are waiting for more than one window
+        windows = self.browser.windows
+        if index > len(windows):
+            print("warning: waiting for window", index, "but only",
+                  len(windows), "window(s) exist")
+
+        # try once without time checking
+        if len(windows) > index:
+            windows.current = windows[index]
+            return True
+
+        # poll periodically
+        start_time = time.time()
+        while time.time() - start_time < wait:
+            if len(windows) > index:
+                windows.current = windows[index]
+                return True
+            time.sleep(poll_frequency)
+
+        # window took too long to load
+        raise TimeoutException("Failed to get window " +str(index))
+
+    def wait_exists(self, element_list, verbose=True):
+        """Waits until the query used to create element_list finds at least one
+        element and returns the new list
+
+        By default, prints a warning every time bool(element_list) is False
+        """
+        # get a reference to the actual function, and save its arguments
+        find_by_str = element_list.find_by
+        find_by = getattr(element_list, 'find_by_'+find_by_str)
+        query = element_list.query
+
+        tpl = "{} waiting for element by {}: '{}'"
+        while not element_list:
+            if verbose:
+                print(tpl.format(self.name, find_by_str, query))
+            self.browser.find_by(find_by, query)
+
+        return element_list
+
     def wait_script(self, script):
         print(self.name, "waiting for Javascript expression to evaluate to True")
         print(self.name, "JS expr:", script)
         while not self.browser.evaluate_script(script):
             time.sleep(1)
 
-    def wait_text(self, text):
+    def wait_text(self, text, wait_time=None):
         print(self.name, "waiting for text:", text)
         while True:
             if self.browser.is_text_present(text, wait_time=1):
                 break
 
     def wait_text_multi(self, texts):
+        print("waiting for any text in:", texts)
         wait_time = 1
         while True:
             for text in texts:
                 if self.browser.is_text_present(text, wait_time):
                     return text
+
+    def wait_visible(self, element, wait=None, click=False):
+        """Waits until an element is visible and optionally clicks it.
+
+        If wait is not None, then after wait seconds, this function raises a
+        TimeoutException. If click is True, then the element is clicked on
+        success.
+
+        Returns the element on success.
+        """
+        start_time = time.time()
+        while wait == None or time.time() - start_time < wait:
+            if element.visible:
+                if click:
+                    element.click()
+                return
+        raise TimeoutException
 
     def warn_if_text(self, text):
         msg = "Warning: {} ({}) found '{{}}' on step {}"

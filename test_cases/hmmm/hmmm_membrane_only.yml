@@ -1,0 +1,3 @@
+base: pdb/basic
+dict: basic.map.yml
+parent: bilayer/monly_bilayer.yml

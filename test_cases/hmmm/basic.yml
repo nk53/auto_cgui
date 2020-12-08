@@ -1,0 +1,34 @@
+- label: MARCKS-ED without PIP2
+  pdb:
+    name: marcks_ed.pdb
+    format: charmm
+  size_method: nlipid
+  lipids:
+    upper:
+      popc: 60
+      pope: 60
+      pops: 30
+    lower:
+      popc: 60
+      pope: 60
+      pops: 30
+
+- label: MARCKS-ED with PIP2
+  pdb:
+    name: marcks_ed.pdb
+    format: charmm
+  format: charmm
+  size_method: nlipid
+  lipids:
+    upper:
+      popc: 61
+      pope: 61
+      pops: 24
+      popi24: 2
+      popi25: 2
+    lower:
+      popc: 61
+      pope: 61
+      pops: 24
+      popi24: 2
+      popi25: 2

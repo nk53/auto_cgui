@@ -1,0 +1,21 @@
+- label: MARCKS-ED with PIP2
+  jobid: 0694991434
+  resume_link: 3
+  pdb:
+    name: marcks_ed.pdb
+    format: charmm
+  format: charmm
+  size_method: nlipid
+  lipids:
+    upper:
+      popc: 61
+      pope: 61
+      pops: 24
+      popi24: 2
+      popi25: 2
+    lower:
+      popc: 61
+      pope: 61
+      pops: 24
+      popi24: 2
+      popi25: 2

@@ -39,9 +39,8 @@
   pdb_orientation: True
   area_calc: True
   water_thickness: 30
-  msize_method: nlipid
-  msize: number
-  mlipids:
+  size_method: nlipid
+  lipids:
     lower:
       pvcl2: 5
       pppe: 70
