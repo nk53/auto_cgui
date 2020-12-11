@@ -485,7 +485,10 @@ class PDBBrowserProcess(CGUIBrowserProcess):
                 raise ValueError("Invalid MTS reagents (nitroxide) format")
             for name, value in zip(epr_fmt, mts_nitride):
                 eid = id_fmt.format(name, epr_no)
-                self.browser.find_by_id(eid).select(value)
+                elem = self.browser.find_by_id(eid)
+                # infinite loop if value does not exist; check output!
+                self.wait_exists(elem.find_by_value(value))
+                elem.select(value)
 
     def set_mts_modifier(self):
         if not 'mts_modifiers' in self.test_case:

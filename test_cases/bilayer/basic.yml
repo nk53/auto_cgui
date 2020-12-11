@@ -34,7 +34,7 @@
   temperature: 310.15
 
 - label: BtuB in E. coli, 38 E. coli LPS in upper and 75 PPPE, 20 PVPG, and 5 PVCL2 in lower
-  parent: pm_bilayer.yml
+  parent: bilayer.yml
   pdb: 1nqe.pdb
   pdb_orientation: True
   area_calc: True
@@ -47,13 +47,94 @@
       pvpg: 20
     upper:
       lpsa:
-        ec:
-          lip:
-            - lipa
-          core:
-            - K12, 38
-          oanti:
-            - O6, 2
+        species: ec # E. coli
+        lip: lipa
+        core: K12
+        count: 38
+        oanti: O6, 2
+  input: openmm
+  hmr: True
+  temperature: 310.15
+
+# this file uses mostly default options to test different component types
+- label: C. jejuni with 1:1 GM1-mimicry, GD1a-mimicry inner-ratio and 8:2 POPE, POPG outer-ratio
+  parent: membrane_only.yml
+  size_method: nlipid
+  water_thickness: 40
+  lipids:
+    upper:
+      lpsa:
+        species: cj # C. jejuni
+        lip: lipa
+        core: O19a
+        count: 30
+      lpsb:
+        species: cj
+        lip: lipa
+        core: O19b
+        count: 30
+    lower:
+      pope: 138
+      popg: 34
+      lpsa: 30
+      lpsb: 0
+  input: openmm
+  hmr: True
+  temperature: 310.15
+
+- label: Glycoglycerolipid and Ganglio-series bilayer
+  parent: membrane_only.yml
+  size_method: nlipid
+  water_thickness: 40
+  lipids:
+    lower:
+      chl1: 1
+      popc: 1
+      glpa:
+        predefined: Gc001 # MGDG
+        count: 20
+    upper:
+      glpb:
+        predefined: Gg001 # GA2
+        count: 20
+  input: openmm
+  hmr: True
+  temperature: 310.15
+
+- label: Axonal Membrane
+  parent: membrane_only.yml
+  size_method: nlipid
+  water_thickness: 40
+  lipids:
+    lower:
+      chl1: 119
+      popc: 47
+      sope: 46
+      pops: 7
+      popi: 10
+      ssm: 7
+    upper:
+      chl1: 66
+      popc: 26
+      sope: 25
+      pops: 4
+      popi: 5
+      ssm: 4
+      glpa:
+        lipid: CER180
+        count: 86
+      glpb:
+        predefined: Ga002 # Sulfatide
+        lipid: CER180
+        count: 17
+      glpc:
+        predefined: Gg014 # GM1a (GM1)
+        lipid: CER180
+        count: 4
+      glpd:
+        predefined: Gg026 # GD1a
+        lipid: CER180
+        count: 4
   input: openmm
   hmr: True
   temperature: 310.15

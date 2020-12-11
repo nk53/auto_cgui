@@ -18,12 +18,15 @@ class BilayerBrowserProcess(SolutionBrowserProcess, InputBrowserProcess):
         # reorder the config into a map of lipid name -> lipid cateogry
         self.lipid_config = utils.read_yaml("membrane.lipids.enabled.yml")['default']
 
+        custom_categories = 'glp', 'lps' # glycolipids and LPS
         lipid_map = dict()
         for category_key, category_info in self.lipid_config.items():
             category = category_info['name']
 
             # TODO: also handle detergents
-            if 'lipids' in category_info:
+            if category_key in custom_categories:
+                lipid_map[category_key] = category
+            elif 'lipids' in category_info:
                 for lipid in category_info['lipids']:
                     lipid_map[lipid] = category
 
@@ -106,214 +109,175 @@ class BilayerBrowserProcess(SolutionBrowserProcess, InputBrowserProcess):
                 field = field_tpl.format(atom_index, field)
                 self.browser.fill(field, value)
 
-    def select_lipids(self):
-        if not 'lipids' in self.test_case:
-            raise KeyError("Missing 'lipids' option")
+    def _build_glycolipids(self, glycolipids, lipids_root):
+        if not glycolipids:
+            return
 
-        lipids = self.test_case['lipids']
+        self.activate_lipid_category(self.lipid_map['glp'])
+        for i in range(1, len(glycolipids)):
+            self.browser.execute_script('addGlycolipid()')
+
+        for lipid, lipid_info in glycolipids.items():
+            Ulipid = lipid.upper()
+
+            predefined = lipid_info.get('predefined')
+            lipid_type = lipid_info.get('lipid')
+
+            lipids_root.find_by_value(Ulipid).click()
+            self.switch_to_window(1)
+
+            # wait for HTML to stop changing
+            html = None
+            while html != self.browser.html:
+                html = self.browser.html
+                time.sleep(1)
+
+            if predefined:
+                tpl = 'loadGRS("{}")'
+                self.browser.evaluate_script(tpl.format(predefined))
+
+            if lipid_type:
+                self.browser.select('sequence[0][name]', lipid_type)
+
+                # ensure GRS is properly updated
+                while True:
+                    grs_elem = self.browser.find_by_id('grs')
+                    if grs_elem and grs_elem.text and lipid_type in grs_elem.text:
+                        break
+                    time.sleep(1)
+
+            self.browser.evaluate_script('updateGlycolipid();')
+            self.switch_to_window(0)
+
+    def _build_LPS(self, lps_lipids, lipids_root):
+        if not lps_lipids:
+            return
+
+        self.activate_lipid_category(self.lipid_map['lps'])
+        for i in range(1, len(lps_lipids)):
+            self.browser.execute_script('addLPS()')
+
+        for lipid, lipid_info in lps_lipids.items():
+            Ulipid = lipid.upper()
+
+            species = lipid_info['species']
+            lipid_A = lipid_info['lip']
+            core = lipid_info['core']
+            oanti = lipid_info.get('oanti')
+
+            lipids_root.find_by_value(Ulipid).click()
+            self.switch_to_window(1)
+
+            # wait for HTML to stop changing
+            html = None
+            while html != self.browser.html:
+                html = self.browser.html
+                time.sleep(1)
+
+            self.browser.select('lps[species]', species)
+
+            # may need to wait for options to repopulate
+            self.wait_exists(self.browser.find_by_css('#lps_lipa option[value='+lipid_A+']'))
+            self.browser.select('lps[lipa]', lipid_A)
+
+            self.wait_exists(self.browser.find_by_css('#lps_core option[value='+core+']'))
+            self.browser.select('lps[core]', core)
+
+            if oanti:
+                oanti = oanti.replace(' ', '')
+                ocount = None
+                if ',' in oanti:
+                    oanti, ocount = oanti.split(',')
+
+                self.browser.find_by_id(oanti).click()
+
+                if ocount != None:
+                    self.browser.fill('lps[nounit]', ocount)
+
+            self.browser.execute_script('updateLPS();')
+            self.switch_to_window(0)
+
+    def select_lipids(self):
+        lipids = self.test_case.get('lipids')
+        if not lipids:
+            raise KeyError("Missing 'lipids' option")
 
         if not 'upper' in lipids:
             raise KeyError("Missing 'upper' lipid option")
         if not 'lower' in lipids:
             raise KeyError("Missing 'lower' lipid option")
 
-        size_method = self.test_case.get('size', 'number').lower()
-        allowed_size_methods = ('ratio', 'number')
+        size_method = self.test_case.get('size_method', 'ratio').lower()
+        # last two are the same
+        allowed_size_methods = ('ratio', 'number', 'nlipid')
         if not size_method in allowed_size_methods:
             msg = "Invalid size_method: {}; use one of {!r}"
             raise ValueError(msg.format(size_method, allowed_size_methods))
 
-        size_id = size_method
-        if size_id == 'number':
-            size_id = 'nlipid'
+        if size_method == 'ratio':
+            valid_size = False
+            for key in ('X', 'Y', 'XY'):
+                if key in self.test_case:
+                    valid_size = True
+                    break
+            if not valid_size:
+                raise ValueError("size_method is 'ratio', but no X/Y length is given")
 
-        all_lipids_root = self.browser.find_by_id('hetero_xy_option_'+size_id)
+        size_id = size_method
+        if size_method == 'number':
+            size_id = 'nlipid'
+        elif size_method == 'nlipid':
+            size_method = 'number'
 
         # chrome times out too quickly
         self.browser.driver.set_script_timeout(10000);
         self.browser.driver.set_page_load_timeout(10000);
 
-        # reorganize lipid list by lipid category and determine full element name
+        self.click_by_attrs(name='hetero_xy_option', value=size_id)
+        all_lipids_root = self.browser.find_by_id('hetero_xy_option_'+size_id)
+
         lipid_elems = list()
-        categories = set() # the categories we need to activate
+        categories = set()
         name_tpl = "lipid_"+size_method+"[{}][{}]"
-        ch = 'a'
-        Uch = 'A'
-        linc_num = 0
-        ginc_num = 0
-        for layer in self.test_case['lipids']:
-            for lipid in self.test_case['lipids'][layer]:
-                if lipid == "lpsa":
-                    lipid = "lpsa"
-                    Ulipid = "LPSA"
-                    lps_preface = "lps"
-                    Ulps_preface = "LPS"
-                    category = self.lipid_map[lipid]
-                    categories.add(category)
-                    self.activate_lipid_category(category)
-                    if 'lpsa' in self.test_case['lipids']['upper'] and 'lpsa' in self.test_case['lipids']['lower']:
-                        lps_count = ((len(self.test_case['lipids']['upper'][lipid]) + len(self.test_case['lipids']['lower'][lipid])) - 1)
+
+        # extract custom lipid info
+        custom_lipids = {
+            'lps': {},
+            'glp': {},
+        }
+        for layer, layer_info in lipids.items():
+            for lipid, lipid_info in layer_info.items():
+                lipid = lipid.lower()
+
+                custom_type = None
+                for prefix in custom_lipids:
+                    if lipid.startswith(prefix):
+                        custom_type = custom_lipids[prefix]
+                        break
+
+                if custom_type != None:
+                    if isinstance(lipid_info, int) or not lipid_info:
+                        if not lipid in custom_type:
+                            tpl = "Missing lipid info for {} lipid: '{}'"
+                            raise KeyError(tpl.format(prefix.upper(), lipid))
+                        count = lipid_info or 0
                     else:
-                        lps_count = (len(self.test_case['lipids'][layer][lipid]) - 1)
-                    for i in range(lps_count):
-                        if linc_num == 0:
-                            self.browser.execute_script('addLPS()')
-                    for species in self.test_case['lipids'][layer][lipid]:
-                        lps_letter = chr(ord(ch) + linc_num)
-                        Ulps_letter = chr(ord(Uch) + linc_num)
-                        lipid = (lps_preface + lps_letter)
-                        Ulipid = (Ulps_preface + Ulps_letter)
-
-                        if '_' in species:
-                            speciesn,speciesc = species.split('_')
-                        else:
-                            speciesn = species
-
-                        for lipn, lip in enumerate(self.test_case['lipids'][layer][lipid][species]['lip']):
-                            lip = str(lip)
-
-                        for coren, core in enumerate(self.test_case['lipids'][layer][lipid][species]['core']):
-                            core, count = core.split(', ')
-
-                        if 'oanti' in self.test_case['lipids'][layer][lipid][species]:
-                            for oantin, oanti in enumerate(self.test_case['lipids'][layer][lipid][species]['oanti']):
-                                oanti, ocount = oanti.split(', ')
-
-                        all_lipids_root.find_by_value(Ulipid).first.click()
-                        self.switch_to_window(1)
-
-                        # may need to wait for elements to appear
-                        for selector in (speciesn, lip, core):
-                            elem = self.browser.find_by_value(selector)
-                            self.wait_exists(elem).click()
-
-                        if 'oanti' in self.test_case['lipids'][layer][lipid][species]:
-                            self.browser.find_by_id(oanti).first.click()
-                            self.browser.find_by_name('lps[nounit]').first.fill(ocount)
-
-                        self.browser.execute_script("updateLPS();")
-                        self.switch_to_window(0)
-
-                        lipid_tup = name_tpl.format(layer, lipid), count
-                        lipid_elems.append(lipid_tup)
-                        linc_num += 1
-                elif lipid == "glycolipid":
-                    lipid = "glpa"
-                    Ulipid = "GLPA"
-                    glp_preface = "glp"
-                    Uglp_preface = "GLP"
-                    pglyc_fmt = "//span[.='{}']"
-                    sub2_fmt = "//input[@value='{}']"
-                    sub3_fmt = "//input[@value='{}']"
-                    category = self.lipid_map[lipid]
-                    categories.add(category)
-                    self.activate_lipid_category(category)
-
-                    if 'glycolipid' in self.test_case['lipids']['upper'] and 'glycolipid' in self.test_case['lipids']['lower']:
-                        glp_count = ((len(self.test_case['lipids']['upper'][lipid]) + len(self.test_case['lipids']['lower'][lipid])) - 1)
-                    else:
-                        glp_count = (len(self.test_case['lipids'][layer][lipid]) - 1)
-
-                    for i in range(glp_count):
-                        if ginc_num == 0:
-                            self.browser.execute_script('addGlycolipid()')
-
-                    for species in self.test_case['lipids'][layer][lipid]:
-                        glp_letter = chr(ord(ch) + ginc_num)
-                        Uglp_letter = chr(ord(Uch) + ginc_num)
-                        lipid = (glp_preface + glp_letter)
-                        Ulipid = (Uglp_preface + Uglp_letter)
-
-                        if '_' in species:
-                            speciesn,speciesc = species.split('_')
-                        else:
-                            speciesn = species
-
-                        if (species == 'CER' or species == 'PICER' or species == 'DAG' or species == 'PIDAG' or species == 'ACYL'):
-                            nlipid_root = self.browser.find_by_id('hetero_xy_option_nlipid')
-                            nlipid_root.find_by_value(Ulipid).first.click()
-                            self.switch_to_window(1)
-
-                            for modn, mod in enumerate(self.test_case['lipids'][layer][lipid][species]):
-                                modnum, modid, count = mod.split(', ')
-                                self.browser.find_by_value(species).click()
-                                self.wait_exists(self.browser.find_by_value(modid)).click()
-
-                            time.sleep(2) # TODO: is an explicit wait possible?
-                            self.browser.execute_script("updateGlycolipid();")
-                            self.switch_to_window(0)
-
-                            lipid_tup = name_tpl.format(layer, lipid), count
-                            lipid_elems.append(lipid_tup)
-                            ginc_num += 1
-                        else:
-                            for sub2n, sub2 in enumerate(self.test_case['lipids'][layer][lipid][species]['sub2']):
-                                if ', ' in sub2:
-                                    sub2name, sub2, count = sub2.split(', ')
-                                else:
-                                    msub3 = self.test_case['lipids'][layer][lipid][species]['sub2'][sub2]
-                                    for sub3 in msub3:
-                                        sub3name,sub3id, count = sub3.split(', ')
-                                        sub3 = str(sub3id)
-                            nlipid_root = self.browser.find_by_id('hetero_xy_option_nlipid')
-                            all_lipids_root.find_by_value(Ulipid).first.click()
-                            self.switch_to_window(1)
-                            self.interact(locals())
-                            try:
-                                pglyc_id = pglyc_fmt.format(speciesn)
-                                sub2_id = pglyc_fmt.format(sub2)
-                                sub3_id = sub3_fmt.format(sub3)
-                                self.browser.execute_script("$('sub1').toggle()")
-                                time.sleep(1)
-                                self.browser.find_by_xpath(pglyc_id).click()
-                                time.sleep(1)
-                                sub2_sibling = self.browser.find_by_xpath(sub2_id)
-                                sub2_sibling.find_by_xpath("./..").click()
-                                time.sleep(1)
-                                sub3_sibling = self.browser.find_by_xpath(sub3_id)
-                                sub3_sibling.find_by_xpath("./..").click()
-                                time.sleep(1)
-                            except:
-                                sub2_fmt = "//span[.='{}']/../ul/li/label/input[@value='{}']"
-                                pglyc_id = pglyc_fmt.format(speciesn)
-                                sub2_id = sub2_fmt.format(speciesn, sub2)
-                                self.browser.execute_script("$('sub1').toggle()")
-                                time.sleep(1)
-                                self.browser.find_by_xpath(pglyc_id).click()
-                                time.sleep(1)
-                                sub2_sibling = self.browser.find_by_xpath(sub2_id)
-                                sub2_sibling.find_by_xpath("./..").click()
-                                time.sleep(1)
-                            try:
-                                for modn, mod in enumerate(self.test_case['lipids'][layer][lipid][species]['modification']):
-                                    modnum, modtype, modid = mod.split(', ')
-                                    modtype = str(modtype)
-                                    modid = str(modid)
-                                    self.browser.find_by_value(modtype).click()
-                                    time.sleep(1)
-                                    self.browser.find_by_value(modid).click()
-                                    time.sleep(1)
-                                self.browser.execute_script("updateGlycolipid();")
-                                self.browser.windows.current = self.browser.windows[0]
-                                lipid_tup = name_tpl.format(layer, lipid), count
-                                lipid_elems.append(lipid_tup)
-                                ginc_num += 1
-                            except:
-                                self.browser.execute_script("updateGlycolipid();")
-                                self.browser.windows.current = self.browser.windows[0]
-                                lipid_tup = name_tpl.format(layer, lipid), count
-                                lipid_elems.append(lipid_tup)
-                                ginc_num += 1
+                        if lipid in custom_type:
+                            tpl = "Duplicate {} lipid specification: '{}'"
+                            raise KeyError(tpl.format(prefix.upper(), lipid))
+                        custom_type[lipid] = lipid_info
+                        count = lipid_info['count']
                 else:
-                    for lipid, count in lipids[layer].items():
-                        lipid = lipid.lower()
-                        if not (lipid == "glycolipid" or lipid == "lpsa"):
-                            category = self.lipid_map[lipid]
-                            categories.add(category)
+                    count = lipid_info
+                    category = self.lipid_map[lipid]
+                    categories.add(category)
 
-                            # browser.fill() needs both name and count
-                            lipid_tup = name_tpl.format(layer, lipid), count
-                            lipid_elems.append(lipid_tup)
+                lipid_tup = name_tpl.format(layer, lipid), count
+                lipid_elems.append(lipid_tup)
+
+        self._build_LPS(custom_lipids['lps'], all_lipids_root)
+        self._build_glycolipids(custom_lipids['glp'], all_lipids_root)
+
         # activate all categories
         for category in categories:
             self.activate_lipid_category(category)

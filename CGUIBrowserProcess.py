@@ -185,7 +185,6 @@ class CGUIBrowserProcess(Process):
                         raise NotImplementedError
 
         if test_text:
-            print("waiting for", test_text)
             self.wait_text_multi([test_text, self.CHARMM_ERROR])
 
     def handle_step(self, step_info):
@@ -362,7 +361,6 @@ class CGUIBrowserProcess(Process):
                     for step_num, step in enumerate(steps):
                         self.step = step_num
                         if 'wait_text' in step:
-                            print(self.name, "waiting for", step['wait_text'])
                             found_text = self.wait_text_multi([step['wait_text'], self.CHARMM_ERROR, self.PHP_FATAL_ERROR])
                         if found_text != step['wait_text']:
                             failure = True
@@ -432,6 +430,7 @@ class CGUIBrowserProcess(Process):
         # try once without time checking
         if len(windows) > index:
             windows.current = windows[index]
+            self.browser.find_by_tag('body') # wait for page to have any html
             return True
 
         # poll periodically
@@ -439,6 +438,7 @@ class CGUIBrowserProcess(Process):
         while time.time() - start_time < wait:
             if len(windows) > index:
                 windows.current = windows[index]
+                self.browser.find_by_tag('body')
                 return True
             time.sleep(poll_frequency)
 
@@ -477,7 +477,7 @@ class CGUIBrowserProcess(Process):
                 break
 
     def wait_text_multi(self, texts):
-        print("waiting for any text in:", texts)
+        print(self.name, "waiting for any text in:", texts)
         wait_time = 1
         while True:
             for text in texts:

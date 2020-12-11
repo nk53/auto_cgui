@@ -602,62 +602,8 @@ default:
         - bddtm
   glp:
     name: Glycolipids
-    lipids:
-      - glpa
-      - glpb
-      - glpc
-      - glpd
-      - glpe
-      - glpf
-      - glpg
-      - glph
-      - glpi
-      - glpj
-      - glpk
-      - glpl
-      - glpm
-      - glpn
-      - glpo
-      - glpp
-      - glpq
-      - glpr
-      - glps
-      - glpt
-      - glpu
-      - glpv
-      - glpw
-      - glpx
-      - glpy
-      - glpz
   lps:
     name: LPS (lipopolysaccharides)
-    lipids:
-      - lpsa
-      - lpsb
-      - lpsc
-      - lpsd
-      - lpse
-      - lpsf
-      - lpsg
-      - lpsh
-      - lpsi
-      - lpsj
-      - lpsk
-      - lpsl
-      - lpsm
-      - lpsn
-      - lpso
-      - lpsp
-      - lpsq
-      - lpsr
-      - lpss
-      - lpst
-      - lpsu
-      - lpsv
-      - lpsw
-      - lpsx
-      - lpsy
-      - lpsz
 micelle:
   # Detergents (Zwitterionic)
   type1:

@@ -1,11 +1,3 @@
-import os
-import ast
-import time
-import utils
-import yaml
-from os.path import join as pjoin
-from splinter import Browser
-from splinter.exceptions import ElementDoesNotExist
 from BilayerBrowserProcess import BilayerBrowserProcess
 
 class HMMMBrowserProcess(BilayerBrowserProcess):

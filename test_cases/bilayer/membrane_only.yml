@@ -1,11 +1,10 @@
 base: pdb/basic
 dict: membrane_only.map.yml
-# indicate ion_method for bilayer, even if using default, to prevent
-# alert on the solvent options page
 ion_method: distance
-membrane_only: True
 steps:
   - wait_text: Lipid Type
+    poststeps:
+      - calc_size()
     alert: accept
   # solvent options are similar to solution builder, but we still handle
   # them separately
