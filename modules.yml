@@ -3,6 +3,7 @@ BILAYER: BilayerBrowserProcess
 FEP: FEPBrowserProcess
 GLYCOLIPID: GlycolipidBrowserProcess
 HMMM: HMMMBrowserProcess
+NANODISC: NanodiscBrowserProcess
 LPS: LPSBrowserProcess
 NMM: NMMBrowserProcess
 MCA: MCABrowserProcess

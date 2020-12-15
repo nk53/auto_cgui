@@ -214,7 +214,7 @@ class BilayerBrowserProcess(SolutionBrowserProcess, InputBrowserProcess):
             msg = "Invalid size_method: {}; use one of {!r}"
             raise ValueError(msg.format(size_method, allowed_size_methods))
 
-        if size_method == 'ratio':
+        if size_method == 'ratio' and self.module_title != "Nanodisc Builder":
             valid_size = False
             for key in ('X', 'Y', 'XY'):
                 if key in self.test_case:
@@ -233,7 +233,8 @@ class BilayerBrowserProcess(SolutionBrowserProcess, InputBrowserProcess):
         self.browser.driver.set_script_timeout(10000);
         self.browser.driver.set_page_load_timeout(10000);
 
-        self.click_by_attrs(name='hetero_xy_option', value=size_id)
+        if self.module_title != "Nanodisc Builder":
+            self.click_by_attrs(name='hetero_xy_option', value=size_id)
         all_lipids_root = self.browser.find_by_id('hetero_xy_option_'+size_id)
 
         lipid_elems = list()
