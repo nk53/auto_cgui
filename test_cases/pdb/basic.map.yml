@@ -6,6 +6,10 @@ glycan:
   step: 2
   presteps:
     - set_glycosylation()
+gpi:
+  step: 2
+  presteps:
+    - set_gpi()
 phosphorylation:
   step: 2
   presteps:
@@ -82,3 +86,7 @@ symop:
   step: 2
   presteps:
     - set_symop()
+reference:
+  step: 2
+  presteps:
+    - test_glycosylation()

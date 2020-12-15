@@ -1,8 +1,12 @@
 # abbreviation (case insensitive): module filename base
 BILAYER: BilayerBrowserProcess
 FEP: FEPBrowserProcess
+GLYCOLIPID: GlycolipidBrowserProcess
+HMMM: HMMMBrowserProcess
+LPS: LPSBrowserProcess
+NMM: NMMBrowserProcess
 MCA: MCABrowserProcess
 POLYMER: PBBrowserProcess
 PDB: PDBBrowserProcess
 SOLUTION: SolutionBrowserProcess
-NMM: NMMBrowserProcess
+GLYCAN: GlycanOnlyBrowserProcess

@@ -600,6 +600,10 @@ default:
         - budtm
         - addtm
         - bddtm
+  glp:
+    name: Glycolipids
+  lps:
+    name: LPS (lipopolysaccharides)
 micelle:
   # Detergents (Zwitterionic)
   type1:
@@ -800,4 +804,3 @@ micelle:
     lipids:
       - chsd
       - chsp
-

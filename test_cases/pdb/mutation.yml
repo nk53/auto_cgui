@@ -1,0 +1,14 @@
+# this file uses mostly default options to test different component types
+- label: reader
+  base: components/basic
+  pdb: 2klu
+  # chain rid res patch
+  mutations:
+    - PROA 364 GLY ASN
+    - PROA 365 PRO ALA
+  steps:
+    - wait_text: Manipulate PDB
+    - wait_text: Generate PDB
+      presteps:
+        - set_mutation()
+  final_wait_text: Computed Energy

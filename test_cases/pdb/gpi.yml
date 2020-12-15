@@ -1,7 +1,7 @@
 # this file uses mostly default options to test different component types
 - label: reader
   base: components/basic
-  pdb: 1l6x
+  pdb: 1cdr
   gpi:
     lipid: '{"lipid_type":"PIDAG","name":"PI-DAG-DM"}'
     grs: |
@@ -14,9 +14,3 @@
       7 - - - - - - 16A: AMAN
       8 - - - - - - - 14A: AMAN
     segid: PROA
-  steps:
-    - wait_text: Manipulate PDB
-    - wait_text: Generate PDB
-      presteps:
-        - set_gpi()
-    - wait_text: Computed Energy

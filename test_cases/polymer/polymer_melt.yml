@@ -4,6 +4,7 @@
 #
 - label: melt #single solution melt
   base: components/basic
+  parent: False
   pchains:
     pchain1:
       type1:

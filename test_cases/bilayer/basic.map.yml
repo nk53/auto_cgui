@@ -76,10 +76,14 @@ hydration_number:
     - click_by_value('nhydration')
   elems:
     - nhydration: hydration_number
-size_method:
-  step: 3
+area_calc:
+  step: 2
   presteps:
-    - click_by_attrs(name='hetero_xy_option', value='size_method')
+    - click_by_attrs(name='fill_checked', value='1')
+pdb_orientation:
+  step: 2
+  presteps:
+    - click_by_attrs(name='align_option', value='1')
 lipids:
   step: 3
   presteps:
@@ -105,4 +109,3 @@ ion_method:
   step: 4
   presteps:
     - set_ion_method()
-

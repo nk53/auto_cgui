@@ -1,32 +1,32 @@
-#- label: 5JY6
-#  base: pdb/basic
-#  pdb: 5jy6.pdb
-#  ligand: ligands/basic 
-#  chains:
-#    - HETA
-#    - HETB
-#    - HETC
-#    - HETD
-#    - HETE
-#    - HETF
-#    - HETG
-#    - HETH
-#    - WATA
-#    - WATB
-#    - WATC
-#    - WATD
-#  # resname charmm-name
-#  hcr:
-#    - NAD NAD
-#  steps:
-#    - wait_text: Manipulate PDB
-#    - wait_text: Generate PDB
-#    - wait_text: Computed Energy
-#
+- label: 5JY6
+  base: pdb/basic
+  pdb: 5jy6.pdb
+  ligand: ligands/basic
+  chains:
+    - HETA
+    - HETB
+    - HETC
+    - HETD
+    - HETE
+    - HETF
+    - HETG
+    - HETH
+    - WATA
+    - WATB
+    - WATC
+    - WATD
+  # resname charmm-name
+  hcr:
+    - NAD NAD
+  steps:
+    - wait_text: Manipulate PDB
+    - wait_text: Generate PDB
+    - wait_text: Computed Energy
+
 - label: 4W53
   base: pdb/basic
   pdb: 4w53.pdb
-  ligand: ligands/basic 
+  ligand: ligands/basic
   chains:
     - HETA
     - HETB
@@ -34,7 +34,7 @@
   # resname charmm-name/cgen-opt
   hcr:
     - MBN antc_mol
-    - EPE antc_mol
+    - EPE charmm_mol
   steps:
     - wait_text: Manipulate PDB
     - wait_text: Generate PDB

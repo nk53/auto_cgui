@@ -91,7 +91,7 @@ if 'USER' in CONFIG and 'PASS' in CONFIG:
     BASE_URL = '/'.join(BASE_URL)
 settings['base_url'] = BASE_URL
 
-browser_type = 'chrome'
+browser_type = 'firefox'
 if 'BROWSER_TYPE' in CONFIG:
     browser_type = CONFIG['BROWSER_TYPE']
 settings['browser_type'] = browser_type

@@ -1,0 +1,18 @@
+base: pdb/basic
+dict: basic.map.yml
+parent: False
+url_ym: ?doc=input/afes.abinding
+ion_method: distance
+steps:
+  - module:
+      name: bilayer
+      stop: 7
+  - wait_text: FEP/TI simulation
+  - wait_text: drag
+  - wait_text: Force Field Options
+    presteps:
+      - fill('lfitedge', 10)    # Waterbox Size
+
+  - module:
+      name: input
+      start: 1

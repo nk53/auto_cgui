@@ -1,0 +1,24 @@
+# Fill this file with specific test cases to perform
+- label: Glucocerebrosides all options
+  download: no
+  glycolipid: Glucocerebrosides
+- label: Glycoglycerolipids MGDG and DGDG
+  download: no
+  glycolipid: Glycoglycerolipids
+  sub2:
+    - MGDG, Gc001
+    - DGDG, Gc002
+- label: Ganglio-series with GA2 (0-series), GM3 (a-series), and GD3 (b-series)
+  download: no
+  glycolipid: Ganglio-series
+  sub2:
+    0-series:
+      - GA2, Gg001
+    a-series:
+      - GM3, Gg002
+    b-series:
+      - GD3, Gg004
+    c-series:
+      - GT3, Gg016
+    others:
+      - GM4, Gg033

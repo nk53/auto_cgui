@@ -1,10 +1,10 @@
 - label: 6XR3
   base: pdb/basic
   pdb: 6xr3.pdb
-  # chain 
+  # chain
   chains:
     - HETA
-  # resname 
+  # resname
   sdf:
     - V7G
   # symoption
@@ -18,11 +18,11 @@
 - label: 4W53
   base: pdb/basic
   pdb: 4w53.pdb
-  # chain 
+  # chain
   chains:
     - HETA
     - HETB
-  # resname 
+  # resname
   sdf:
     - MBN
     - EPE
