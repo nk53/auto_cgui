@@ -4,7 +4,6 @@ from os.path import join as pjoin
 from splinter import Browser
 from splinter.exceptions import ElementDoesNotExist
 from SolutionBrowserProcess import SolutionBrowserProcess
-from selenium.common.exceptions import UnexpectedAlertPresentException, ElementNotInteractableException
 
 def init_module(test_cases, args):
     """Preprocesses test cases

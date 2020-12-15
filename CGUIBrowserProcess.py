@@ -11,11 +11,7 @@ from os.path import join as pjoin
 from splinter import Browser
 from splinter.exceptions import ElementDoesNotExist
 from splinter.element_list import ElementList
-#from splinter.driver.webdriver import WebDriverElement
 from selenium.common.exceptions import TimeoutException
-#from selenium.webdriver.common.by import By
-#from selenium.webdriver.support.ui import WebDriverWait
-#from selenium.webdriver.support import expected_conditions as EC
 
 class CGUIBrowserProcess(Process):
     """Usage: subclass this class and write an init_system() method.
