@@ -2,7 +2,7 @@
   base: components/basic
   parent: vac
   nanomaterial_type:
-    metals: fem        # alm, cum, aum, pbm, nim, pdm, ptm, agm
+    metals: pdm        # alm, cum, aum, pbm, nim, pdm, ptm, agm
 
     shape: box         # sphere, cylinder, rod, polygon, box, wulff
     radius: 10         # for sphere, cylinder, rod, wulff
@@ -24,7 +24,7 @@
   base: components/basic
   parent: sol
   nanomaterial_type:
-    metals: esm        # alm, cum, aum, pbm, nim, pdm, ptm, agm
+    metals: pdm        # alm, cum, aum, pbm, nim, pdm, ptm, agm
 
     shape: box         # sphere, cylinder, rod, polygon, box, wulff
     radius: 10         # for sphere, cylinder, rod, wulff

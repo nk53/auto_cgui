@@ -327,6 +327,9 @@ class NMMBrowserProcess(SolutionBrowserProcess):
 
         if matName == 'acm' or matName == 'agm' or matName == 'alm' or  matName == 'aum' or  matName == 'cem' or  matName == 'cum' or  matName == 'esm' or  matName == 'fem' or  matName == 'irm' or  matName == 'nim' or  matName == 'pbm' or matName == 'pdm' or matName == 'ptm' or matName == 'rhm' or  matName == 'srm' or matName == 'thm' or matName == 'ybm':
             browser.select('shape', mshape)
+            if mshape == 'box':
+                milidx = test_case['nanomaterial_type']['mindex'][0]
+                browser.select('mindex', milidx)
             if mshape == 'sphere':
                 rsphere = test_case['nanomaterial_type']['radius']
                 browser.fill('radius', rsphere)
