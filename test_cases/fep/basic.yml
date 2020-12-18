@@ -1,17 +1,150 @@
-# this file uses mostly default options to test different component types
-- label: solvator
-  base: ligands/basic
-  ligands:
-    lig1:
-      type: solvator
-    lig2:
-      type: solvator
-    lig3:
-      type: solvator
-  steps:
-    - wait_text: Set Pair Options
-      presteps:
-        - select_ligands()
-    - wait_text: Waterbox Size Option
-    - wait_text: Please download
+- label: relative ligand binder with membrane
+  parent: rbinding_membrane
+  system_type: bilayer
+  pdb: 3pwh.pdb
+  ligand: ligands/basic
+  orient_ppm:
+  XY: 70
+  lipids:
+    lower:
+      popc: 1
+    upper:
+      popc: 1
+  drags:
+    - 11.mol2
+    - 25a.mol2
+    - 25b.mol2
+#  path: min
+  programs:
+    - namd
+  ffs:
+    - cgenff
+
+- label: absolute ligand binder with membrane
+  parent: abinding_membrane
+  system_type: bilayer
+  pdb: 3pwh.pdb
+  ligand: ligands/basic
+  orient_ppm:
+  XY: 70
+  lipids:
+    lower:
+      popc: 1
+    upper:
+      popc: 1
+  drags:
+    - 11.mol2
+    - 25a.mol2
+    - 25b.mol2
+  programs:
+    - genesis
+  ffs:
+    - cgenff
+
+
+- label: absolute ligand solvation
+  parent: asolv
+  drags:
+    - tc11.mol2
+    - tc12.mol2
+    - tc13.mol2
+    - tc14.mol2
+  programs:
+    - namd
+  ffs:
+    - cgenff
+
+- label: absolute ligand binder
+  parent: abinding
+  system_type: solution
+  pdb: 4w53.pdb
+  ligand: ligands/basic
+  chains:
+    - HETB
+  drags:
+    - tc11.mol2
+    - tc12.mol2
+    - tc13.mol2
+    - tc14.mol2
+  programs:
+    - namd
+  ffs:
+    - cgenff
+
+- label: relative ligand binder
+  parent: rbinding
+  system_type: solution
+  pdb: 4djw.pdb
+  ligand: ligands/basic
+  chains:
+    - PROB
+    - HETB
+    - HETC
+    - HETD
+  drags:
+    - bace1.mol2
+    - bace2.mol2
+  path: min
+  programs:
+    - amber
+                   #  protein_ffs:
+                   #    - ff19sb
+                   #  ligand_ffs:
+                   #    - gaff2
+                   #  water_ffs:
+                   #    - opc
+  ffs:
+    - amber
+  protocols:
+    - unified
+
+- label: absolute ligand binder
+  parent: abinding
+  system_type: solution
+  pdb: thrombin.pdb
+  ligand: ligands/basic
+  hcr:
+    - UNL antc_mol
+  drags:
+    - ligand1.mol2
+    - ligand2.mol2
+  programs:
+    - namd
+  ffs:
+    - cgenff
+
+- label: absolute ligand solvation
+  parent: asolv
+  drags:
+    - ligand1.mol2
+    - ligand2.mol2
+  programs:
+    - namd
+  ffs:
+    - cgenff
+
+- label: relative ligand binder
+  parent: rbinding
+  system_type: solution
+  pdb: thrombin.pdb
+  ligand: ligands/basic
+  hcr:
+    - UNL antc_mol
+  drags:
+    - ligand1.mol2
+    - ligand2.mol2
+  programs:
+    - namd
+  ffs:
+    - cgenff
+
+- label: relative ligand solvation
+  parent: rsolv
+  drags:
+    - ligand1.mol2
+    - ligand2.mol2
+  programs:
+    - namd
+  ffs:
+    - cgenff
 

@@ -1,4 +1,4 @@
-# this file uses mostly default options to test different component types
+#this file uses mostly default options to test different component types
 - label: 1UBQ with two staples in solution
   staples:
     - RMETA3 PROA 1 PROA 3
@@ -6,3 +6,77 @@
   pdb: 1ubq.pdb
   input: openmm
   hmr: True
+- label: 186L modified
+  base: pdb/basic
+  pdb: 186l_modified.charmm
+  ligand: ligands/basic
+  chains:
+    - HETA
+    - HETB
+    - HETC
+    - HETD
+    - WATA
+  hcr:
+    - CLA CLA
+    - HED charmm
+    - LIG ctop_upload
+- label: 2OI0_modified parameterized
+  base: pdb/basic
+  pdb: 2oi0_modified.pdb
+  ligand: ligands/basic
+  chains:
+    - HETA
+  hcr:
+    - LIG param
+- label: solvation 5JY6
+  base: pdb/basic
+  pdb: 5jy6.pdb
+  ligand: ligands/basic
+  chains:
+    - HETA
+    - HETB
+    - HETC
+    - HETD
+    - HETE
+    - HETF
+    - HETG
+    - HETH
+    - WATA
+    - WATB
+    - WATC
+    - WATD
+  # resname charmm-name
+  hcr:
+    - NAD NAD
+- label: solvation 4HG6
+  base: pdb/basic
+  pdb: 4hg6.pdb
+  ligand: ligands/basic
+  # chain1 resid1 chain2 resid2
+  ssbonds:
+    - PROB 163 PROB 430
+- label: 1KDX with terminal patching and phosphorylation
+  pdb: 1kdx.pdb
+  phosphorylation:
+    - PROB SER 133 SP1
+  input: openmm
+  hmr: true
+- label: 5TCT with two scml
+  pdb: 5tct.pdb
+  ligand: ligands/basic
+  chains:
+    - PROB
+    - PROC
+    - PROD
+    - PROE
+    - PROF
+    - DNAB
+    - HETA
+    - HETB
+    - HETE
+  hcr:
+    - ADP ADP
+    - MN ZN2
+  input: openmm
+  hmr: true
+

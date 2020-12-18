@@ -14,6 +14,31 @@ class PDBBrowserProcess(CGUIBrowserProcess):
         self.module_url = "?doc=input/pdbreader"
         super(PDBBrowserProcess, self).__init__(todo_q, done_q, **kwargs)
 
+    def set_mutation(self):
+        if not 'mutations' in self.test_case:
+            raise ValueError("Missing stapling options")
+
+        mutations = self.test_case['mutations']
+        # open stapling menu
+        self.click('mutation_checked', 'Mutant')
+
+        # add as many mutations as needed
+        add_btn = self.browser.find_by_value("Add Mutation")
+        for mutation in mutations[1:]:
+            add_btn.click()
+
+        # set stapling options
+        mutation_fmt = 'chain', 'rid', 'res', 'patch'
+        id_fmt = 'mutation_{}_{}'
+        for mutation_no, mutation in enumerate(mutations):
+            mutation = mutation.split()
+            if len(mutation) != 4:
+                raise ValueError("Invalid mutation format")
+
+            for name, value in zip(mutation_fmt, mutation):
+                sid = id_fmt.format(name, mutation_no)
+                self.browser.find_by_id(sid).select(value)
+
     def set_gpi(self):
         if not 'gpi' in self.test_case:
             raise ValueError("Missing gpi options")
@@ -29,18 +54,33 @@ class PDBBrowserProcess(CGUIBrowserProcess):
         self.browser.select("lipid_type", lipid['lipid_type'])
         self.browser.select("sequence[0][name]", lipid['name'])
         _d = re.compile('- ')
+        nchem = 1
         for i,residue in enumerate(gpi['grs'].split('\n')):
             if not residue.strip(): continue
             depth = len(_d.findall(residue))
             linkage, resname = residue.split('- ')[-1].split()
             idx = resname.find('_')
+            chemod = None
             if idx > 0:
+                chemod = resname[idx+1:].split('_')
                 resname = resname[:idx]
             if depth > 4:
                 self.browser.find_by_id(str(depth-1)).find_by_css('.add').first.click()
             self.browser.select("sequence[%d][name]" % (i+1), resname[1:])
             self.browser.select("sequence[%d][type]" % (i+1), resname[0])
             self.browser.select("sequence[%d][linkage]" % (i+1), linkage[1])
+            if chemod:
+                for chm in chemod:
+                    if chm == '6PEA' and i == 3: continue
+                    self.browser.execute_script("add_chem()")
+                    match = re.match('[0-9]+', chm)
+                    site = match.group()
+                    patch = chm[match.end():]
+                    self.browser.select("chem[%d][residue]" % nchem, resname[1:])
+                    self.browser.select("chem[%d][resid]" % nchem, i+1)
+                    self.browser.select("chem[%d][site]" % nchem, site)
+                    self.browser.select("chem[%d][patch]" % nchem, patch)
+                    nchem += 1
         self.browser.execute_script("updateGPI()")
         self.browser.windows.current = self.browser.windows[0]
 
@@ -68,16 +108,20 @@ class PDBBrowserProcess(CGUIBrowserProcess):
                 time.sleep(1)
 
             GRS_field.fill(g['grs'])
-            prot = ast.literal_eval(g['prot'])
-            self.browser.select("sequence[0][name]", prot['segid'])
-            self.browser.select("sequence[0][name2]", prot['resname'])
-            self.browser.select("sequence[0][name3]", prot['resid'])
+            self.browser.find_by_id('apply_GRS').click()
+            if g['type'] in ['n-linked', 'o-linked']:
+                prot = ast.literal_eval(g['prot'])
+                self.browser.select("sequence[0][name]", prot['segid'])
+                self.browser.select("sequence[0][name2]", prot['resname'])
+                self.browser.select("sequence[0][name3]", prot['resid'])
             self.browser.execute_script("seqUpdate()")
             self.browser.windows.current = self.browser.windows[0]
 
     def set_csml(self):
         if not 'hcr' in self.test_case:
             raise ValueError("Missing Hetero Chain options")
+        pdb = self.pdb = self.test_case['pdb']
+        pdb_id, pdb_fmt = pdb.split('.')
         hcrs = self.test_case['hcr']
         hid_fmt = "rename[{}]"
         csmlb_fmt = "openCSMLSearch('{}')"
@@ -87,15 +131,20 @@ class PDBBrowserProcess(CGUIBrowserProcess):
             hid = hid_fmt.format(hcr)
             antc_fmt = "//input[@name='rename[{}]' and @value='antechamber']"
             cgen_fmt = "//input[@name='rename[{}]' and @value='cgenff']"
+            ctop_fmt = "//input[@name='rename[{}]' and @value='charmm']"
             sdf_fmt = "//input[@name='rename_option[{}][{}]' and @value='sdf']"
             mol2_fmt = "//input[@name='rename_option[{}][{}]' and @value='mol2']"
             molup_fmt = "mol2_{}[{}]"
             sdfup_fmt = "sdf_{}[{}]"
+            top_fmt = "top[{}]"
+            par_fmt = "par[{}]"
             mfile_fmt = "{}.mol2"
             sfile_fmt = "{}.sdf"
+            rtffile_fmt = "{}.rtf"
+            prmfile_fmt = "{}.prm"
             ligfile = os.path.abspath(pjoin('files', self.test_case['ligand']))
             self.ligfile = ligfile
- 
+
             if name == 'charmm':
                 cgenid = cgen_fmt.format(hcr)
                 self.browser.find_by_xpath(cgenid).first.click()
@@ -142,6 +191,28 @@ class PDBBrowserProcess(CGUIBrowserProcess):
                 self.browser.find_by_xpath(antcid).first.click()
                 self.browser.find_by_xpath(sdfid).first.click()
                 self.browser.attach_file(sdfupid, sdfpath)
+            elif name == 'param':
+                cid = csmlb_fmt.format(hcr)
+                cid_button = self.browser.execute_script(cid)
+                self.browser.windows.current = self.browser.windows[1]
+                self.wait_text('parameterize ligand')
+                self.browser.find_by_css("div#options input[type=radio]").first.click()
+                self.browser.find_by_id("nextBtn").first.click()
+                self.browser.windows.current = self.browser.windows[0]
+                cgenid = cgen_fmt.format(hcr)
+                self.browser.find_by_xpath(cgenid).first.click()
+            elif name == 'ctop_upload':
+                cgen_opt = 'charmm'
+                ctopid = ctop_fmt.format(hcr)
+                topupid = top_fmt.format(hcr)
+                parupid = par_fmt.format(hcr)
+                topfid = rtffile_fmt.format(pdb_id)
+                parfid = prmfile_fmt.format(pdb_id)
+                toppath = pjoin(self.ligfile, topfid)
+                parpath = pjoin(self.ligfile, parfid)
+                self.browser.find_by_xpath(ctopid).first.click()
+                self.browser.attach_file(topupid, toppath)
+                self.browser.attach_file(parupid, parpath)
             else:
                 hid_button = self.browser.find_by_name(hid)
                 if not hid_button.checked:
@@ -149,6 +220,7 @@ class PDBBrowserProcess(CGUIBrowserProcess):
                 cid = csmlb_fmt.format(hcr)
                 cid_button = self.browser.execute_script(cid)
                 self.browser.windows.current = self.browser.windows[1]
+                self.wait_text('residue name')
                 self.browser.find_by_value(name).first.click()
                 self.browser.find_by_id("nextBtn").first.click()
                 self.browser.windows.current = self.browser.windows[0]
@@ -295,6 +367,9 @@ class PDBBrowserProcess(CGUIBrowserProcess):
 
         # set phosphorylation options; continue iteration as necessary
         phos_fmt = 'chain', 'res', 'rid', 'patch'
+        # fields are given in different order from how they should be filled
+        phos_order = 'chain', 'res', 'patch', 'rid'
+
         id_fmt = 'phos_{}_{}'
         for phos_no, p in enumerate(phos):
             p = p.upper().split()
@@ -302,14 +377,21 @@ class PDBBrowserProcess(CGUIBrowserProcess):
             if len(p) != len(phos_fmt):
                 raise ValueError("Invalid phosphorylation format")
 
+            # set name/value pairs so they can be used in arbitrary order
+            format_map = {f:None for f in phos_fmt}
             for name, value in zip(phos_fmt, p):
                 sid = id_fmt.format(name, phos_no)
+                format_map[name] = sid, value
+
+            # write fields in order that C-GUI requires
+            for name in phos_order:
+                sid, value = format_map[name]
                 self.browser.find_by_id(sid).select(value)
 
     def set_term(self):
         if not 'terms' in self.test_case:
             raise ValueError("Missing terminal group ptaching")
-        
+
         terms = self.test_case['terms']
         id_fmt = 'terminal[{}][{}]'
         terms_fmt = ['first', 'last']
@@ -318,7 +400,7 @@ class PDBBrowserProcess(CGUIBrowserProcess):
             term = term.split()
             patchs.append(term[0])
             if len(term) != 3:
-                raise ValueError("Invaild terminal group patching format") 
+                raise ValueError("Invaild terminal group patching format")
             for name,value in zip(terms_fmt,term[1:]):
                 for patch in patchs:
                     tname = id_fmt.format(patch, name)
@@ -343,7 +425,7 @@ class PDBBrowserProcess(CGUIBrowserProcess):
 
             for name, value in zip(ltl_fmt, lipid_tail):
                 lid = id_fmt.format(name, ltl_no)
-                self.browser.find_by_id(lid).select(value) 
+                self.browser.find_by_id(lid).select(value)
 
     def set_fluo_label(self):
         if not 'fluo_labels' in self.test_case:
@@ -379,7 +461,7 @@ class PDBBrowserProcess(CGUIBrowserProcess):
         for lbt_no, llp in enumerate(llps):
             llp = llp.split()
             if len(llp) != 4:
-                raise ValueError("Invaild lbt-loops format") 
+                raise ValueError("Invaild lbt-loops format")
 
             for name, value in zip(llp_fmt, llp):
                 lid = id_fmt.format(name, lbt_no)
@@ -400,10 +482,13 @@ class PDBBrowserProcess(CGUIBrowserProcess):
         for epr_no, mts_nitride in enumerate(mts_nitrides):
             mts_nitride = mts_nitride.split()
             if len(mts_nitride) != 4:
-                raise ValueError("Invalid MTS reagents (nitroxide) format") 
+                raise ValueError("Invalid MTS reagents (nitroxide) format")
             for name, value in zip(epr_fmt, mts_nitride):
                 eid = id_fmt.format(name, epr_no)
-                self.browser.find_by_id(eid).select(value)
+                elem = self.browser.find_by_id(eid)
+                # infinite loop if value does not exist; check output!
+                self.wait_exists(elem.find_by_value(value))
+                elem.select(value)
 
     def set_mts_modifier(self):
         if not 'mts_modifiers' in self.test_case:
@@ -420,7 +505,7 @@ class PDBBrowserProcess(CGUIBrowserProcess):
         for mts_no, mts_modifier in enumerate(mts_modifiers):
             mts_modifier = mts_modifier.split()
             if len(mts_modifier) != 4:
-                raise ValueError("Invalid MTS reagents (modifier) format") 
+                raise ValueError("Invalid MTS reagents (modifier) format")
             for name, value in zip(mts_fmt, mts_modifier):
                 mid = id_fmt.format(name, mts_no)
                 self.browser.find_by_id(mid).select(value)
@@ -440,7 +525,7 @@ class PDBBrowserProcess(CGUIBrowserProcess):
         for uaa_no, uaa in enumerate(uaas):
             uaa = uaa.split()
             if len(uaa) != 4:
-                raise ValueError("Invalid unnatural amino acid format") 
+                raise ValueError("Invalid unnatural amino acid format")
             for name, value in zip(uaa_fmt, uaa):
                 uid = id_fmt.format(name, uaa_no)
                 self.browser.find_by_id(uid).select(value)
@@ -473,18 +558,38 @@ class PDBBrowserProcess(CGUIBrowserProcess):
             for term, value in zip(terms_fmt, rid[1:]):
                 for i in chain_ids:
                     tname = name_fmt.format(i, term)
-                    self.browser.find_by_name(tname).fill(value)           
+                    self.browser.find_by_name(tname).fill(value)
 
     def chain_select(self):
         if not 'chains' in self.test_case:
             raise ValueError("Missing chains")
 
         chains = self.test_case['chains']
-        name_fmt = 'chains[{}][checked]'
-        for chain in chains:
-            name_chain = name_fmt.format(chain)
-            click_btn = self.browser.find_by_name(name_chain)
-            click_btn.click()
+        print(chains)
+
+        # shortcut for selecting all chains
+        if isinstance(chains, str) and chains.lower() == 'all':
+            # returns all unchecked chain selection buttons
+            pattern = 'input[type=checkbox][name$="[checked]"]:not(:checked)'
+            buttons = self.browser.find_by_css(pattern)
+
+            for button in buttons:
+                button.check()
+        else:
+            name_fmt = 'chains[{}][checked]'
+            for chain in chains:
+                name_chain = name_fmt.format(chain)
+                click_btn = self.browser.find_by_name(name_chain)
+                click_btn.click()
+    def test_glycosylation(self):
+        if 'reference' in self.test_case:
+            print('pdbid: %s' % self.pdb)
+            reference = self.test_case['reference']
+            for ref in reference:
+                segid = ref['segid']
+                grs = ref['grs'].strip()
+                value = self.browser.find_by_name('glycan[%s][grs]' % segid).value
+                assert grs == value, "{segid} GRS value is not correct during benchmark test, grs:{grs}, value:{value}".format(segid=segid, grs=str([grs]), value=str(value))
 
     def init_system(self, test_case, resume=False):
         module_title = self.module_title
@@ -525,6 +630,7 @@ class PDBBrowserProcess(CGUIBrowserProcess):
 
             if source:
                 browser.fill('pdb_id', pdb_name)
+                browser.select('source', 'RCSB')
             else:
                 pdb_path = pjoin(self.base, pdb_name)
                 browser.attach_file("file", pdb_path)

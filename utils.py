@@ -82,6 +82,7 @@ def setup_custom_options(test_case, module):
                 if elems:
                     for ind, elem in enumerate(elems):
                         for elem_name, elem_value in elem.items():
+                            elem_value = str(elem_value)
                             elems[ind][elem_name] = re.sub(pattern, value, elem_value)
 
                     test_elems = test_step.setdefault('elems', [])
@@ -160,18 +161,12 @@ def setup_test_inheritance(child_case, module):
 
         # break if module has itself as parent
         parent = find_test_file(parent, module=module)
-        if parent == filenames[-1]:
+        if parent in filenames:
             break
 
         with open(parent) as parent_file:
             parent_case = yaml.load(parent_file.read(), Loader=yaml.FullLoader)
         lineage.append(parent_case)
-
-        if parent in filenames:
-            filenames.append(parent)
-            errmsg = "Multiple/circular inheritance not allowed; got: "
-            errmsg += repr(filenames)
-            raise NotImplementedError(errmsg)
         filenames.append(parent)
 
         child_case = parent_case
@@ -187,4 +182,3 @@ def setup_test_inheritance(child_case, module):
 def read_yaml(filename):
     with open(filename) as fh:
         return yaml.full_load(fh.read())
-

@@ -1,0 +1,3 @@
+base: glycolipid/basic
+steps:
+  - wait_text: Computed Energy

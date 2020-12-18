@@ -4,7 +4,6 @@ from os.path import join as pjoin
 from splinter import Browser
 from splinter.exceptions import ElementDoesNotExist
 from SolutionBrowserProcess import SolutionBrowserProcess
-from selenium.common.exceptions import UnexpectedAlertPresentException, ElementNotInteractableException
 
 def init_module(test_cases, args):
     """Preprocesses test cases
@@ -492,12 +491,12 @@ class NMMBrowserProcess(SolutionBrowserProcess):
                     xlen = test_case['nanomaterial_type']['lx']
                     print(xlen)
                     browser.fill('lx', xlen)
-    
+
                     ylen = test_case['nanomaterial_type']['ly']
                     browser.fill('ly', ylen)
-    
+
                     zlen = test_case['nanomaterial_type']['lz']
-                    browser.fill('lz', zlen)               
+                    browser.fill('lz', zlen)
                 else:
                     browser.find_by_id('percent_defect').fill(percentDefect)
                     time.sleep(0.5)

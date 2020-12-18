@@ -1,0 +1,21 @@
+base: pdb/basic
+dict: membrane_only.map.yml
+ion_method: distance
+steps:
+  - wait_text: Lipid Type
+    poststeps:
+      - calc_size()
+    alert: accept
+  # solvent options are similar to solution builder, but we still handle
+  # them separately
+  - wait_text: Component Building Options
+    poststeps:
+      - click_by_value('Calculate number of ions')
+      - wait_script('is_updated')
+  - wait_text: Building Ion and Waterbox
+  - wait_text: Assemble Generated Components
+  - module:
+      name: input
+      stop: -1
+  # membrane wait text differs from input's default
+  - wait_text: Equilibration Input Notes

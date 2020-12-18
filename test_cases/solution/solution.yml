@@ -1,6 +1,8 @@
 base: pdb/basic
 dict: basic.map.yml
-ion_method: distance
+#ion_method: distance
+ion_method: mc
+ion_type: NaCl
 steps:
   - module:
       name: pdb
