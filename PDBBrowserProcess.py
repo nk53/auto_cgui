@@ -339,7 +339,7 @@ class PDBBrowserProcess(CGUIBrowserProcess):
 
         # set stapling options
         staple_fmt = 'type', 'chain1', 'rid1', 'chain2', 'rid2'
-        id_fmt = 'stapling_{}_{}'
+        css_fmt = '#stapling_{}_{} option[value="{}"]'
         for staple_no, staple in enumerate(staples):
             staple = staple.split()
 
@@ -347,8 +347,9 @@ class PDBBrowserProcess(CGUIBrowserProcess):
                 raise ValueError("Invalid staple format")
 
             for name, value in zip(staple_fmt, staple):
-                sid = id_fmt.format(name, staple_no)
-                self.browser.find_by_id(sid).select(value)
+                opt_elem = css_fmt.format(name, staple_no, value)
+                opt_elem = self.browser.find_by_css(opt_elem)
+                opt_elem = self.wait_exists(opt_elem).click()
 
     def set_phosphorylation(self):
         phos = self.test_case.get('phosphorylation')
