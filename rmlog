@@ -1,0 +1,27 @@
+#!/bin/bash
+
+files=""
+for f in charmm-gui-* *.log; do
+    if [ -e "$f" ]; then
+        files="$files $f"
+    fi
+done
+
+if [ -z "$files" ]; then
+    echo Nothing to remove
+else
+    ls -d $files
+    echo
+    read -p "Remove all above? [y/N] " response
+    if [[ "$response" == "y" ]] || [[ "$response" == "Y" ]]; then
+        for filename in $files; do
+            if [ -d $filename ]; then
+                echo Removing "$filename/*"
+                rm -r $filename
+            else
+                echo Removing $filename
+                rm $filename
+            fi
+        done
+    fi
+fi

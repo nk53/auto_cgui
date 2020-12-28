@@ -34,6 +34,7 @@ class CGUIBrowserProcess(Process):
         self.dry_run = kwargs.pop('dry_run', False)
         self.inter_q = kwargs.pop('inter_q', None)
         self.msg_q = kwargs.pop('msg_q', None)
+        self.module = kwargs.pop('module', None)
 
         if not self.base_url.endswith('/'):
             self.base_url += '/'
@@ -132,6 +133,8 @@ class CGUIBrowserProcess(Process):
         fsize = float(os.stat(saveas).st_size) / (1024.0 * 1024.0)
         print("download complete, file size is %5.2f MB" % fsize)
 
+        return saveas
+
     def eval(self, expr):
         """Evaluate a Python command that could refer to a method of self
         *OR* to a global function.
@@ -213,9 +216,12 @@ class CGUIBrowserProcess(Process):
         test_case = getattr(self, 'test_case', {})
         jobid = test_case.get('jobid', -1)
 
-        self.done_q.put(('INTERACT', self.name, jobid))
+        if not 'jobid' in local:
+            local['jobid'] = jobid
+        if not 'label' in local:
+            local['label'] = test_case.get('label')
 
-        it = iter(self.inter_q.get, 'STOP')
+        self.done_q.put(('INTERACT', self.name, jobid))
 
         # handle automatic printing of last command's uncaptured return value
         print_last = "\n".join(["try:","{}","\tif _ != None: print(repr(_))","except:","\traise", ""])
@@ -225,7 +231,14 @@ class CGUIBrowserProcess(Process):
         shell = code.InteractiveInterpreter(locals=local)
         cmd_lines = []
         prefix = '_ = '
-        for cmd in iter(self.inter_q.get, 'STOP'):
+        for recipient, cmd in iter(self.inter_q.get, (self.name, 'STOP')):
+            print(recipient, cmd)
+            # prevent interpreting commands for someone else
+            if recipient != self.name:
+                self.inter_q.put((recipient, cmd))
+                time.sleep(2)
+                continue
+
             # obtain potentailly multi-line command
             cmd_lines.append(cmd)
             cmd = "\n".join(cmd_lines)
@@ -395,8 +408,87 @@ class CGUIBrowserProcess(Process):
                         self.done_q.put(('FAILURE', test_case, step_num, elapsed_time))
                         failure = False
                     else:
-                        self.done_q.put(('SUCCESS', test_case, elapsed_time))
-                    if not 'localhost' in self.base_url: self.download()
+                        # download project and optionally compare PSF
+                        if not 'localhost' in self.base_url:
+                            sys_archive = self.download()
+                            sys_dir, ext = os.path.splitext(sys_archive)
+                        else:
+                            sys_dir = pjoin(self.www_dir, jobid)
+
+                        # check test case for reference/target files
+                        ref = test_case.get('psf_validation')
+
+                        # modules must override this with psf_validation as necessary
+                        target = 'step1_pdbreader.psf'
+                        if isinstance(ref, dict):
+                            target = ref.get('target')
+                            if not target:
+                                errmsg = "Error: psf_validation missing 'target' filename"
+                                self.done_q.put(('INVALID', test_case, elapsed_time, errmsg))
+                            ref = ref.get('reference') or ref.get('ref')
+
+                        # looking in a standard location for the reference file
+                        ref_psf = ref or utils.ref_from_label(test_case['label'])
+                        try:
+                            ref = utils.find_test_file(ref_psf,
+                                    module=self.module,
+                                    root_dir='files/references',
+                                    ext='.psf')
+                        except FileNotFoundError:
+                            msg = "couldn't find a reference PSF for "+\
+                                  "'{}', skipping PSF validation"
+                            print(self.name, msg.format(test_case['label']))
+                        del ref_psf
+
+                        if not ref:
+                            # no reference for this system, just go to the next case
+                            self.done_q.put(('SUCCESS', test_case, elapsed_time))
+                            continue
+
+                        # extract system files if necessary
+                        if not os.path.exists(sys_dir):
+                            if os.path.exists(sys_archive):
+                                shutil.unpack_archive(sys_archive)
+                            else:
+                                errmsg = "Error: Couldn't find archive: '{}'".format(sys_archive)
+                                self.done_q.put(('INVALID', test_case, elapsed_time, errmsg))
+                                continue
+
+                        # ensure system directory exists
+                        if not os.path.isdir(sys_dir):
+                            if os.path.exists(sys_dir):
+                                msg = "'{}' already exists and is not a directory"
+                                raise FileExistsError(msg.format(sys_dir))
+                            else:
+                                msg = "could not find project at '{}/'"
+                                raise FileNotFoundError(msg.format(sys_dir))
+
+                        # finally, do the actual PSF comparison
+                        target = pjoin(sys_dir, target)
+                        result = utils.diff_psf(target, ref)
+
+                        # result is a string if PSF can't be parsed
+                        if isinstance(result, str):
+                            errmsg = result + os.linesep
+                        # result is a tuple if files differ
+                        if isinstance(result, tuple):
+                            target_line_no, ref_line_no, target_line, ref_line = result
+                            errmsg = [
+                                'Target ({}) differs from reference ({}):',
+                                '{} line {}',
+                                target_line,
+                                '{} line {}',
+                                ref_line,
+                            ]
+                            errmsg = os.linesep.join(errmsg)
+                            errmsg = errmsg.format(target, ref, target, target_line_no, ref, ref_line_no)
+                        # result is None on success
+                        if result == None:
+                            self.done_q.put(('VALID', test_case, elapsed_time))
+                        else:
+                            self.done_q.put(('INVALID', test_case, elapsed_time, errmsg))
+                            del errmsg
+
                 except Exception as e:
                     import sys, traceback
                     # give the full exception string
@@ -456,7 +548,7 @@ class CGUIBrowserProcess(Process):
         while not element_list:
             if verbose:
                 print(tpl.format(self.name, find_by_str, query))
-            self.browser.find_by(find_by, query)
+            element_list = self.browser.find_by(find_by, query)
 
         return element_list
 

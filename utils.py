@@ -3,33 +3,35 @@ import re
 import yaml
 from os.path import join as pjoin
 
-def find_test_file(filename, module=None):
+def find_test_file(filename, module=None, root_dir='test_cases', ext='.yml'):
     """Looks for a test case or related file in the following order:
         - test_cases/module/filename     (if module)
         - test_cases/module/filename.yml (if module)
         - test_cases/filename
         - test_cases/filename/filename
         - test_cases/filename/filename.yml
+    On success, returns the path to the test file.
+    On failure, raises FileNotFoundError.
     """
     # keep track of all paths attempted, for debugging
     tried = []
 
     if module:
         # try joining all args
-        path = pjoin('test_cases', module, filename)
+        path = pjoin(root_dir, module, filename)
         tried.append(path)
 
         # try joining all args + .yml
         if os.path.isfile(path):
             return path
         else:
-            path += '.yml'
+            path += ext
             tried.append(path)
         if os.path.isfile(path):
             return path
 
     # try omitting module
-    path = pjoin('test_cases', filename)
+    path = pjoin(root_dir, filename)
     tried.append(path)
 
     # one of the above should at least be a file or directory
@@ -44,7 +46,7 @@ def find_test_file(filename, module=None):
     if os.path.isfile(path):
         return path
     else:
-        path += '.yml'
+        path += ext
         tried.append(path)
 
     if not os.path.isfile(path):
@@ -182,3 +184,94 @@ def setup_test_inheritance(child_case, module):
 def read_yaml(filename):
     with open(filename) as fh:
         return yaml.full_load(fh.read())
+
+def psf_seek_title(fh):
+    """Advances the file pointer to the first line after the title
+
+    Assumes fh is newly-opened and pointing at the first character
+
+    Return
+    ======
+        success, num_lines_read
+    """
+    psf_format = fh.readline()
+    in_section = None
+    line_no = 1
+    for line in fh:
+        line_no += 1
+
+        line = line.strip()
+        if not line:
+            continue
+
+        if not in_section:
+            title_size = line.split()[0]
+            if not title_size.isdigit():
+                return False, line_no
+            title_size = int(title_size)
+            title_lines_read = 1
+            in_section = True
+        elif title_lines_read < title_size:
+            title_lines_read += 1
+        else:
+            return True, line_no
+
+    return False, line_no
+
+def diff_psf(target, reference):
+    """Compares target and reference line-by-line.
+
+    Comparison begins after the title.
+
+    Parameters
+    ==========
+      target        structure to check
+      reference     structure considered "correct"
+
+    Return
+    ======
+        None if there are no differences;
+        An error string if file can't be parsed;
+        Otherwise, a tuple showing the first difference is returned:
+            target_line_no, reference_line_no, target_line, reference_line
+    """
+    INVALID_TARGET = 'Error: target is not a valid PSF: {}'
+    INVALID_REFERENCE = 'Error: reference is not a valid PSF: {}'
+    INVALID_TITLE = 'Error: invalid title format for PSF: {}'
+
+    if isinstance(target, str):
+        if not os.path.isfile(target):
+            return INVALID_TARGET.format(target)
+        target = open(target)
+    if isinstance(reference, str):
+        if not os.path.isfile(reference):
+            return INVALID_REFERENCE.format(reference)
+        reference = open(reference)
+
+    with target:
+        with reference:
+            success, target_line_no = psf_seek_title(target)
+            if not success:
+                return INVALID_TITLE.format(target.name)
+
+            success, ref_line_no = psf_seek_title(reference)
+            if not success:
+                return INVALID_TITLE.format(reference.name)
+
+            for target_line, reference_line in zip(target, reference):
+                target_line_no += 1
+                ref_line_no += 1
+                target_line = target_line.strip().upper()
+                reference_line = reference_line.strip().upper()
+                if target_line != reference_line:
+                    return target_line_no, ref_line_no, target_line, reference_line
+
+            # compress any whitespace at end of file
+            target_data = target.read(512).rstrip()
+            reference_data = reference.read(512).rstrip()
+
+    if target_data != reference_data:
+        return target_line_no, ref_line_no, target_data, reference_data
+
+def ref_from_label(label):
+    return label.strip().lower().replace(' ', '_')+'.psf'

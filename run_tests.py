@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import argparse
 import os
+import readline
 import shutil
 import sys
 import utils
@@ -26,6 +27,7 @@ def log_exception(case_info, step_num, exc_info):
 
 def log_failure(case_info, step, elapsed_time):
     global LOGFILE
+
     templ = 'Job "{}" ({}) failed on step {} after {:.2f} seconds\n'
     if not 'jobid' in case_info:
         case_info['jobid'] = '-1'
@@ -35,14 +37,31 @@ def log_failure(case_info, step, elapsed_time):
         label = case_info['label']
         fh.write(templ.format(label, jobid, step, elapsed_time))
 
-def log_success(case_info, elapsed_time):
+def log_success(case_info, elapsed_time, ran_validation=False):
     global LOGFILE
-    templ = 'Job "{}" ({}) finished successfully after {:.2f} seconds\n'
+
+    if ran_validation:
+        ran_validation = ' and passed validation'
+    else:
+        ran_validation = ''
+
+    templ = 'Job "{}" ({}) finished successfully after {:.2f} seconds{}\n'
     jobid = case_info['jobid']
     label = case_info['label']
     with open(LOGFILE, 'a') as fh:
         label = case_info['label']
-        fh.write(templ.format(label, jobid, elapsed_time))
+        fh.write(templ.format(label, jobid, elapsed_time, ran_validation))
+
+def log_invalid(case_info, elapsed_time, reason):
+    global LOGFILE
+    templ = 'Job "{}" ({}) finished after {:.2f} seconds, but was invalid:\n{}\n'
+    if not 'jobid' in case_info:
+        case_info['jobid'] = '-1'
+    jobid = case_info['jobid']
+    label = case_info['label']
+    with open(LOGFILE, 'a') as fh:
+        label = case_info['label']
+        fh.write(templ.format(label, jobid, elapsed_time, reason))
 
 parser = argparse.ArgumentParser(description="Test a C-GUI project")
 parser.add_argument('-m', '--module', type=str)
@@ -121,6 +140,7 @@ if not MODULE_NAME in cgui_modules:
     raise ValueError('Unknown C-GUI module: '+MODULE_NAME)
 MODULE_FILE = cgui_modules[MODULE_NAME]
 cgui_module = MODULE_NAME.lower()
+settings['module'] = cgui_module
 
 # import relevant names from the module file
 module = import_module(MODULE_FILE)
@@ -170,11 +190,14 @@ stopped = False # set to True after STOP sent to all threads
 while pending:
     result = done_queue.get()
     pending -= 1
-    if result[0] == 'SUCCESS':
+    if result[0] in ('SUCCESS', 'VALID'):
         done_case, elapsed_time = result[1:]
         done_label = done_case['label']
-        done_jobid = str(done_case['jobid'])
-        log_success(done_case, elapsed_time)
+        ran_validation = result[0] == 'VALID'
+        log_success(done_case, elapsed_time, ran_validation)
+    elif result[0] == 'INVALID':
+        done_case, elapsed_time, reason = result[1:]
+        log_invalid(done_case, elapsed_time, reason)
     elif result[0] == 'FAILURE':
         done_case, step_num, elapsed_time = result[1:]
         log_failure(done_case, step_num, elapsed_time)
@@ -185,18 +208,20 @@ while pending:
         print("Exception encountered for job ({})".format(done_case['jobid']))
         print(exc_info)
     elif result[0] == 'INTERACT':
-        "Interacting with {} ({})".format(*result[1:])
-        prompt = '>>> '
+        partner, partner_jobid = result[1:]
+        print("Interacting with {} ({})".format(partner, partner_jobid))
+        normal_prompt = partner+'> '
+        continue_prompt = '... '
+        prompt = normal_prompt
         pending += 1
         while True:
             try:
                 cmd = input(prompt)
+                if cmd == 'quit()' or cmd.startswith('sys.exit('):
+                    cmd = 'STOP'
             except EOFError:
-                inter_queue.put('STOP')
-                break
-            if cmd == 'quit()' or cmd.startswith('sys.exit('):
                 cmd = 'STOP'
-            inter_queue.put(cmd)
+            inter_queue.put((partner, cmd))
             if cmd == 'STOP':
                 break
             need_more = msg_queue.get()
@@ -205,9 +230,10 @@ while pending:
                 print(exc_str)
                 need_more = False
             if need_more:
-                prompt = '... '
+                prompt = continue_prompt
             else:
-                prompt = '>>> '
+                prompt = normal_prompt
+        del partner, partner_jobid
     elif result[0] == 'CONTINUE':
         pending += 1
         done_case = result[1]
