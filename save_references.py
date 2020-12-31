@@ -4,6 +4,7 @@ import os
 import re
 import shutil
 import sys
+import utils
 
 def directory(path, errtype=argparse.ArgumentTypeError):
     """Pretends to be a casting function, but really just checks that a
@@ -19,7 +20,7 @@ def directory(path, errtype=argparse.ArgumentTypeError):
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--ref', nargs=1, metavar='filename',
-        default='step1_pdbreader.psf',
+        default=['step1_pdbreader.psf'],
         help="name of source reference file (default: 'step1_pdbreader.psf'")
 parser.add_argument('results_file', nargs='?',
         type=argparse.FileType('r'), default='results.log',
@@ -39,9 +40,9 @@ with args.results_file as fh:
         line = line.strip()
         if not 'success' in line:
             print("Skipping failed test case:", line, file=sys.stderr)
+            continue
 
-        jobid = re.search(r'\(([0-9]+)\)', line).group(1)
-        label = re.search(r'"([^"]+)"', line).group(1)
+        jobid, label = utils.parse_jobid_label(line)
 
         ref_dir = 'charmm-gui-'+jobid
         ref_archive = ref_dir+'.tgz'
@@ -60,7 +61,7 @@ with args.results_file as fh:
         # allow reference naming scheme to be modified in one place
         ref_filename = utils.ref_from_label(label)
 
-        src = os.path.join(ref_dir, args.ref)
+        src = os.path.join(ref_dir, args.ref[0])
         dest = os.path.join(args.dest, ref_filename)
 
         print('copying', src, '->', dest)

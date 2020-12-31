@@ -1,5 +1,6 @@
 import os
 import re
+import shutil
 import yaml
 from os.path import join as pjoin
 
@@ -275,3 +276,108 @@ def diff_psf(target, reference):
 
 def ref_from_label(label):
     return label.strip().lower().replace(' ', '_')+'.psf'
+
+def validate_test_case(test_case, sys_dir, sys_archive=None, module=None, elapsed_time=-1., printer_name=None):
+    """Attempts to infer a test's reference PSF, then validates it
+
+    Parameters
+    ==========
+        sys_dir       str    name of project directory produced by this test case
+        sys_archive   str    name of compressed archive containing project directory
+        test_case     dict   item from a test case configuration file
+        module        str    module name
+        elapsed_time  float  time since start of test case
+
+    Returns
+    =======
+        A tuple representing the test cases's validation, for use with
+        BrowserManager / CGUIBrowserProcess
+    """
+    # check test case for reference/target files
+    ref = test_case.get('psf_validation')
+
+    # modules must override this with psf_validation as necessary
+    target = 'step1_pdbreader.psf'
+    if isinstance(ref, dict):
+        target = ref.get('target') or target
+        ref = ref.get('reference') or ref.get('ref')
+
+    # looking in a standard location for the reference file
+    ref_psf = ref or ref_from_label(test_case['label'])
+    try:
+        ref = find_test_file(ref_psf,
+                module=module,
+                root_dir='files/references',
+                ext='.psf')
+    except FileNotFoundError:
+        msg = "couldn't find a reference PSF for "+\
+              "'{}', skipping PSF validation"
+        if printer_name:
+            print(printer_name, msg.format(test_case['label']))
+        else:
+            print(msg.format(test_case['label']))
+
+    if not ref:
+        # no reference for this system, just go to the next case
+        return 'SUCCESS', test_case, elapsed_time
+
+    # extract system files if necessary
+    if not os.path.exists(sys_dir):
+        if os.path.exists(sys_archive):
+            shutil.unpack_archive(sys_archive)
+        else:
+            errmsg = "Error: Couldn't find archive: '{}'".format(sys_archive)
+            return 'INVALID', test_case, elapsed_time, errmsg
+
+    # ensure system directory exists
+    if not os.path.isdir(sys_dir):
+        if os.path.exists(sys_dir):
+            msg = "'{}' already exists and is not a directory"
+            raise FileExistsError(msg.format(sys_dir))
+        else:
+            msg = "could not find project at '{}/'"
+            raise FileNotFoundError(msg.format(sys_dir))
+
+    # finally, do the actual PSF comparison
+    target = pjoin(sys_dir, target)
+    result = diff_psf(target, ref)
+
+    # result is a string if PSF can't be parsed
+    if isinstance(result, str):
+        errmsg = result + os.linesep
+    # result is a tuple if files differ
+    if isinstance(result, tuple):
+        target_line_no, ref_line_no, target_line, ref_line = result
+        errmsg = [
+            'Target ({}) differs from reference ({}):',
+            '{} line {}',
+            target_line,
+            '{} line {}',
+            ref_line,
+        ]
+        errmsg = os.linesep.join(errmsg)
+        errmsg = errmsg.format(target, ref, target, target_line_no, ref, ref_line_no)
+    # result is None on success
+    if result == None:
+        return 'VALID', test_case, elapsed_time
+    else:
+        return 'INVALID', test_case, elapsed_time, errmsg
+
+def parse_jobid(result_str):
+    """Given a line from a results.log file, returns the job ID"""
+    return re.search(r'\(([0-9]+)\)', result_str).group(1)
+
+def parse_jobid_label(result_str):
+    """Given a line from a results.log file, returns a tuple containing
+    both the job ID and test case label"""
+    return parse_jobid(result_str), parse_label(result_str)
+
+def parse_label(result_str):
+    """Given a line from a results.log file, returns the test case label"""
+    return re.search(r'"([^"]+)"', result_str).group(1)
+
+def get_sys_dirname(jobid):
+    return 'charmm-gui-{}'.format(jobid)
+
+def get_archive_name(jobid):
+    return 'charmm-gui-{}.tgz'.format(jobid)

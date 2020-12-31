@@ -31,6 +31,7 @@ class CGUIBrowserProcess(Process):
         self.base_url = kwargs.pop('base_url', 'http://charmm-gui.org/')
         self.www_dir = kwargs.pop('www_dir', None)
         self.interactive = kwargs.pop('interactive', False)
+        self.errors_only = kwargs.pop('errors_only', False)
         self.dry_run = kwargs.pop('dry_run', False)
         self.inter_q = kwargs.pop('inter_q', None)
         self.msg_q = kwargs.pop('msg_q', None)
@@ -114,7 +115,7 @@ class CGUIBrowserProcess(Process):
         elif 'output' in test_case:
             saveas = test_case['output'] + '.tgz'
         else:
-            saveas = 'charmm-gui-{}.tgz'.format(jobid)
+            saveas = utils.get_archive_name(jobid)
 
         url = "{url}?doc=input/download&jobid={jobid}".format(url=self.base_url, jobid=jobid)
         print("downloading %s to %s" % (url, saveas))
@@ -158,7 +159,7 @@ class CGUIBrowserProcess(Process):
 
         return ElementList(filter(lambda elem: elem.visible, elems))
 
-    def go_next(self, test_text=None, alert=None):
+    def go_next(self, test_text=None, alert=None, invalid_alert_text=None):
         if isinstance(alert, str):
             alert = alert.lower()
         assert alert in (None, 'accept', 'dismiss'), "unrecognized alert response: "+str(alert)
@@ -174,14 +175,20 @@ class CGUIBrowserProcess(Process):
         # some modules give warning dialogs that we don't care about
         if alert:
             prompt = self.browser.get_alert()
+
             if prompt:
-                with prompt:
-                    if alert == 'accept':
-                        prompt.accept()
-                    elif alert == 'dismiss':
-                        prompt.dismiss()
-                    else:
-                        raise NotImplementedError
+                alert_text = prompt.text
+                alert_invalid = invalid_alert_text and invalid_alert_text in alert_text
+                # allow UnexpectedAlertPresentException to propagate if alert is invalid
+                if not alert_invalid:
+                    with prompt:
+                        if alert == 'accept':
+                            prompt.accept()
+                        elif alert == 'dismiss':
+                            prompt.dismiss()
+                        else:
+                            raise NotImplementedError
+                        print(self.name, "{}ed alert with text: '{}'".format(alert, alert_text))
 
         if test_text:
             self.wait_text_multi([test_text, self.CHARMM_ERROR])
@@ -208,7 +215,7 @@ class CGUIBrowserProcess(Process):
             else:
                 elem.fill(value)
 
-    def init_system(self):
+    def init_system(self, *args):
         raise NotImplementedError("This must be implemented in a child class")
 
     def interact(self, local={}):
@@ -317,7 +324,7 @@ class CGUIBrowserProcess(Process):
             table[link_no].click()
         else:
             raise NotImplementedError
-            assert project != None and step != None, "Missing args"
+            #assert project != None and step != None, "Missing args"
 
     def run(self):
         # if user set --dry-run, print test case and return
@@ -376,8 +383,10 @@ class CGUIBrowserProcess(Process):
                             break
 
                         # Check for PHP errors, warnings, and notices
-                        if self.warn_if_text(self.PHP_MESSAGES) and self.interactive:
-                            self.interact(locals())
+                        found_text = self.warn_if_text(self.PHP_MESSAGES)
+                        if found_text and self.interactive:
+                            if not self.errors_only or found_text == self.PHP_ERROR:
+                                self.interact(locals())
 
                         for prestep in step.get('presteps', []):
                             self.eval(prestep)
@@ -387,12 +396,13 @@ class CGUIBrowserProcess(Process):
                             self.eval(poststep)
 
                         if step_num < len(steps)-1:
-                            alert = step.get('alert', None)
-                            self.go_next(alert=alert)
+                            alert = step.get('alert')
+                            invalid_alert_text = step.get('invalid_alert_text')
+                            self.go_next(alert=alert, invalid_alert_text=invalid_alert_text)
 
                     elapsed_time = time.time() - start_time
 
-                    if self.interactive:
+                    if self.interactive and not self.errors_only:
                         self.interact(locals())
 
                     # early failure?
@@ -409,85 +419,20 @@ class CGUIBrowserProcess(Process):
                         failure = False
                     else:
                         # download project and optionally compare PSF
+                        sys_archive = None
                         if not 'localhost' in self.base_url:
                             sys_archive = self.download()
                             sys_dir, ext = os.path.splitext(sys_archive)
                         else:
                             sys_dir = pjoin(self.www_dir, jobid)
 
-                        # check test case for reference/target files
-                        ref = test_case.get('psf_validation')
+                        validation_result = utils.validate_test_case(test_case, sys_dir,
+                                sys_archive=sys_archive,
+                                module=self.module,
+                                elapsed_time=elapsed_time,
+                                printer_name=self.name)
 
-                        # modules must override this with psf_validation as necessary
-                        target = 'step1_pdbreader.psf'
-                        if isinstance(ref, dict):
-                            target = ref.get('target')
-                            if not target:
-                                errmsg = "Error: psf_validation missing 'target' filename"
-                                self.done_q.put(('INVALID', test_case, elapsed_time, errmsg))
-                            ref = ref.get('reference') or ref.get('ref')
-
-                        # looking in a standard location for the reference file
-                        ref_psf = ref or utils.ref_from_label(test_case['label'])
-                        try:
-                            ref = utils.find_test_file(ref_psf,
-                                    module=self.module,
-                                    root_dir='files/references',
-                                    ext='.psf')
-                        except FileNotFoundError:
-                            msg = "couldn't find a reference PSF for "+\
-                                  "'{}', skipping PSF validation"
-                            print(self.name, msg.format(test_case['label']))
-                        del ref_psf
-
-                        if not ref:
-                            # no reference for this system, just go to the next case
-                            self.done_q.put(('SUCCESS', test_case, elapsed_time))
-                            continue
-
-                        # extract system files if necessary
-                        if not os.path.exists(sys_dir):
-                            if os.path.exists(sys_archive):
-                                shutil.unpack_archive(sys_archive)
-                            else:
-                                errmsg = "Error: Couldn't find archive: '{}'".format(sys_archive)
-                                self.done_q.put(('INVALID', test_case, elapsed_time, errmsg))
-                                continue
-
-                        # ensure system directory exists
-                        if not os.path.isdir(sys_dir):
-                            if os.path.exists(sys_dir):
-                                msg = "'{}' already exists and is not a directory"
-                                raise FileExistsError(msg.format(sys_dir))
-                            else:
-                                msg = "could not find project at '{}/'"
-                                raise FileNotFoundError(msg.format(sys_dir))
-
-                        # finally, do the actual PSF comparison
-                        target = pjoin(sys_dir, target)
-                        result = utils.diff_psf(target, ref)
-
-                        # result is a string if PSF can't be parsed
-                        if isinstance(result, str):
-                            errmsg = result + os.linesep
-                        # result is a tuple if files differ
-                        if isinstance(result, tuple):
-                            target_line_no, ref_line_no, target_line, ref_line = result
-                            errmsg = [
-                                'Target ({}) differs from reference ({}):',
-                                '{} line {}',
-                                target_line,
-                                '{} line {}',
-                                ref_line,
-                            ]
-                            errmsg = os.linesep.join(errmsg)
-                            errmsg = errmsg.format(target, ref, target, target_line_no, ref, ref_line_no)
-                        # result is None on success
-                        if result == None:
-                            self.done_q.put(('VALID', test_case, elapsed_time))
-                        else:
-                            self.done_q.put(('INVALID', test_case, elapsed_time, errmsg))
-                            del errmsg
+                        self.done_q.put(validation_result)
 
                 except Exception as e:
                     import sys, traceback

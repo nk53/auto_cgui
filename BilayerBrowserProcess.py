@@ -293,14 +293,7 @@ class BilayerBrowserProcess(SolutionBrowserProcess, InputBrowserProcess):
         calc_button = self.first_visible(calc_button)
         calc_button.click()
 
-        # text varies depending on options; just wait for any text at all
-        hetero_size = self.browser.find_by_id('hetero_size')
-        while not hetero_size.text:
-            print(self.name, 'waiting for hetero_size to have text')
-            time.sleep(2)
-
-            # element reference might be stale
-            hetero_size = self.browser.find_by_id('hetero_size')
+        self.wait_script('is_updated');
 
     def init_system(self, test_case, resume=False):
         module_title = self.module_title

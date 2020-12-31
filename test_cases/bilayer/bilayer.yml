@@ -12,6 +12,7 @@ steps:
     poststeps:
       - calc_size()
     alert: accept
+    invalid_alert_text: There was a change
   # solvent options are similar to solution builder, but we still handle
   # them separately
   - wait_text: Component Building Options

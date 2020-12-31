@@ -1,11 +1,14 @@
 base: pdb/basic
 dict: membrane_only.map.yml
 ion_method: distance
+psf_validation:
+  target: step4_lipid.psf
 steps:
   - wait_text: Lipid Type
     poststeps:
       - calc_size()
     alert: accept
+    invalid_alert_text: There was a change
   # solvent options are similar to solution builder, but we still handle
   # them separately
   - wait_text: Component Building Options
