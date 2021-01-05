@@ -1,5 +1,5 @@
 # this file uses mostly default options to test different component types
-- label: reader
+- label: 1cdr with glycan
   base: components/basic
   pdb: 1cdr
   gpi:

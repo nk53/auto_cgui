@@ -1,4 +1,4 @@
-- label: 1kdx with terminal groups patching
+- label: 1kdx with terminal group patching
   base: pdb/basic
   pdb: 1kdx.pdb
   terms:

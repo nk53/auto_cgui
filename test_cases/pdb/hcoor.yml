@@ -1,4 +1,4 @@
-- label: 1ABS
+- label: 1ABS with heme coordination
   base: pdb/basic
   pdb: 1abs.pdb
   chains:
@@ -6,12 +6,8 @@
   # chain res rid
   hcoor:
     - PROA TYR 103
-  steps:
-    - wait_text: Manipulate PDB
-    - wait_text: Generate PDB
-    - wait_text: Computed Energy
 
-- label: 3ELL
+- label: 3ELL with heme coordination
   base: pdb/basic
   pdb: 3ell.pdb
   chains:
@@ -21,9 +17,4 @@
   hcoor:
     - PROA TYR 7
     - PROA TYR 7
-  steps:
-    - wait_text: Manipulate PDB
-    - wait_text: Generate PDB
-    - wait_text: Computed Energy
-
 

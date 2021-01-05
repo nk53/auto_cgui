@@ -1,4 +1,4 @@
-- label: 6XR3
+- label: 6XR3 with SDF from RCSB and Symmetry options
   base: pdb/basic
   pdb: 6xr3.pdb
   # chain
@@ -10,12 +10,8 @@
   # symoption
   symop:
     - biomat
-  steps:
-    - wait_text: Manipulate PDB
-    - wait_text: Generate PDB
-    - wait_text: Computed Energy
 
-- label: 4W53
+- label: 4W53 with SDF from RCSB
   base: pdb/basic
   pdb: 4w53.pdb
   # chain
@@ -26,9 +22,4 @@
   sdf:
     - MBN
     - EPE
-  steps:
-    - wait_text: Manipulate PDB
-    - wait_text: Generate PDB
-    - wait_text: Computed Energy
-
 

@@ -46,6 +46,15 @@ mts_modifiers:
   step: 2
   presteps:
     - set_mts_modifier()
+mutation:
+  step: 2
+  presteps:
+    - set_mutation()
+# alias for mutation
+mutations:
+  step: 2
+  presteps:
+    - set_mutation()
 uaas:
   step: 2
   presteps:

@@ -1,0 +1,180 @@
+- label: Feig paper, solvated only (5%)
+  parent: multicomp_solution
+  solvent_tests: [water+ions]
+  components:
+    1ubq:
+      type: solvated
+      count: 5
+    1vii:
+      type: solvated
+      count: 5
+    3gb1:
+      type: solvated
+      count: 5
+  XYZ: 153.32
+- label: Feig paper, solvated only (10%)
+  parent: multicomp_solution
+  solvent_tests: [water+ions]
+  components:
+    1ubq:
+      type: solvated
+      count: 10
+    1vii:
+      type: solvated
+      count: 10
+    3gb1:
+      type: solvated
+      count: 10
+  XYZ: 154.06
+- label: Feig paper, solvated only (30%)
+  parent: multicomp_solution
+  solvent_tests: [water+ions]
+  components:
+    1ubq:
+      type: solvated
+      count: 10
+    1vii:
+      type: solvated
+      count: 10
+    3gb1:
+      type: solvated
+      count: 10
+  XYZ: 106.31
+- label: Feig paper, membrane_only + solvated (5%)
+  parent: multicomp_bilayer
+  solvent_tests: [water+ions]
+  components:
+    1ubq:
+      type: solvated
+      count: 4
+    1vii:
+      type: solvated
+      count: 4
+    3gb1:
+      type: solvated
+      count: 4
+  lipids:
+    upper:
+      chl1: 1
+      popc: 1
+      psm: 1
+    lower:
+      chl1: 1
+      popc: 1
+      psm: 1
+  XY: 134.21
+  Z: 76.855
+- label: Feig paper, membrane_only + solvated (10%)
+  parent: multicomp_bilayer
+  solvent_tests: [water+ions]
+  components:
+    1ubq:
+      type: solvated
+      count: 8
+    1vii:
+      type: solvated
+      count: 8
+    3gb1:
+      type: solvated
+      count: 8
+  lipids:
+    upper:
+      chl1: 1
+      popc: 1
+      psm: 1
+    lower:
+      chl1: 1
+      popc: 1
+      psm: 1
+  XY: 134.18
+  Z: 77.67
+- label: Feig paper, membrane_only + solvated (30%)
+  parent: multicomp_bilayer
+  solvent_tests: [water+ions]
+  components:
+    1ubq:
+      type: solvated
+      count: 23
+    1vii:
+      type: solvated
+      count: 23
+    3gb1:
+      type: solvated
+      count: 23
+  lipids:
+    upper:
+      chl1: 1
+      popc: 1
+      psm: 1
+    lower:
+      chl1: 1
+      popc: 1
+      psm: 1
+  XY: 133.74
+  Z: 77.415
+- label: PEO40_PEE37 + proteins (5%)
+  jobid: 0762743028
+  resume_link: 1
+  parent: multicomp_solution
+  solvent_tests: [water+ions]
+  PBCX: 107.875134
+  PBCY: 107.875134
+  PBCZ: 120
+  Z: 35.09
+  exclude_length: 10
+  components:
+    peo_pee:
+      type: periodic
+    1ubq:
+      type: solvated
+      count: 2
+    1vii:
+      type: solvated
+      count: 2
+    3gb1:
+      type: solvated
+      count: 2
+- label: HA + proteins (30%)
+  jobid: 0762671253
+  resume_link: 1
+  parent: multicomp_solution
+  solvent_tests: [water+ions]
+  PBCX: 103.587
+  PBCY: 114.1749
+  PBCZ: 42
+  Z: 34.53
+  exclude_length: 5
+  components:
+    ha:
+      type: periodic
+    1ubq:
+      type: solvated
+      count: 12
+    1vii:
+      type: solvated
+      count: 12
+    3gb1:
+      type: solvated
+      count: 12
+- label: QZ + proteins (10%)
+  jobid: 0762694349
+  resume_link: 1
+  parent: multicomp_solution
+  solvent_tests: [water+ions]
+  PBCX: 103.173
+  PBCY: 102.1152
+  PBCZ: 44
+  Z: 38.76
+  exclude_length: 5
+  components:
+    ha:
+      type: periodic
+    1ubq:
+      type: solvated
+      count: 4
+    1vii:
+      type: solvated
+      count: 4
+    3gb1:
+      type: solvated
+      count: 4

@@ -1,0 +1,41 @@
+PSF EXT CMAP CHEQ XPLOR
+
+         2 !NTITLE
+* GENERATES A SINGLE COPY OF A SINGLE RESIDUE                                   
+*  DATE:     9/11/20     15:50: 0      CREATED BY USER: nathan                  
+
+         1 !NATOM
+         1 MEMB     1        CAL      CAL      CAL       2.00000       40.0800           0   0.00000       0.00000    
+
+         0 !NBOND: bonds
+
+
+         0 !NTHETA: angles
+
+
+         0 !NPHI: dihedrals
+
+
+         0 !NIMPHI: impropers
+
+
+         0 !NDON: donors
+
+
+         0 !NACC: acceptors
+
+
+         0 !NNB
+
+         0
+
+         1         0 !NGRP NST2
+         0         2         0
+
+         1 !MOLNT
+         1
+
+         0         0 !NUMLP NUMLPH
+
+         0 !NCRTERM: cross-terms
+

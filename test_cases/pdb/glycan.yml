@@ -1,7 +1,5 @@
-# this file uses mostly default options to test different component types
-- label: reader
-  base: components/basic
-  pdb: 1l6x
+- label: 1l6x with glycan
+  pdb: 1l6x.cif
   glycan:
   -
     type: n-linked

@@ -1,4 +1,4 @@
-- label: 5JY6
+- label: 5JY6 with CSML search
   base: pdb/basic
   pdb: 5jy6.pdb
   ligand: ligands/basic
@@ -18,12 +18,8 @@
   # resname charmm-name
   hcr:
     - NAD NAD
-  steps:
-    - wait_text: Manipulate PDB
-    - wait_text: Generate PDB
-    - wait_text: Computed Energy
 
-- label: 4W53
+- label: 4W53 with Antechamber and CGenFF
   base: pdb/basic
   pdb: 4w53.pdb
   ligand: ligands/basic
@@ -35,9 +31,25 @@
   hcr:
     - MBN antc_mol
     - EPE charmm_mol
-  steps:
-    - wait_text: Manipulate PDB
-    - wait_text: Generate PDB
-    - wait_text: Computed Energy
 
+- label: 186L with BBEN
+  base: pdb/basic
+  pdb: 186l.pdb
+  ligand: ligands/basic
+  chains:
+    - HETA
+    - HETB
+    - HETC
+    - WATA
+  hcr:
+    - HED charmm
+    - N4B BBEN
 
+- label: 2OI0_modified parameterized with PDB coordinates
+  base: pdb/basic
+  pdb: 2oi0_modified.pdb
+  ligand: ligands/basic
+  chains:
+    - HETA
+  hcr:
+    - LIG param

@@ -1,4 +1,4 @@
-- label: 6IYC
+- label: 6IYC with disulfide bonds and protonation state
   base: pdb/basic
   pdb: 6iyc.pqr
   # chain1 res rid patch

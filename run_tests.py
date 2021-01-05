@@ -12,10 +12,12 @@ from time import sleep
 # module alias (case-insensitive): base filename
 cgui_modules = utils.read_yaml('modules.yml')
 
-parser = argparse.ArgumentParser(description="Test a C-GUI project")
-parser.add_argument('-m', '--module', type=str)
-parser.add_argument('-t', '--test-name', default='basic',
-        help="Name of test to run (default: basic)")
+parser = argparse.ArgumentParser(
+        description="Test a C-GUI project by simulating browser interactions")
+parser.add_argument('-m', '--modules', type=str, nargs='+', metavar='MODULE',
+        help="One or more C-GUI modules to test")
+parser.add_argument('-t', '--test-name',
+        help="Name of test to run (default: standard)")
 parser.add_argument('-n', '--num-threads', type=int, default=1,
         metavar="N",
         help="Number of parallel threads to spawn for testing (default: 1)")
@@ -34,8 +36,10 @@ parser.add_argument('-l', '--logfile', default='results.log')
 parser.add_argument('--config', type=argparse.FileType('r'),
         default="config.yml", metavar="PATH",
         help="Path to configuration file (default: config.yml)")
-parser.add_argument('--dry-run', action='store_true', help="Don't actually run anything, just print the resulting test cases after preprocessing")
-parser.add_argument('--validate-only', action='store_true', help="Reads logfile and attempts to infer and validate PSFs of all logged test cases")
+parser.add_argument('--dry-run', action='store_true',
+        help="Don't actually run anything, just print the resulting test cases after preprocessing")
+parser.add_argument('--validate-only', action='store_true',
+        help="Reads logfile and attempts to infer and validate PSFs of all logged test cases")
 
 args = parser.parse_args()
 
@@ -86,80 +90,123 @@ if WWW_DIR != None:
         raise ValueError(WWW_DIR+" is not a directory")
 settings['www_dir'] = WWW_DIR
 
-MODULE_NAME = args.module
-if not MODULE_NAME:
+if not args.modules:
     if not 'MODULE' in CONFIG:
         raise KeyError('Missing C-GUI module name, either use -m opt or specify MODULE in config.yml')
-    MODULE_NAME = CONFIG['MODULE']
-MODULE_NAME = MODULE_NAME.upper()
-if not MODULE_NAME in cgui_modules:
-    raise ValueError('Unknown C-GUI module: '+MODULE_NAME)
-MODULE_FILE = cgui_modules[MODULE_NAME]
-cgui_module = MODULE_NAME.lower()
-settings['module'] = cgui_module
+    args.modules = [CONFIG['MODULE']]
 
-# import relevant names from the module file
-module = import_module(MODULE_FILE)
-init_module = getattr(module, 'init_module', None)
-BrowserProcess = getattr(module, MODULE_FILE)
+test_cases = []
+for MODULE_NAME in args.modules:
+    MODULE_NAME = MODULE_NAME.upper()
+    if not MODULE_NAME in cgui_modules:
+        raise ValueError('Unknown C-GUI module: '+MODULE_NAME)
+    MODULE_FILE = cgui_modules[MODULE_NAME]
+    cgui_module = MODULE_NAME.lower()
+    settings['module'] = cgui_module
 
-TEST_CASE_PATH = pjoin('test_cases', MODULE_NAME.lower(), args.test_name+'.yml')
-test_cases = utils.read_yaml(TEST_CASE_PATH)
+    # import relevant names from the module file
+    module = import_module(MODULE_FILE)
+    init_module = getattr(module, 'init_module', None)
+    BrowserProcess = getattr(module, MODULE_FILE)
 
-base_cases = [utils.setup_custom_options(test_case, cgui_module) for test_case in test_cases]
-if callable(init_module):
-    base_cases, wait_cases = init_module(base_cases, args)
-else:
-    wait_cases = {}
+    # look for a test case in a standard order
+    file_tests = 'standard', 'minimal', 'full'
+    if args.test_name and not args.test_name in file_tests:
+        TEST_CASE_PATH = pjoin('test_cases', cgui_module, args.test_name+'.yml')
 
-if args.validate_only:
-    if wait_cases:
-        # processing the wait cases is too complicated and rare for now
-        print("Warning: wait_cases can only be checked at their original runtime; skipping ...")
+        # test cases from this module before (pre-) custom option setup
+        pre_test_cases = utils.read_yaml(TEST_CASE_PATH)
+    else:
+        #default_tests = file_tests + ('basic',)
+        #for test_name in default_tests:
+        #    TEST_CASE_PATH = pjoin('test_cases', cgui_module, test_name+'.yml')
+        #    if os.path.exists(TEST_CASE_PATH):
+        #        break
+        #if not os.path.exists(TEST_CASE_PATH):
+        #    errmsg = "Couldn't find any default test for module {}: {!r}"
+        #    raise FileNotFoundError(errmsg.format(MODULE_NAME, default_tests))
 
-    with open(LOGFILE) as results_file:
-        sys_info = {}
-        for line in results_file:
-            jobid, label = utils.parse_jobid_label(line)
-            sys_info[label] = {
-                'dirname': utils.get_sys_dirname(jobid),
-                'archive': utils.get_archive_name(jobid),
-                'jobid': jobid,
-            }
+        file_order = 'full', 'standard', 'minimal'
+        test_name = args.test_name or 'standard'
+        rank = file_order.index(test_name)
+        defaults = file_order[rank:]
 
-    # log messages directly to stdout
-    from Logger import Logger
-    logger = Logger(sys.stdout)
+        test_files = []
+        for default in defaults:
+            default_path = pjoin('test_cases', MODULE_NAME, default+'.yml')
 
-    #import pdb; pdb.set_trace()
-    for test_case in base_cases:
-        # try to find the system directory for this test case
-        label = test_case['label']
-        if not label in sys_info:
-            continue
+            if not os.path.exists(default_path):
+                continue
 
-        # add jobid to test case
-        case_info = sys_info[label]
-        test_case['jobid'] = case_info['jobid']
+            test_files += utils.read_yaml(default_path)['files']
 
-        result = utils.validate_test_case(test_case, case_info['dirname'],
-                sys_archive=case_info['archive'],
-                module=MODULE_NAME)
+        # remove duplicates
+        test_files = list(set(test_files))
 
-        logger.log_result(result)
-else:
-    settings['dry_run'] = args.dry_run
-    settings['interactive'] = args.interactive
-    settings['errors_only'] = args.errors_only
+        # if there are no tests, look for basic.yml
+        test_files = test_files or ['basic.yml']
 
-    # sets up multiprocessing info
-    manager = BrowserManager(BrowserProcess, LOGFILE, args.num_threads, **settings)
+        # get all test cases from filenames
+        pre_test_cases = []
+        for test_file in test_files:
+            test_file = utils.find_test_file(test_file, module=cgui_module)
+            test_cases = utils.read_yaml(test_file)
+            pre_test_cases.extend(test_cases)
 
-    # initializes the other threads
-    manager.start()
+    base_cases = [utils.setup_custom_options(test_case, cgui_module) for test_case in pre_test_cases]
 
-    # runs test-case event loop
-    manager.run(base_cases, wait_cases)
+    if callable(init_module):
+        base_cases, wait_cases = init_module(base_cases, args)
+    else:
+        wait_cases = {}
 
-    # blocks until all BrowserProcesses terminate
-    manager.stop()
+    if args.validate_only:
+        if wait_cases:
+            # processing the wait cases is too complicated and rare for now
+            print("Warning: wait_cases can only be checked at their original runtime; skipping ...")
+
+        with open(LOGFILE) as results_file:
+            sys_info = {}
+            for line in results_file:
+                jobid, label = utils.parse_jobid_label(line)
+                sys_info[label] = {
+                    'dirname': utils.get_sys_dirname(jobid),
+                    'archive': utils.get_archive_name(jobid),
+                    'jobid': jobid,
+                }
+
+        # log messages directly to stdout
+        from Logger import Logger
+        logger = Logger(sys.stdout)
+
+        for test_case in base_cases:
+            # try to find the system directory for this test case
+            label = test_case['label']
+            if not label in sys_info:
+                continue
+
+            # add jobid to test case
+            case_info = sys_info[label]
+            test_case['jobid'] = case_info['jobid']
+
+            result = utils.validate_test_case(test_case, case_info['dirname'],
+                    sys_archive=case_info['archive'],
+                    module=MODULE_NAME)
+
+            logger.log_result(result)
+    else:
+        settings['dry_run'] = args.dry_run
+        settings['interactive'] = args.interactive
+        settings['errors_only'] = args.errors_only
+
+        # sets up multiprocessing info
+        manager = BrowserManager(BrowserProcess, LOGFILE, args.num_threads, **settings)
+
+        # initializes the other threads
+        manager.start()
+
+        # runs test-case event loop
+        manager.run(base_cases, wait_cases)
+
+        # blocks until all BrowserProcesses terminate
+        manager.stop()

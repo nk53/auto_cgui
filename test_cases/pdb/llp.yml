@@ -1,4 +1,4 @@
-- label: 3ltq  with lbt-loops
+- label: 3ltq with lbt-loops
   base: pdb/basic
   pdb: 3ltq.pdb
   llps:

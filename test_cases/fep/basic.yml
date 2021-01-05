@@ -41,7 +41,6 @@
   ffs:
     - cgenff
 
-
 - label: absolute ligand solvation
   parent: asolv
   drags:
