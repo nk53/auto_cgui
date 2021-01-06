@@ -8,6 +8,7 @@ from BrowserManager import BrowserManager
 from importlib import import_module
 from os.path import join as pjoin
 from time import sleep
+from utils import warn
 
 # module alias (case-insensitive): base filename
 cgui_modules = utils.read_yaml('modules.yml')
@@ -50,12 +51,12 @@ settings = {}
 LOGFILE = args.logfile
 if args.validate_only:
     if not os.path.exists(LOGFILE):
-        print("Can't validate: logfile ({}) does not exist".format(LOGFILE))
+        warn("Can't validate: logfile ({}) does not exist".format(LOGFILE))
 else:
     if os.path.exists(LOGFILE):
-        print("Appending to existing logfile:", LOGFILE)
+        warn("Appending to existing logfile:", LOGFILE)
     else:
-        print("Creating new logfile:", LOGFILE)
+        warn("Creating new logfile:", LOGFILE)
 
 # read configuration
 with args.config:
@@ -94,10 +95,21 @@ if not args.modules:
     if not 'MODULE' in CONFIG:
         raise KeyError('Missing C-GUI module name, either use -m opt or specify MODULE in config.yml')
     args.modules = [CONFIG['MODULE']]
+else:
+    modules = [module.upper() for module in args.modules]
+    if 'ALL' in modules:
+        # get the argument as actually given, for output formatting
+        if len(args.modules) > 1:
+            all_arg = args.modules[modules.index('ALL')]
+            modules = ' '.join(args.modules)
+            errmsg = "Got '-m {}'. Did you mean '-m {}'?"
+            errmsg = errmsg.format(modules, all_arg)
+            raise argparse.ArgumentTypeError(errmsg)
+
+        args.modules = cgui_modules
 
 test_cases = []
 for MODULE_NAME in args.modules:
-    MODULE_NAME = MODULE_NAME.upper()
     if not MODULE_NAME in cgui_modules:
         raise ValueError('Unknown C-GUI module: '+MODULE_NAME)
     MODULE_FILE = cgui_modules[MODULE_NAME]
@@ -117,15 +129,6 @@ for MODULE_NAME in args.modules:
         # test cases from this module before (pre-) custom option setup
         pre_test_cases = utils.read_yaml(TEST_CASE_PATH)
     else:
-        #default_tests = file_tests + ('basic',)
-        #for test_name in default_tests:
-        #    TEST_CASE_PATH = pjoin('test_cases', cgui_module, test_name+'.yml')
-        #    if os.path.exists(TEST_CASE_PATH):
-        #        break
-        #if not os.path.exists(TEST_CASE_PATH):
-        #    errmsg = "Couldn't find any default test for module {}: {!r}"
-        #    raise FileNotFoundError(errmsg.format(MODULE_NAME, default_tests))
-
         file_order = 'full', 'standard', 'minimal'
         test_name = args.test_name or 'standard'
         rank = file_order.index(test_name)
@@ -144,7 +147,15 @@ for MODULE_NAME in args.modules:
         test_files = list(set(test_files))
 
         # if there are no tests, look for basic.yml
-        test_files = test_files or ['basic.yml']
+        if not test_files:
+            basic_file = 'basic.yml'
+            try:
+                utils.find_test_file(basic_file, module=cgui_module)
+            except FileNotFoundError:
+                if not os.path.exists(basic_file):
+                    warn('No test files for {} module, skipping'.format(cgui_module))
+                    continue
+            test_files = [basic_file]
 
         # get all test cases from filenames
         pre_test_cases = []
@@ -163,21 +174,22 @@ for MODULE_NAME in args.modules:
     if args.validate_only:
         if wait_cases:
             # processing the wait cases is too complicated and rare for now
-            print("Warning: wait_cases can only be checked at their original runtime; skipping ...")
+            warn("Warning: wait_cases can only be checked at their original runtime; skipping ...")
 
         with open(LOGFILE) as results_file:
             sys_info = {}
             for line in results_file:
-                jobid, label = utils.parse_jobid_label(line)
-                sys_info[label] = {
-                    'dirname': utils.get_sys_dirname(jobid),
-                    'archive': utils.get_archive_name(jobid),
-                    'jobid': jobid,
-                }
+                jobid, label, module = utils.parse_jobinfo(line)
+                if module.lower() == cgui_module:
+                    sys_info[label] = {
+                        'dirname': utils.get_sys_dirname(jobid),
+                        'archive': utils.get_archive_name(jobid),
+                        'jobid': jobid,
+                    }
 
         # log messages directly to stdout
         from Logger import Logger
-        logger = Logger(sys.stdout)
+        logger = Logger(sys.stdout, cgui_module)
 
         for test_case in base_cases:
             # try to find the system directory for this test case
@@ -191,7 +203,7 @@ for MODULE_NAME in args.modules:
 
             result = utils.validate_test_case(test_case, case_info['dirname'],
                     sys_archive=case_info['archive'],
-                    module=MODULE_NAME)
+                    module=cgui_module)
 
             logger.log_result(result)
     else:

@@ -21,12 +21,12 @@ def directory(path, errtype=argparse.ArgumentTypeError):
 parser = argparse.ArgumentParser()
 parser.add_argument('--ref', nargs=1, metavar='filename',
         default=['step1_pdbreader.psf'],
-        help="name of source reference file (default: 'step1_pdbreader.psf'")
+        help="name of source reference file (default: step1_pdbreader.psf")
+parser.add_argument('-o', '--output', type=directory,
+        help="output directory in which to place reference files")
 parser.add_argument('results_file', nargs='?',
         type=argparse.FileType('r'), default='results.log',
         help="log file containing testing results (default: 'results.log')")
-parser.add_argument('dest', type=directory,
-        help="directory to place reference files")
 
 args = parser.parse_args()
 
@@ -42,7 +42,7 @@ with args.results_file as fh:
             print("Skipping failed test case:", line, file=sys.stderr)
             continue
 
-        jobid, label = utils.parse_jobid_label(line)
+        jobid, label, module = utils.parse_jobinfo(line)
 
         ref_dir = 'charmm-gui-'+jobid
         ref_archive = ref_dir+'.tgz'
@@ -62,7 +62,10 @@ with args.results_file as fh:
         ref_filename = utils.ref_from_label(label)
 
         src = os.path.join(ref_dir, args.ref[0])
-        dest = os.path.join(args.dest, ref_filename)
+        if args.output:
+            dest = os.path.join(args.output, ref_filename)
+        else:
+            dest = os.path.join('files', 'references', module, ref_filename)
 
         print('copying', src, '->', dest)
         shutil.copy(src, dest)

@@ -117,8 +117,6 @@ class PBBrowserProcess(CGUIBrowserProcess):
         super(PBBrowserProcess, self).run()
         if self.output:
             self.download(self.output + '.tgz')
-        else:
-            self.download('charmm-gui-%s.tgz' % str(self.jobid))
 
     def init_system(self, test_case, resume=False):
         url = self.base_url + "?doc=input/polymer"

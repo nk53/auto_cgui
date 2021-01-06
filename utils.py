@@ -2,6 +2,7 @@ import os
 import re
 import shutil
 import yaml
+import sys
 from os.path import join as pjoin
 
 def find_test_file(filename, module=None, root_dir='test_cases', ext='.yml'):
@@ -367,17 +368,25 @@ def parse_jobid(result_str):
     """Given a line from a results.log file, returns the job ID"""
     return re.search(r'\(([0-9]+)\)', result_str).group(1)
 
-def parse_jobid_label(result_str):
+def parse_jobinfo(result_str):
     """Given a line from a results.log file, returns a tuple containing
-    both the job ID and test case label"""
-    return parse_jobid(result_str), parse_label(result_str)
+    the job ID, test case label, and module name"""
+    return parse_jobid(result_str), parse_label(result_str), parse_module(result_str)
 
 def parse_label(result_str):
     """Given a line from a results.log file, returns the test case label"""
     return re.search(r'"([^"]+)"', result_str).group(1)
+
+def parse_module(result_str):
+    """Given a line from a results.log file, returns the test case module"""
+    return re.search(r"'([^']+)'", result_str).group(1)
 
 def get_sys_dirname(jobid):
     return 'charmm-gui-{}'.format(jobid)
 
 def get_archive_name(jobid):
     return 'charmm-gui-{}.tgz'.format(jobid)
+
+def warn(*strs):
+    """Shortcut for print(..., file=sys.stderr)"""
+    print(*strs, file=sys.stderr)

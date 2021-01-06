@@ -1,6 +1,5 @@
 # this file uses mostly default options to test different component types
 - label: reader
-  base: components/basic
   glycan:
     grs: |
       1 AGLC_2NSF_6SUF

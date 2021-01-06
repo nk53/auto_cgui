@@ -12,7 +12,7 @@ class BrowserManager:
 
         browser_args and browser_kwargs are passed directly to BrowserProcess.__init__
         """
-        self.logger = Logger(logfile)
+        self.logger = Logger(logfile, browser_kwargs['module'])
 
         self.todo_queue = todo_queue = Queue()
         self.done_queue = done_queue = Queue()
