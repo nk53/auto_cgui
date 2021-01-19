@@ -1,6 +1,5 @@
 # this file uses mostly default options to test different component types
 - label: 1cdr with glycan
-  base: components/basic
   pdb: 1cdr.cif
   gpi:
     lipid: '{"lipid_type":"PIDAG","name":"PI-DAG-DM"}'
