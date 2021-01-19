@@ -22,10 +22,10 @@ def init_module(test_cases, args):
     return base_cases, wait_cases
 
 class GlycolipidBrowserProcess(CGUIBrowserProcess):
-    def __init__(self, todo_q, done_q, **kwargs):
+    def __init__(self, *args, **kwargs):
         self.module_title = "Glycolipid Modeler"
         self.module_url = "?doc=input/glycolipid"
-        super(GlycolipidBrowserProcess, self).__init__(todo_q, done_q, **kwargs)
+        super(GlycolipidBrowserProcess, self).__init__(*args, **kwargs)
 
     def run_step0(self, pglycolipid = None, sub2 = None, sub3 = None):
         module_title = self.module_title
@@ -65,8 +65,7 @@ class GlycolipidBrowserProcess(CGUIBrowserProcess):
             time.sleep(1)
         self.go_next(self.test_case['steps'][0]['wait_text'])
 
-        jobid = browser.find_by_css(".jobid").first.text.split()[-1]
-        self.test_case['jobid'] = jobid
+        self.get_jobid()
         if not 'glycolipid' in self.test_case:
             if sub3:
                 print("Finished test:%s %s %s"% (pglycolipid, sub2, sub3))

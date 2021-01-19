@@ -580,6 +580,4 @@ class NMMBrowserProcess(SolutionBrowserProcess):
 
         self.go_next(test_case['steps'][0]['wait_text'])
 
-        jobid = browser.find_by_css(".jobid").first.text.split()[-1]
-        test_case['jobid'] = jobid
-        self.jobid = jobid
+        self.jobid = self.get_jobid()

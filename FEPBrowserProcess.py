@@ -205,8 +205,7 @@ class FEPBrowserProcess(BilayerBrowserProcess):
                     browser.find_by_value(pdb_fmt).click()
 
                 self.go_next(test_case['steps'][0]['wait_text'])
-                jobid = browser.find_by_css(".jobid").first.text.split()[-1]
-                test_case['jobid'] = jobid
+                self.get_jobid()
             elif system_type =='solution':
                 self.browser.find_by_value('solution').click()
                 if isinstance(pdb, dict):
@@ -244,8 +243,7 @@ class FEPBrowserProcess(BilayerBrowserProcess):
                     browser.find_by_value(pdb_fmt).click()
 
                 self.go_next(test_case['steps'][0]['wait_text'])
-                jobid = browser.find_by_css(".jobid").first.text.split()[-1]
-                test_case['jobid'] = jobid
+                self.get_jobid()
         elif test_case['url_ym'] in solvating_urls:
             browser.visit(url)
             drags = self.test_case['drags']
@@ -254,5 +252,4 @@ class FEPBrowserProcess(BilayerBrowserProcess):
                 self.browser.attach_file('files[]', lig_path)
 
             self.go_next(test_case['steps'][0]['wait_text'])
-            jobid = browser.find_by_css(".jobid").first.text.split()[-1]
-            test_case['jobid'] = jobid
+            self.get_jobid()

@@ -24,10 +24,10 @@ def init_module(test_cases, args):
 
 
 class GlycanOnlyBrowserProcess(CGUIBrowserProcess):
-    def __init__(self, todo_q, done_q, **kwargs):
+    def __init__(self, *args, **kwargs):
         self.module_title = "Glycan Reader & Modeler"
         self.module_url = "?doc=input/glycan&step=0"
-        super(GlycanOnlyBrowserProcess, self).__init__(todo_q, done_q, **kwargs)
+        super(GlycanOnlyBrowserProcess, self).__init__(*args, **kwargs)
 
     def run(self):
         super(GlycanOnlyBrowserProcess, self).run()
@@ -80,5 +80,4 @@ class GlycanOnlyBrowserProcess(CGUIBrowserProcess):
             self.browser.click_link_by_text("Glycan Only System")
             self.set_glycan()
 
-            jobid = browser.find_by_css(".jobid").first.text.split()[-1]
-            test_case['jobid'] = jobid
+            self.get_jobid()

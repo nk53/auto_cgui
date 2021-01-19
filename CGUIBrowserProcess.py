@@ -25,7 +25,7 @@ class CGUIBrowserProcess(Process):
     PHP_FATAL_ERROR = "Fatal error:"
     PHP_MESSAGES = PHP_NOTICE, PHP_WARNING, PHP_ERROR
 
-    def __init__(self, todo_q, done_q, **kwargs):
+    def __init__(self, todo_q, done_q, lock, **kwargs):
         """Setup Queues, browser settings, and delegate rest to multiprocessing.Process"""
         self.browser_type = kwargs.pop('browser_type', 'firefox')
         self.base_url = kwargs.pop('base_url', 'http://charmm-gui.org/')
@@ -44,6 +44,7 @@ class CGUIBrowserProcess(Process):
 
         self.todo_q = todo_q
         self.done_q = done_q
+        self.lock = lock
 
     def _click(self, elem, wait=None):
         elem.click()
@@ -159,14 +160,34 @@ class CGUIBrowserProcess(Process):
 
         return ElementList(filter(lambda elem: elem.visible, elems))
 
-    def go_next(self, test_text=None, alert=None, invalid_alert_text=None):
+    def get_jobid(self):
+        elems = self.browser.find_by_css('.jobid')
+        if not elems:
+            jobid = '-1'
+        else:
+            jobid = elems.text.split()[-1]
+
+        self.test_case['jobid'] = jobid
+        return jobid
+
+    def go_next(self, test_text=None, alert=None, invalid_alert_text=None, next_button=None):
         if isinstance(alert, str):
             alert = alert.lower()
         assert alert in (None, 'accept', 'dismiss'), "unrecognized alert response: "+str(alert)
-        button_elem = self.browser.find_by_id('nextBtn')
-        if not button_elem:
-            button_elem = self.browser.find_by_id("input_nav").find_by_tag("table")
-        assert button_elem, "Can't find next button"
+
+        if isinstance(next_button, (tuple, list)):
+            finder = getattr('find_by_'+next_button[0])
+            selector = next_button[1]
+            button_elem = self.browser.find_by(finder, selector)
+        elif getattr(next_button, 'click', None):
+            button_elem = next_button
+        elif callable(next_button):
+            button_elem = next_button()
+        else:
+            button_elem = self.browser.find_by_id('nextBtn')
+            if not button_elem:
+                button_elem = self.browser.find_by_id("input_nav").find_by_tag("table")
+            assert button_elem, "Can't find next button"
 
         while not button_elem.visible:
             time.sleep(1)
@@ -191,7 +212,7 @@ class CGUIBrowserProcess(Process):
                         print(self.name, "{}ed alert with text: '{}'".format(alert, alert_text))
 
         if test_text:
-            self.wait_text_multi([test_text, self.CHARMM_ERROR])
+            self.wait_text_multi([test_text, self.CHARMM_ERROR, self.PHP_ERROR])
 
     def handle_step(self, step_info):
         for elem_info in step_info['elems']:
@@ -367,7 +388,10 @@ class CGUIBrowserProcess(Process):
                         jobid = test_case['jobid']
                         resume_link = test_case['resume_link']
                         self.resume_step(jobid, link_no=resume_link)
-                    self.init_system(test_case, resume)
+
+                    # prevent Job ID race condition
+                    with self.lock:
+                        self.init_system(test_case, resume)
 
                     jobid = test_case['jobid']
                     print(self.name, "Job ID:", jobid)
@@ -385,7 +409,7 @@ class CGUIBrowserProcess(Process):
                         # Check for PHP errors, warnings, and notices
                         found_text = self.warn_if_text(self.PHP_MESSAGES)
                         if found_text and self.interactive:
-                            if not self.errors_only or found_text == self.PHP_ERROR:
+                            if not self.errors_only or found_text in (self.PHP_ERROR, self.PHP_FATAL_ERROR):
                                 self.interact(locals())
 
                         for prestep in step.get('presteps', []):
@@ -486,14 +510,14 @@ class CGUIBrowserProcess(Process):
         """
         # get a reference to the actual function, and save its arguments
         find_by_str = element_list.find_by
-        find_by = getattr(element_list, 'find_by_'+find_by_str)
+        finder = getattr(element_list, 'find_by_'+find_by_str)
         query = element_list.query
 
         tpl = "{} waiting for element by {}: '{}'"
         while not element_list:
             if verbose:
                 print(tpl.format(self.name, find_by_str, query))
-            element_list = self.browser.find_by(find_by, query)
+            element_list = self.browser.find_by(finder, query)
 
         return element_list
 

@@ -1,7 +1,7 @@
 # this file uses mostly default options to test different component types
 - label: 3CHB/GM1 complex, Glycan video demo 3
   base: components/basic
-  pdb: 3chb
+  pdb: 3chb.cif
   glycan:
   -
     type: glycolipid

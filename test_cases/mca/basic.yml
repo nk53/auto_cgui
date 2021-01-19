@@ -52,6 +52,8 @@
       ddpc: 1
 - label: membrane_only + custom_solvent
   parent: multicomp_bilayer
+  psf_validation:
+    target: step3.3_custom_box.psf
   solvent_tests: [water, water+ions]
   components:
     tolu:

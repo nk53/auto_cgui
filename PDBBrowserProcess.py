@@ -9,10 +9,10 @@ from splinter.exceptions import ElementDoesNotExist
 from CGUIBrowserProcess import CGUIBrowserProcess
 
 class PDBBrowserProcess(CGUIBrowserProcess):
-    def __init__(self, todo_q, done_q, **kwargs):
+    def __init__(self, *args, **kwargs):
         self.module_title = "PDB Reader"
         self.module_url = "?doc=input/pdbreader"
-        super(PDBBrowserProcess, self).__init__(todo_q, done_q, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def set_mutation(self):
         if not 'mutations' in self.test_case:
@@ -639,5 +639,4 @@ class PDBBrowserProcess(CGUIBrowserProcess):
 
             self.go_next(test_case['steps'][0]['wait_text'])
 
-            jobid = browser.find_by_css(".jobid").first.text.split()[-1]
-            test_case['jobid'] = jobid
+            self.get_jobid()

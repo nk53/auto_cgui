@@ -2,7 +2,7 @@ dict: basic.map.yml
 base: components/basic
 # "parent: False" means this has no parent
 parent: False
-reference:
+psf_validation:
   target: step2_molpacking.psf
 solvent_tests: [water+ions]
 steps:

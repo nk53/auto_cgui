@@ -8,11 +8,11 @@ from splinter.exceptions import ElementDoesNotExist
 from CGUIBrowserProcess import CGUIBrowserProcess
 
 class PBBrowserProcess(CGUIBrowserProcess):
-    def __init__(self, todo_q, done_q, **kwargs):
+    def __init__(self, *args, **kwargs):
         self.jobid = None
         self.polydic = None
         self.output = None # charmm-gui-jobid.tgz
-        super(PBBrowserProcess, self).__init__(todo_q, done_q, **kwargs)
+        super(PBBrowserProcess, self).__init__(*args, **kwargs)
 
     def getpath(self, nested_dict, value, prepath=()):
         for k, v in nested_dict.items():
@@ -23,19 +23,6 @@ class PBBrowserProcess(CGUIBrowserProcess):
                 p = self.getpath(v, value, path) # recursive call
                 if p is not None:
                     return p
-
-    def download(self, saveas):
-        url = "{url}?doc=input/download&jobid={jobid}".format(url=self.base_url, jobid=self.jobid)
-        print("downloading %s to %s" % (url, saveas))
-
-        user_agent = 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'
-        headers = {'User-Agent': user_agent}
-
-        user, password = 'testing', 'lammps'
-        r = requests.get(url, headers=headers, auth=(user, password))
-        open(saveas, "wb").write(r.content)
-        fsize = float(os.stat(saveas).st_size) / (1024.0 * 1024.0)
-        print("download complete, file size is %5.2f MB" % fsize)
 
     def select(self, element, value):
         self.browser.select(element, value)
@@ -106,8 +93,7 @@ class PBBrowserProcess(CGUIBrowserProcess):
         self.go_next(wait_text)
 
         # set jobid
-        jobid = browser.find_by_css(".jobid").first.text.split()[-1]
-        self.jobid = jobid
+        self.jobid = self.get_jobid()
 
     def resume_step(self, jobid, project=None, step=None, link_no=None):
         self.jobid = jobid

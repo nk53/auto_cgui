@@ -7,7 +7,6 @@ import yaml
 from BrowserManager import BrowserManager
 from importlib import import_module
 from os.path import join as pjoin
-from time import sleep
 from utils import warn
 
 # module alias (case-insensitive): base filename
@@ -110,6 +109,7 @@ else:
 
 test_cases = []
 for MODULE_NAME in args.modules:
+    MODULE_NAME = MODULE_NAME.upper()
     if not MODULE_NAME in cgui_modules:
         raise ValueError('Unknown C-GUI module: '+MODULE_NAME)
     MODULE_FILE = cgui_modules[MODULE_NAME]

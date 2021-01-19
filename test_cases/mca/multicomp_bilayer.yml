@@ -1,6 +1,8 @@
 dict: basic.map.yml
 base: components/basic
 parent: False
+reference:
+  target: step2_molpacking.psf
 solvent_tests: [water+ions]
 steps:
   - wait_text: Component ID

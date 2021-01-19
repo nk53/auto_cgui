@@ -3,8 +3,7 @@ import readline
 import sys
 import utils
 from Logger import Logger
-from multiprocessing import Queue
-from time import sleep
+from multiprocessing import Lock, Queue
 
 class BrowserManager:
     def __init__(self, BrowserProcess, logfile, num_threads=1, **browser_kwargs):
@@ -16,6 +15,7 @@ class BrowserManager:
 
         self.todo_queue = todo_queue = Queue()
         self.done_queue = done_queue = Queue()
+        self.lock = lock = Lock()
 
         if browser_kwargs.get('interactive'):
             self.inter_queue = browser_kwargs['inter_q'] = Queue()
@@ -26,7 +26,7 @@ class BrowserManager:
 
         self.dry_run = browser_kwargs.get('dry_run')
 
-        self.processes = [BrowserProcess(todo_queue, done_queue, **browser_kwargs) for i in range(num_threads)]
+        self.processes = [BrowserProcess(todo_queue, done_queue, lock, **browser_kwargs) for i in range(num_threads)]
 
     def run(self, base_cases, wait_cases={}):
         """Delegates tasks to BrowserProcess instances and logs results
@@ -40,8 +40,6 @@ class BrowserManager:
         # put regular cases in the task queue
         pending = 0
         for case in base_cases:
-            if not self.dry_run:
-                sleep(0.1 * pending)
             self.todo_queue.put(case)
             pending += 1
 

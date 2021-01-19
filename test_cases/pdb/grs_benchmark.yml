@@ -1,6 +1,6 @@
 - label: 3sdy with glycan
   base: components/basic
-  pdb: 3sdy # n-linked multiple
+  pdb: 3sdy.cif # n-linked multiple
   reference:
   -
     segid: CARA
@@ -40,7 +40,7 @@
 
 - label: 3nk3 with glycan
   base: components/basic
-  pdb: 3nk3 # o-linked
+  pdb: 3nk3.cif # o-linked
   reference:
   -
     segid: CARA
@@ -50,7 +50,7 @@
 
 - label: 4b1q with glycan
   base: components/basic
-  pdb: 4b1q
+  pdb: 4b1q.cif
   reference:
   -
     segid: CARA
@@ -63,7 +63,7 @@
 
 - label: 4cqy with glycan
   base: components/basic
-  pdb: 4cqy # Neu5Ac
+  pdb: 4cqy.cif # Neu5Ac
   reference:
   -
     segid: CARA
@@ -86,7 +86,7 @@
 
 - label: 4hiz with glycan
   base: components/basic
-  pdb: 4hiz # Neu5Ac 29 link
+  pdb: 4hiz.cif # Neu5Ac 29 link
   reference:
   -
     segid: CARA
@@ -96,7 +96,7 @@
 
 - label: 3i02 with glycan
   base: components/basic
-  pdb: 3i02 # Kdo
+  pdb: 3i02.cif # Kdo
   reference:
   -
     segid: CARA
@@ -107,7 +107,7 @@
 
 - label: 3oko with glycan
   base: components/basic
-  pdb: 3oko # Kdo 28 link
+  pdb: 3oko.cif # Kdo 28 link
   reference:
   -
     segid: CARA
@@ -118,7 +118,7 @@
 
 - label: 5fvn with glycan
   base: components/basic
-  pdb: 5fvn # Lipid A
+  pdb: 5fvn.cif # Lipid A
   reference:
   -
     segid: CARH
@@ -129,7 +129,7 @@
 
 - label: 1qff with glycan
   base: components/basic
-  pdb: 1qff # LPS
+  pdb: 1qff.cif # LPS
   reference:
   -
     segid: CARA
@@ -146,7 +146,7 @@
 
 - label: 1qlb with glycan
   base: components/basic
-  pdb: 1qlb # detergent
+  pdb: 1qlb.cif # detergent
   reference:
   -
     segid: CARA
@@ -156,7 +156,7 @@
 
 - label: 5dnf with glycan
   base: components/basic
-  pdb: 5dnf # GAGs
+  pdb: 5dnf.cif # GAGs
   reference:
   -
     segid: CARD
@@ -167,7 +167,7 @@
 
 - label: 3uan with glycan
   base: components/basic
-  pdb: 3uan # GAGs
+  pdb: 3uan.cif # GAGs
   reference:
   -
     segid: CARA
@@ -181,7 +181,7 @@
 
 - label: 2vzt with glycan
   base: components/basic
-  pdb: 2vzt # should ignore unknown chemod
+  pdb: 2vzt.cif # should ignore unknown chemod
   reference:
   -
     grs: 1 BGLCN
@@ -189,7 +189,7 @@
 
 - label: 2e75 with glycan
   base: components/basic
-  pdb: 2e75 
+  pdb: 2e75.cif
   reference:
   -
     segid: CARA
@@ -199,7 +199,7 @@
 
 - label: 2gaz with glycan
   base: components/basic
-  pdb: 2gaz # PI-DAG
+  pdb: 2gaz.cif # PI-DAG
   reference:
   -
     segid: CARD
@@ -210,7 +210,7 @@
 
 - label: 3rzn with glycan
   base: components/basic
-  pdb: 3rzn # Cer
+  pdb: 3rzn.cif # Cer
   reference:
   -
     segid: CARA
@@ -220,7 +220,7 @@
 
 - label: 1lt5 with glycan
   base: components/basic
-  pdb: 1lt5 # S-linkage
+  pdb: 1lt5.cif # S-linkage
   reference:
   -
     segid: CARA
@@ -231,7 +231,7 @@
 
 - label: 2vrq with glycan
   base: components/basic
-  pdb: 2vrq # Xyl-Ara
+  pdb: 2vrq.cif # Xyl-Ara
   reference:
   -
     segid: CARA
@@ -243,7 +243,7 @@
 
 - label: 4bpa with glycan
   base: components/basic
-  pdb: 4bpa # Mur
+  pdb: 4bpa.cif # Mur
   reference:
   -
     segid: CARA
@@ -255,7 +255,7 @@
 
 - label: 4c3x with glycan
   base: components/basic
-  pdb: 4c3x # sucrose
+  pdb: 4c3x.cif # sucrose
   reference:
   -
     segid: CARA
@@ -265,7 +265,7 @@
 
 - label: 4xwz with glycan
   base: components/basic
-  pdb: 4xwz # FructoPyranose
+  pdb: 4xwz.cif # FructoPyranose
   reference:
   -
     segid: CARA
@@ -273,7 +273,7 @@
 
 - label: 3l2m with glycan
   base: components/basic
-  pdb: 3l2m # cyclo-dextrin
+  pdb: 3l2m.cif # cyclo-dextrin
   reference:
   -
     segid: CARA
@@ -288,7 +288,7 @@
 
 - label: 1fwu with glycan
   base: components/basic
-  pdb: 1fwu # OMe
+  pdb: 1fwu.cif # OMe
   reference:
   -
     segid: CARA
@@ -299,7 +299,7 @@
 
 - label: 1gz5 with glycan
   base: components/basic
-  pdb: 1gz5 # phos
+  pdb: 1gz5.cif # phos
   reference:
   -
     segid: CARA
@@ -307,7 +307,7 @@
 
 - label: 2yau with glycan
   base: components/basic
-  pdb: 2yau # Ac
+  pdb: 2yau.cif # Ac
   reference:
   -
     segid: CARA
@@ -315,7 +315,7 @@
 
 - label: 4hg6 with glycan
   base: components/basic
-  pdb: 4hg6 # polysaccharide
+  pdb: 4hg6.cif # polysaccharide
   reference:
 -
   segid: CARA
@@ -341,7 +341,7 @@
 
 - label: 5tps with glycan
   base: components/basic
-  pdb: 5tps # n-linked
+  pdb: 5tps.cif # n-linked
   reference:
 -
   segid: CARA
@@ -356,7 +356,7 @@
 
 - label: 1axm with glycan
   base: components/basic
-  pdb: 1axm # GAGs
+  pdb: 1axm.cif # GAGs
   reference:
   - 
     segid: CARA

@@ -10,6 +10,8 @@ from SolutionBrowserProcess import SolutionBrowserProcess
 from InputBrowserProcess import InputBrowserProcess
 
 class BilayerBrowserProcess(SolutionBrowserProcess, InputBrowserProcess):
+    next_button = None # for resolving multiple next buttons on initial step
+
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.module_title = "Membrane Builder"
@@ -339,17 +341,15 @@ class BilayerBrowserProcess(SolutionBrowserProcess, InputBrowserProcess):
                     browser.attach_file("file", pdb_path)
                     browser.find_by_value(pdb_fmt).click()
 
-                self.go_next(test_case['steps'][0]['wait_text'])
-
-                jobid = browser.find_by_css(".jobid").first.text.split()[-1]
-                test_case['jobid'] = jobid
+                self.go_next(test_case['steps'][0]['wait_text'],
+                        next_button=self.next_button)
+                self.get_jobid()
         else:
             if not resume:
                 browser.visit(url)
                 browser.find_by_xpath("//*[@id='pdb']/h4[2]/input").click()
 
-                self.go_next(test_case['steps'][0]['wait_text'])
-
-                jobid = browser.find_by_css(".jobid").first.text.split()[-1]
-                test_case['jobid'] = jobid
+                self.go_next(test_case['steps'][0]['wait_text'],
+                        next_button=self.next_button)
+                self.get_jobid()
 

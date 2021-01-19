@@ -1,0 +1,7 @@
+base: systems
+convert: full2hmmm
+parent: False
+steps:
+  - module:
+      name: bilayer
+      start: -2

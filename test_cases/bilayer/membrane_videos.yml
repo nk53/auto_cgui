@@ -1,5 +1,5 @@
 - label: GPI-CD59 in plasma membrane, Membrane video demo 2
-  pdb: 1cdr
+  pdb: 1cdr.cif
   gpi:
     lipid: '{"lipid_type":"PIDAG","name":"PI-DAG-DM"}'
     grs: |

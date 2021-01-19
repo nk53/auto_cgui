@@ -22,10 +22,10 @@ def init_module(test_cases, args):
     return base_cases, wait_cases
 
 class LPSBrowserProcess(CGUIBrowserProcess):
-    def __init__(self, todo_q, done_q, **kwargs):
+    def __init__(self, *args, **kwargs):
         self.module_title = "LPS Builder"
         self.module_url = "?doc=input/lps"
-        super(LPSBrowserProcess, self).__init__(todo_q, done_q, **kwargs)
+        super(LPSBrowserProcess, self).__init__(*args, **kwargs)
 
     def run_step0(self, speciesn = None, lip = None, core = None, oanti = None):
         module_title = self.module_title
@@ -47,8 +47,7 @@ class LPSBrowserProcess(CGUIBrowserProcess):
             time.sleep(1)
         self.go_next(self.test_case['steps'][0]['wait_text'])
 
-        jobid = browser.find_by_css(".jobid").first.text.split()[-1]
-        self.test_case['jobid'] = jobid
+        self.get_jobid()
         if not 'species' in self.test_case:
             if oanti:
                 print("Finished test:%s %s %s %s"% (speciesn, lip, core, oanti))

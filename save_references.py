@@ -67,6 +67,10 @@ with args.results_file as fh:
         else:
             dest = os.path.join('files', 'references', module, ref_filename)
 
+        if not os.path.exists(src):
+            print("Skipping nonexistent file:", src)
+            continue
+
         print('copying', src, '->', dest)
         shutil.copy(src, dest)
 

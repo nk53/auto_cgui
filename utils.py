@@ -237,17 +237,23 @@ def diff_psf(target, reference):
         Otherwise, a tuple showing the first difference is returned:
             target_line_no, reference_line_no, target_line, reference_line
     """
-    INVALID_TARGET = 'Error: target is not a valid PSF: {}'
-    INVALID_REFERENCE = 'Error: reference is not a valid PSF: {}'
+    INVALID_PSF = 'Error: {} is not a valid PSF: {}'
+    INVALID_FILE = 'Error: {} is not a regular file: {}'
+    FILE_DOES_NOT_EXIST = 'Error: {} does not exist: {}'
     INVALID_TITLE = 'Error: invalid title format for PSF: {}'
 
     if isinstance(target, str):
-        if not os.path.isfile(target):
-            return INVALID_TARGET.format(target)
+        if not os.path.exists(target):
+            return FILE_DOES_NOT_EXIST.format('target', target)
+        elif not os.path.isfile(target):
+            return INVALID_FILE.format('target', target)
         target = open(target)
+
     if isinstance(reference, str):
-        if not os.path.isfile(reference):
-            return INVALID_REFERENCE.format(reference)
+        if not os.path.exists(reference):
+            return FILE_DOES_NOT_EXIST.format('reference', reference)
+        elif not os.path.isfile(reference):
+            return INVALID_FILE.format('reference', reference)
         reference = open(reference)
 
     with target:
