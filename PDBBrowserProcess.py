@@ -300,7 +300,12 @@ class PDBBrowserProcess(CGUIBrowserProcess):
 
             for name, value in zip(ssbond_fmt, ssbond):
                 ssid = id_fmt.format(name, ssbond_no)
-                self.browser.find_by_id(ssid).select(value)
+                cnt = 0
+                ssid_elem = self.browser.find_by_id(ssid)
+                while not ssid_elem.visible:
+                    cnt += 1 
+                    time.sleep(1)
+                ssid_elem.select(value)
 
     def set_hcoor(self):
         if not 'hcoor' in self.test_case:

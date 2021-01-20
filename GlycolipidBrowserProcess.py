@@ -88,7 +88,7 @@ class GlycolipidBrowserProcess(CGUIBrowserProcess):
 
     def init_system(self, test_case, resume=False):
         if not 'glycolipid' in self.test_case:
-            glycolipid_lib = yaml.load(open('test_cases/glycolipid/basic.yml','r'), Loader=yaml.Loader)
+            glycolipid_lib = yaml.load(open('test_cases/glycolipid/exhaustive.yml','r'), Loader=yaml.Loader)
             next_glycolipid = False
 
             for glycolipid in list(self.test_case):
@@ -109,7 +109,7 @@ class GlycolipidBrowserProcess(CGUIBrowserProcess):
                             sub3 = str(sub3id)
                             self.run_step0(pglycolipid, sub2, sub3)
         elif 'glycolipid' and 'sub2' in self.test_case:
-            glycolipid_lib = yaml.load(open('test_cases/glycolipid/basic.yml','r'), Loader=yaml.Loader)
+            glycolipid_lib = yaml.load(open('test_cases/glycolipid/exhaustive.yml','r'), Loader=yaml.Loader)
             next_glycolipid = False
 
             for glycolipid in list(self.test_case):
@@ -130,7 +130,7 @@ class GlycolipidBrowserProcess(CGUIBrowserProcess):
                             sub3 = str(sub3id)
                             self.run_step0(pglycolipid, sub2, sub3)
         elif 'glycolipid' in self.test_case and not 'sub2' in self.test_case:
-            glycolipid_lib = yaml.load(open('test_cases/glycolipid/basic.yml','r'), Loader=yaml.Loader)
+            glycolipid_lib = yaml.load(open('test_cases/glycolipid/exhaustive.yml','r'), Loader=yaml.Loader)
             glycolipid_master = [mpglycolipid for mpglycolipid in glycolipid_lib]
             next_glycolipid = False
 

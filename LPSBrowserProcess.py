@@ -70,7 +70,7 @@ class LPSBrowserProcess(CGUIBrowserProcess):
 
     def init_system(self, test_case, resume=False):
         if not 'species' in self.test_case:
-            lps_lib = yaml.load(open('test_cases/lps/basic.yml','r'), Loader=yaml.Loader)
+            lps_lib = yaml.load(open('test_cases/lps/exhaustive.yml','r'), Loader=yaml.Loader)
             for species in self.test_case:
                 speciesn = self.test_case['label']
                 mlipid = self.test_case['lip']
@@ -103,7 +103,7 @@ class LPSBrowserProcess(CGUIBrowserProcess):
                         else:
                             self.run_step0(speciesn, lip, core)
         elif 'species' and 'lip' and 'core' in self.test_case and not 'oanti' in self.test_case:
-            lps_lib = yaml.load(open('test_cases/lps/basic.yml','r'), Loader=yaml.Loader)
+            lps_lib = yaml.load(open('test_cases/lps/exhaustive.yml','r'), Loader=yaml.Loader)
             lps_master = [mspecies for mspecies in lps_lib]
             next_species = False
 
@@ -129,7 +129,7 @@ class LPSBrowserProcess(CGUIBrowserProcess):
                                     self.run_step0(speciesn, lip, core)
                                     next_species = True
         elif 'species' and 'lip' in self.test_case and not ('core' and 'oanti') in self.test_case:
-            lps_lib = yaml.load(open('test_cases/lps/basic.yml','r'), Loader=yaml.Loader)
+            lps_lib = yaml.load(open('test_cases/lps/exhaustive.yml','r'), Loader=yaml.Loader)
             lps_master = [mspecies for mspecies in lps_lib]
             next_species = False
 
@@ -155,7 +155,7 @@ class LPSBrowserProcess(CGUIBrowserProcess):
                                     self.run_step0(speciesn, lip, core)
                                     next_species = True
         elif 'species' in self.test_case and not ('lip' and 'core' and 'oanti') in self.test_case:
-            lps_lib = yaml.load(open('test_cases/lps/basic.yml','r'), Loader=yaml.Loader)
+            lps_lib = yaml.load(open('test_cases/lps/exhaustive.yml','r'), Loader=yaml.Loader)
             lps_master = [mspecies for mspecies in lps_lib]
             next_species = False
 
