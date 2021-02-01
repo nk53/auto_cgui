@@ -2,7 +2,6 @@ import ast
 import os
 import re
 import time
-import yaml
 from os.path import join as pjoin
 from splinter import Browser
 from splinter.exceptions import ElementDoesNotExist
@@ -303,7 +302,7 @@ class PDBBrowserProcess(CGUIBrowserProcess):
                 cnt = 0
                 ssid_elem = self.browser.find_by_id(ssid)
                 while not ssid_elem.visible:
-                    cnt += 1 
+                    cnt += 1
                     time.sleep(1)
                 ssid_elem.select(value)
 

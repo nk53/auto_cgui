@@ -241,6 +241,8 @@ class CGUIBrowserProcess(Process):
 
     def interact(self, local={}):
         """Provide piped instructions to a new Python interpreter"""
+        if not self.interactive:
+            return
         test_case = getattr(self, 'test_case', {})
         jobid = test_case.get('jobid', -1)
 

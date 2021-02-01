@@ -1,9 +1,4 @@
-import ast
-import re
-import time
-import os
-import sys
-import yaml
+from utils import find_test_file, read_yaml
 from splinter import Browser
 from CGUIBrowserProcess import CGUIBrowserProcess
 
@@ -28,13 +23,11 @@ class GlycolipidBrowserProcess(CGUIBrowserProcess):
         super(GlycolipidBrowserProcess, self).__init__(*args, **kwargs)
 
     def run_step0(self, pglycolipid = None, sub2 = None, sub3 = None):
-        module_title = self.module_title
         url = self.base_url + self.module_url
         browser = self.browser
         browser.visit(url)
-        browser.driver.implicitly_wait(10);
-        browser.driver.set_script_timeout(10000);
-        browser.driver.set_page_load_timeout(10000);
+        browser.driver.set_script_timeout(10000)
+        browser.driver.set_page_load_timeout(10000)
         pglyc_fmt = "//span[.='{}']"
         sub2_fmt = "//input[@value='{}']"
         sub3_fmt = "//input[@value='{}']"
@@ -43,26 +36,19 @@ class GlycolipidBrowserProcess(CGUIBrowserProcess):
             sub2_id = pglyc_fmt.format(sub2)
             sub3_id = sub3_fmt.format(sub3)
             browser.execute_script("$('sub1').toggle()")
-            time.sleep(1)
-            browser.find_by_xpath(pglyc_id).click()
-            time.sleep(1)
+            self.wait_visible(browser.find_by_xpath(pglyc_id), click=True)
             sub2_sibling = browser.find_by_xpath(sub2_id)
-            sub2_sibling.find_by_xpath("./..").click()
-            time.sleep(1)
+            self.wait_visible(sub2_sibling.find_by_xpath("./.."), click=True)
             sub3_sibling = browser.find_by_xpath(sub3_id)
-            sub3_sibling.find_by_xpath("./..").click()
-            time.sleep(1)
+            self.wait_visible(sub3_sibling.find_by_xpath("./.."), click=True)
         else:
             sub2_fmt = "//span[.='{}']/../ul/li/label/input[@value='{}']"
             pglyc_id = pglyc_fmt.format(pglycolipid)
             sub2_id = sub2_fmt.format(pglycolipid, sub2)
             browser.execute_script("$('sub1').toggle()")
-            time.sleep(1)
-            browser.find_by_xpath(pglyc_id).click()
-            time.sleep(1)
+            self.wait_visible(browser.find_by_xpath(pglyc_id), click=True)
             sub2_sibling = browser.find_by_xpath(sub2_id)
-            sub2_sibling.find_by_xpath("./..").click()
-            time.sleep(1)
+            self.wait_visible(sub2_sibling.find_by_xpath("./.."), click=True)
         self.go_next(self.test_case['steps'][0]['wait_text'])
 
         self.get_jobid()
@@ -88,7 +74,7 @@ class GlycolipidBrowserProcess(CGUIBrowserProcess):
 
     def init_system(self, test_case, resume=False):
         if not 'glycolipid' in self.test_case:
-            glycolipid_lib = yaml.load(open('test_cases/glycolipid/exhaustive.yml','r'), Loader=yaml.Loader)
+            glycolipid_lib = read_yaml(find_test_file('exhaustive', module=self.module))
             next_glycolipid = False
 
             for glycolipid in list(self.test_case):
@@ -109,7 +95,7 @@ class GlycolipidBrowserProcess(CGUIBrowserProcess):
                             sub3 = str(sub3id)
                             self.run_step0(pglycolipid, sub2, sub3)
         elif 'glycolipid' and 'sub2' in self.test_case:
-            glycolipid_lib = yaml.load(open('test_cases/glycolipid/exhaustive.yml','r'), Loader=yaml.Loader)
+            glycolipid_lib = read_yaml(find_test_file('exhaustive', module=self.module))
             next_glycolipid = False
 
             for glycolipid in list(self.test_case):
@@ -130,7 +116,7 @@ class GlycolipidBrowserProcess(CGUIBrowserProcess):
                             sub3 = str(sub3id)
                             self.run_step0(pglycolipid, sub2, sub3)
         elif 'glycolipid' in self.test_case and not 'sub2' in self.test_case:
-            glycolipid_lib = yaml.load(open('test_cases/glycolipid/exhaustive.yml','r'), Loader=yaml.Loader)
+            glycolipid_lib = read_yaml(find_test_file('exhaustive', module=self.module))
             glycolipid_master = [mpglycolipid for mpglycolipid in glycolipid_lib]
             next_glycolipid = False
 
