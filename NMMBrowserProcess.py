@@ -29,7 +29,6 @@ class NMMBrowserProcess(SolutionBrowserProcess):
         css_templ = "[{}='{}']"
         base = 'data-material-type'
         full = css_templ.format(base,text)
-        #print(full)
         self.browser.find_by_css(full).click()
         if wait:
             self.wait_text(wait)
@@ -38,7 +37,6 @@ class NMMBrowserProcess(SolutionBrowserProcess):
         css_templ = "[{}='{}']"
         base = 'data-value'
         full = css_templ.format(base,text)
-        #print(a)
         self.browser.find_by_css(full).click()
         if wait:
             self.wait_text(wait)
@@ -46,7 +44,6 @@ class NMMBrowserProcess(SolutionBrowserProcess):
     def select_by_attrs(self, text1, text2, wait=None):
         css_templ = "[{}='{}']"
         full = css_templ.format(text1,text2)
-        #print(a)
         self.browser.find_by_css(full).click()
         if wait:
             self.wait_text(wait)
@@ -56,8 +53,9 @@ class NMMBrowserProcess(SolutionBrowserProcess):
         if wait:
             self.wait_text(wait)
 
-
     def init_system(self, test_case, resume=False):
+        if resume: return
+
         css_templ = "[{}='{}']"
         url = self.base_url + "?doc=input/nanomaterial"
         browser = self.browser

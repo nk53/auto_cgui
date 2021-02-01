@@ -1,6 +1,5 @@
-- label: goldtest
-  base: components/basic
-  parent: vac
+- label: gold surface with ligand
+  parent: nmm_vacuum
   nanomaterial_type:
     metals: aum_surface    # Options for ligand protected gold nanoparticle systems:
                            # aum_nanoparticle, aum_nanocluster, aum_surface

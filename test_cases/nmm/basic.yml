@@ -1,5 +1,5 @@
-- label: goldtest
-  base: components/basic
+- label: kaolinite
+  parent: nmm_vacuum
   nanomaterial_type:
 
 ############################### TEMPLATE FOR OTHER MATERIALS  ##################################

@@ -1,6 +1,5 @@
 - label: nanoparticle generation
-  base: components/basic
-  parent: vac
+  parent: nmm_vacuum
   nanomaterial_type:
     metals: aum_nanoparticle
 

@@ -1,8 +1,0 @@
-dict: basic.map.yml
-parent: False
-steps:
-  - wait_text: Size Options
-  - module:
-      name: solution
-      start: 3
-  - wait_text: Determine System Size

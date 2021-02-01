@@ -439,8 +439,8 @@ class CGUIBrowserProcess(Process):
 
                     # late failure?
                     final_wait_text = steps[-1]['wait_text']
-                    found_text = self.wait_text_multi([final_wait_text, self.CHARMM_ERROR])
-                    if found_text == self.CHARMM_ERROR:
+                    found_text = self.wait_text_multi([final_wait_text, self.CHARMM_ERROR, self.PHP_ERROR, self.PHP_FATAL_ERROR])
+                    if found_text != final_wait_text:
                         self.done_q.put(('FAILURE', test_case, step_num, elapsed_time))
                         failure = False
                     else:

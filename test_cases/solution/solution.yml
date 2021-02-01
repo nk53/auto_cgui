@@ -7,7 +7,7 @@ steps:
   - module:
       name: pdb
       stop: -1
-  - wait_text: Computed Energy
+  - wait_text: Determine System Size
     poststeps:
       - click_by_value('Calculate number of ions')
       - wait_script('is_updated')

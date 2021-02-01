@@ -7,5 +7,5 @@ steps:
 #      - wait_script('is_updated')
   - module:
       name: solution
-      start: 3
+      start: 2
 #  - wait_text: Determine System Size

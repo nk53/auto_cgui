@@ -1,6 +1,4 @@
 - label: nonmetal
-  base: components/basic
-  parent: sol
   nanomaterial_type:
     transition_metal_chalcogenitides:  md
                                      # clay_minerals: matname                      (matname: kn, mm)
