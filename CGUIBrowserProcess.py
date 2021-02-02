@@ -403,7 +403,7 @@ class CGUIBrowserProcess(Process):
                     for step_num, step in enumerate(steps):
                         self.step = step_num
                         if 'wait_text' in step:
-                            found_text = self.wait_text_multi([step['wait_text'], self.CHARMM_ERROR, self.PHP_FATAL_ERROR])
+                            found_text = self.wait_text_multi([step['wait_text'], self.CHARMM_ERROR, self.PHP_FATAL_ERROR, self.PHP_ERROR])
                         if found_text != step['wait_text']:
                             failure = True
                             break
