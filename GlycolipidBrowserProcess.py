@@ -2,6 +2,26 @@ from utils import find_test_file, read_yaml
 from splinter import Browser
 from CGUIBrowserProcess import CGUIBrowserProcess
 
+_categories = read_yaml('glycolipid.enabled.yml')
+_infos = read_yaml('glycolipid.sequence.yml')
+
+def _get_all_glycolipids(category):
+    glycolipids = []
+
+    if isinstance(category, dict):
+        sub = category
+        for series, gids in sub.items():
+            for gid in gids:
+                name = _infos['gid']['name']+', '+gid
+                glycolipid = {series: name}
+                glycolipids.append(glycolipid)
+    else:
+        for gid in category:
+            name = _infos[gid]['name']+', '+gid
+            glycolipids.append(name)
+
+    return glycolipids
+
 def init_module(test_cases, args):
     """Preprocesses test cases
 
@@ -11,10 +31,19 @@ def init_module(test_cases, args):
         wait_cases  Cases that need one of the base cases to complete first
     """
     base_cases = []
-    wait_cases = {}
+
     for test_case in test_cases:
-        base_cases.append(test_case)
-    return base_cases, wait_cases
+        glycolipid = test_case.get('glycolipid')
+        if not 'sub2' in test_case:
+            category = _categories[glycolipid]
+            glycolipids = _get_all_glycolipids(category)
+            for glycolipid in glycolipids:
+                base_case = test_case.copy()
+                base_case['sub2'] = glycolipid
+                base_cases.append(base_case)
+        else:
+            base_cases.append(test_case)
+    return base_cases, {}
 
 class GlycolipidBrowserProcess(CGUIBrowserProcess):
     def __init__(self, *args, **kwargs):
