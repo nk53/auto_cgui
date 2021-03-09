@@ -34,13 +34,30 @@ def init_module(test_cases, args):
 
     for test_case in test_cases:
         glycolipid = test_case.get('glycolipid')
-        if not 'sub2' in test_case:
+        sub2 = test_case.get('sub2')
+        if not sub2:
             category = _categories[glycolipid]
             glycolipids = _get_all_glycolipids(category)
             for glycolipid in glycolipids:
                 base_case = test_case.copy()
-                base_case['sub2'] = glycolipid
+                base_case['sub2'] = [glycolipid]
+                base_case['label'] += ' ({})'.format(glycolipid)
                 base_cases.append(base_case)
+        elif len(sub2) > 1:
+            if isinstance(sub2, list):
+                for glycolipid in sub2:
+                    base_case = test_case.copy()
+                    base_case['sub2'] = [glycolipid]
+                    base_case['label'] += ' ({})'.format(glycolipid)
+                    base_cases.append(base_case)
+            elif isinstance(sub2, dict):
+                for category, glycolipid in sub2.items():
+                    base_case = test_case.copy()
+                    base_case['sub2'] = {category: glycolipid}
+                    base_case['label'] += ' ({})'.format(glycolipid[0])
+                    base_cases.append(base_case)
+            else:
+                raise TypeError("Unrecognized type for sub2: "+type(sub2).__name__)
         else:
             base_cases.append(test_case)
     return base_cases, {}

@@ -13,6 +13,34 @@ class PDBBrowserProcess(CGUIBrowserProcess):
         self.module_url = "?doc=input/pdbreader"
         super().__init__(*args, **kwargs)
 
+    def _set_grs(self, name, value):
+        """Sets value of a <select> and blocks until GRS updates"""
+        elem = self.browser.find_by_name(name)
+
+        if elem.value == value:
+            # nothing to do
+            return
+
+        # save old GRS
+        old_html = self.browser.find_by_id('grs').html
+
+        elem.select(value)
+
+        # poll #grs until value changes
+        while True:
+            new_html = self.browser.find_by_id('grs').html
+            if new_html != old_html:
+                break
+            time.sleep(2)
+
+        # poll again until it stops changing
+        old_html = new_html
+        while True:
+            time.sleep(2)
+            new_html = self.browser.find_by_id('grs').html
+            if new_html == old_html:
+                break
+
     def set_mutation(self):
         if not 'mutations' in self.test_case:
             raise ValueError("Missing stapling options")
@@ -65,9 +93,9 @@ class PDBBrowserProcess(CGUIBrowserProcess):
                 resname = resname[:idx]
             if depth > 4:
                 self.browser.find_by_id(str(depth-1)).find_by_css('.add').first.click()
-            self.browser.select("sequence[%d][name]" % (i+1), resname[1:])
-            self.browser.select("sequence[%d][type]" % (i+1), resname[0])
-            self.browser.select("sequence[%d][linkage]" % (i+1), linkage[1])
+            self._set_grs("sequence[%d][name]" % (i+1), resname[1:])
+            self._set_grs("sequence[%d][type]" % (i+1), resname[0])
+            self._set_grs("sequence[%d][linkage]" % (i+1), linkage[1])
             if chemod:
                 for chm in chemod:
                     if chm == '6PEA' and i == 3: continue
@@ -75,10 +103,10 @@ class PDBBrowserProcess(CGUIBrowserProcess):
                     match = re.match('[0-9]+', chm)
                     site = match.group()
                     patch = chm[match.end():]
-                    self.browser.select("chem[%d][residue]" % nchem, resname[1:])
-                    self.browser.select("chem[%d][resid]" % nchem, i+1)
-                    self.browser.select("chem[%d][site]" % nchem, site)
-                    self.browser.select("chem[%d][patch]" % nchem, patch)
+                    self._set_grs("chem[%d][residue]" % nchem, resname[1:])
+                    self._set_grs("chem[%d][resid]" % nchem, i+1)
+                    self._set_grs("chem[%d][site]" % nchem, site)
+                    self._set_grs("chem[%d][patch]" % nchem, patch)
                     nchem += 1
         self.browser.execute_script("updateGPI()")
         self.browser.windows.current = self.browser.windows[0]
@@ -304,7 +332,11 @@ class PDBBrowserProcess(CGUIBrowserProcess):
                 while not ssid_elem.visible:
                     cnt += 1
                     time.sleep(1)
-                ssid_elem.select(value)
+
+                # select() fails with ElementClickInterceptedException,
+                # whereas click() retries on exception ... this appears
+                # to be a bug in splinter
+                ssid_elem.find_by_value(value).click()
 
     def set_hcoor(self):
         if not 'hcoor' in self.test_case:

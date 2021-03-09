@@ -262,7 +262,6 @@ class CGUIBrowserProcess(Process):
         cmd_lines = []
         prefix = '_ = '
         for recipient, cmd in iter(self.inter_q.get, (self.name, 'STOP')):
-            print(recipient, cmd)
             # prevent interpreting commands for someone else
             if recipient != self.name:
                 self.inter_q.put((recipient, cmd))

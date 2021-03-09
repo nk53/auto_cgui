@@ -8,7 +8,7 @@
   sub2:
     - MGDG, Gc001
     - DGDG, Gc002
-- label: Ganglio-series with GA2 (0-series), GM3 (a-series), and GD3 (b-series)
+- label: Ganglio-series with GA2, GM3, and GD3
   download: no
   glycolipid: Ganglio-series
   sub2:
