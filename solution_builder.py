@@ -1,15 +1,11 @@
-import ast
-import os
-import time
-import yaml
-from os.path import join as pjoin
-from splinter import Browser
-from splinter.exceptions import ElementDoesNotExist
-from PDBBrowserProcess import PDBBrowserProcess
-from InputBrowserProcess import InputBrowserProcess
-import pdb
+"""Implements options for Solution Builder"""
+from pdb_reader import PDBBrowserProcess
+from input_generator import InputBrowserProcess
+
+_BROWSER_PROCESS = 'SolutionBrowserProcess'
 
 class SolutionBrowserProcess(PDBBrowserProcess, InputBrowserProcess):
+    """Implements selection of solution settings"""
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.module_title = "Solution Builder"
@@ -21,12 +17,13 @@ class SolutionBrowserProcess(PDBBrowserProcess, InputBrowserProcess):
             raise ValueError("Missing ion_method")
 
         ion_method = str(self.test_case['ion_method']).lower()[0]
-        ion_method = ion_method == 'd' and 'dist' or 'mc'
+        ion_method = 'dist' if ion_method == 'd' else 'mc'
 
         self.browser.select('ion_method', ion_method)
 
 
     def set_ion_type(self):
+        """Sets the type of ion to place in solution"""
         if not 'ion_type' in self.test_case:
             raise ValueError("Missing ion_type")
 
@@ -42,6 +39,7 @@ class SolutionBrowserProcess(PDBBrowserProcess, InputBrowserProcess):
         self.browser.select('ion_type', ion_type)
 
     def set_xyz(self):
+        """Sets box dimensions"""
         dims = 'xyz'
         boxtype_names = 'boxtype', 'solvtype'
 
@@ -54,7 +52,7 @@ class SolutionBrowserProcess(PDBBrowserProcess, InputBrowserProcess):
                     return
                 found = True
                 break
-            elif dim.upper() in self.test_case:
+            if dim.upper() in self.test_case:
                 self.test_case[dim] = self.test_case.pop(dim.upper())
                 found = True
 

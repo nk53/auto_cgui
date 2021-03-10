@@ -1,12 +1,18 @@
 #!/usr/bin/env python3
+"""Command-line interface to testing suite"""
+# standard library imports
 import argparse
 import os
 import sys
-import utils
-import yaml
-from BrowserManager import BrowserManager
 from importlib import import_module
 from os.path import join as pjoin
+
+# third-party dependencies
+import yaml
+
+# auto_cgui imports
+import utils
+from browser_manager import BrowserManager
 from utils import warn
 
 if __name__ == '__main__':
@@ -27,20 +33,27 @@ if __name__ == '__main__':
     parser.add_argument('-e', '--errors-only', action='store_true',
             help="(-i modifier) only interact on exceptions and errors")
     parser.add_argument('-w', '--www-dir', metavar="PATH",
-            help="Directory where C-GUI projects are stored. Uses value stored in config by default.")
+            help="Directory where C-GUI projects are stored. "+\
+                 "Uses value stored in config by default.")
     parser.add_argument('-b', '--base-url', metavar="URL",
             default='http://charmm-gui.org/',
             help="Web address to CHARMM-GUI (default: http://charmm-gui.org/)")
     parser.add_argument('--copy', action='store_true',
-            help="For tests on localhost, run solvent tests by cloning the project at the solvent test's branch point; saves time, but can cause errors if the request cache is corrupted")
+            help="For tests on localhost, run solvent tests by cloning the "+\
+                 "project at the solvent test's branch point; saves time, "+\
+                 "but can cause errors if the request cache is corrupted")
     parser.add_argument('-l', '--logfile', default='results.log')
     parser.add_argument('--config', type=argparse.FileType('r'),
             default="config.yml", metavar="PATH",
             help="Path to configuration file (default: config.yml)")
     parser.add_argument('--dry-run', action='store_true',
-            help="Don't actually run anything, just print the resulting test cases after preprocessing")
+            help="Don't actually run anything, just print the resulting test "+\
+                 "cases after preprocessing")
     parser.add_argument('--validate-only', action='store_true',
             help="Reads logfile and attempts to infer and validate PSFs of all logged test cases")
+    parser.add_argument('--no-lock', action='store_true',
+            help="Don't wait for other jobs to get past front page. "+\
+                 "Useful for jobs with a long front page")
 
     args = parser.parse_args()
 
@@ -71,10 +84,16 @@ if __name__ == '__main__':
         BASE_URL = '/'.join(BASE_URL)
     settings['base_url'] = BASE_URL
 
-    browser_type = 'firefox'
+    if 'CGUSER' in CONFIG and 'CGPASS' in CONFIG:
+        settings['credentials'] = {
+            'user': CONFIG['CGUSER'],
+            'pass': CONFIG['CGPASS'],
+        }
+
+    BROWSER_TYPE = 'firefox'
     if 'BROWSER_TYPE' in CONFIG:
-        browser_type = CONFIG['BROWSER_TYPE']
-    settings['browser_type'] = browser_type
+        BROWSER_TYPE = CONFIG['BROWSER_TYPE']
+    settings['browser_type'] = BROWSER_TYPE
 
     # validate WWW_DIR as a directory
     WWW_DIR = args.www_dir
@@ -84,16 +103,17 @@ if __name__ == '__main__':
     else:
         WWW_DIR = CONFIG['WWW_DIR']
 
-    if WWW_DIR != None:
+    if WWW_DIR is not None:
         if not os.path.exists(WWW_DIR):
             raise ValueError(WWW_DIR+" does not exist")
-        elif not os.path.isdir(WWW_DIR):
+        if not os.path.isdir(WWW_DIR):
             raise ValueError(WWW_DIR+" is not a directory")
     settings['www_dir'] = WWW_DIR
 
     if not args.modules:
         if not 'MODULE' in CONFIG:
-            raise KeyError('Missing C-GUI module name, either use -m opt or specify MODULE in config.yml')
+            raise KeyError('Missing C-GUI module name, either use -m opt '+\
+                           'or specify MODULE in config.yml')
         args.modules = [CONFIG['MODULE']]
     else:
         modules = [module.upper() for module in args.modules]
@@ -101,10 +121,10 @@ if __name__ == '__main__':
             # get the argument as actually given, for output formatting
             if len(args.modules) > 1:
                 all_arg = args.modules[modules.index('ALL')]
-                modules = ' '.join(args.modules)
-                errmsg = "Got '-m {}'. Did you mean '-m {}'?"
-                errmsg = errmsg.format(modules, all_arg)
-                raise argparse.ArgumentTypeError(errmsg)
+                MODULES = ' '.join(args.modules)
+                ERRMSG = "Got '-m {}'. Did you mean '-m {}'?"
+                ERRMSG = ERRMSG.format(MODULES, all_arg)
+                raise argparse.ArgumentTypeError(ERRMSG)
 
             args.modules = cgui_modules
 
@@ -120,7 +140,10 @@ if __name__ == '__main__':
         # import relevant names from the module file
         module = import_module(MODULE_FILE)
         init_module = getattr(module, 'init_module', None)
-        BrowserProcess = getattr(module, MODULE_FILE)
+
+        # to avoid ambiguity, class name should be provided in module file
+        BrowserProcess = getattr(module, '_BROWSER_PROCESS')
+        BrowserProcess = getattr(module, BrowserProcess)
 
         # look for a test case in a standard order
         file_tests = 'standard', 'minimal', 'full'
@@ -149,14 +172,14 @@ if __name__ == '__main__':
 
             # if there are no tests, look for basic.yml
             if not test_files:
-                basic_file = 'basic.yml'
+                BASIC_FILE = 'basic.yml'
                 try:
-                    utils.find_test_file(basic_file, module=cgui_module)
+                    utils.find_test_file(BASIC_FILE, module=cgui_module)
                 except FileNotFoundError:
-                    if not os.path.exists(basic_file):
+                    if not os.path.exists(BASIC_FILE):
                         warn('No test files for {} module, skipping'.format(cgui_module))
                         continue
-                test_files = [basic_file]
+                test_files = [BASIC_FILE]
 
             # get all test cases from filenames
             pre_test_cases = []
@@ -165,7 +188,8 @@ if __name__ == '__main__':
                 test_cases = utils.read_yaml(test_file)
                 pre_test_cases.extend(test_cases)
 
-        base_cases = [utils.setup_custom_options(test_case, cgui_module) for test_case in pre_test_cases]
+        base_cases = [utils.setup_custom_options(test_case, cgui_module)
+                      for test_case in pre_test_cases]
 
         if callable(init_module):
             base_cases, wait_cases = init_module(base_cases, args)
@@ -175,7 +199,8 @@ if __name__ == '__main__':
         if args.validate_only:
             if wait_cases:
                 # processing the wait cases is too complicated and rare for now
-                warn("Warning: wait_cases can only be checked at their original runtime; skipping ...")
+                warn("Warning: wait_cases can only be checked at their "+\
+                     "original runtime; skipping ...")
 
             with open(LOGFILE) as results_file:
                 sys_info = {}
@@ -211,6 +236,7 @@ if __name__ == '__main__':
             settings['dry_run'] = args.dry_run
             settings['interactive'] = args.interactive
             settings['errors_only'] = args.errors_only
+            settings['use_lock'] = not args.no_lock
 
             # sets up multiprocessing info
             manager = BrowserManager(BrowserProcess, LOGFILE, args.num_threads, **settings)

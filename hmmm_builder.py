@@ -1,25 +1,30 @@
-from BilayerBrowserProcess import BilayerBrowserProcess
+"""Handles Highly Mobile Membrane-Mimetic (HMMM) system building options"""
 from os.path import join as pjoin, splitext
+from bilayer_builder import BilayerBrowserProcess
+
+_BROWSER_PROCESS = 'HMMMBrowserProcess'
 
 class HMMMBrowserProcess(BilayerBrowserProcess):
+    """Implements options specific to HMMM systems"""
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.module_title = "HMMM Builder"
         self.module_url = "?doc=input/membrane.hmmm"
 
-    def init_system(self, test_case, resume=False):
+    def init_system(self, **kwargs):
         # index of the radio button to click to switch projects
         conversion_radios = {
             'hmmm2full': 2,
             'full2hmmm': 3,
         }
 
+        test_case = self.test_case
         convert = test_case.get('convert')
         if convert:
             # do nothing if we're using Job Retriever
-            if resume: return
+            if kwargs.get('resume'):
+                return
 
-            module_title = self.module_title
             url = self.base_url + self.module_url
             browser = self.browser
 
@@ -91,7 +96,9 @@ class HMMMBrowserProcess(BilayerBrowserProcess):
 
                 ft_file = pjoin(self.base, ft_file)
 
-                if filetype == 'pdb': filetype = 'crd'
+                if filetype == 'pdb':
+                    filetype = 'crd'
+
                 upload_name = filetype+'file'+fmt_suffix
                 browser.attach_file(upload_name, ft_file)
 
@@ -107,12 +114,15 @@ class HMMMBrowserProcess(BilayerBrowserProcess):
             self.get_jobid()
         else:
             self.next_button = self.protein_membrane_next_button
-            super().init_system(test_case, resume)
+            super().init_system(**kwargs)
 
     def protein_membrane_next_button(self):
-        # prevent HMMM conversion jobs from clicking the wrong button if queued
-        # after a protein/membrane job
-        self.next_button = None
+        """Finds and returns the HMMM next button for uploaded PDB systems
 
-        # return the Next Button for uploaded PDB systems, not HMMM conversion
+        This function is necessary because HMMM conversion uses a different
+        next button.
+        """
+        # prevents wrong button from being clicked if a conversion job is
+        # queued after a protein/membrane job
+        self.next_button = None
         return self.browser.find_by_id("input_nav").find_by_tag("table")

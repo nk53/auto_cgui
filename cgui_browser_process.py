@@ -1,22 +1,29 @@
+"""Base functionality for all CHARMM-GUI module interaction"""
+# standard library imports
 import code
 import shutil
 import os.path
 import re
-import requests
 import time
-import utils
-import yaml
-from multiprocessing import Process, Queue
+import traceback
+import sys
 from os.path import join as pjoin
+from multiprocessing import Process
+
+# third-party dependencies
+import requests
+import yaml
 from splinter import Browser
-from splinter.exceptions import ElementDoesNotExist
 from splinter.element_list import ElementList
 from selenium.common.exceptions import TimeoutException
+
+# auto_cgui imports
+import utils
 
 class CGUIBrowserProcess(Process):
     """Usage: subclass this class and write an init_system() method.
 
-    For an example, see MCABrowserProcess.
+    For an example, see MCABrowserProcess or PDBBrowserProcess
     """
     CHARMM_ERROR = 'CHARMM was terminated abnormally.'
     PHP_NOTICE = "Notice:"
@@ -36,6 +43,7 @@ class CGUIBrowserProcess(Process):
         self.inter_q = kwargs.pop('inter_q', None)
         self.msg_q = kwargs.pop('msg_q', None)
         self.module = kwargs.pop('module', None)
+        self.credentials = kwargs.pop('credentials', None)
 
         if not self.base_url.endswith('/'):
             self.base_url += '/'
@@ -47,33 +55,56 @@ class CGUIBrowserProcess(Process):
         self.lock = lock
 
     def _click(self, elem, wait=None):
+        """Implements common click-and-wait procedure"""
         elem.click()
         if wait:
             self.wait_text(wait)
 
     def check(self, check_elem_id, wait=None):
+        """Checks a checkbox and optionally waits for text to appear
+
+        Note that check() is not the same as click(): check() will never
+        uncheck a checkbox, whereas click() can if it was already checked.
+        """
         elem = self.browser.find_by_id(check_elem_id)
         elem.check()
         if wait:
             self.wait_text(wait)
 
     def click(self, click_elem_id, wait=None):
+        """Clicks an element and optionally waits for text to appear"""
         elem = self.browser.find_by_id(click_elem_id)
         self._click(elem, wait)
 
     def click_by_attrs(self, wait=None, **attrs):
+        """Finds an element by attributes and clicks it
+
+        Optionally waits for text to appear after clicking
+        """
         css_templ = "[{}='{}']"
         css_str = ''
         for attr, value in attrs.items():
+            if attr.startswith('_'):
+                attr = attr[1:]
+            attr = attr.replace('_', '-')
             css_str += css_templ.format(attr, value)
         elem = self.browser.find_by_css(css_str)
         self._click(elem, wait)
 
     def click_by_text(self, text, wait=None):
+        """Finds an element by its innerHTML and clicks it
+
+        `text` must be an exact match for the inner text of the element to
+        find. Optionally waits for other text to appear.
+        """
         elem = self.browser.find_by_text(text)
         self._click(elem, wait)
 
     def click_by_value(self, value, wait=None):
+        """Finds an element by its DOM value and clicks it
+
+        Optionally waits for text to appear after clicking
+        """
         elem = self.browser.find_by_value(value)
         self._click(elem, wait)
 
@@ -88,7 +119,7 @@ class CGUIBrowserProcess(Process):
 
         If the destination already exists, it is *not* overwritten.
         """
-        if self.www_dir == None:
+        if self.www_dir is None:
             raise ValueError("www_dir is not set")
         jobid = str(self.test_case['jobid'])
         src = pjoin(self.www_dir, jobid)
@@ -104,10 +135,11 @@ class CGUIBrowserProcess(Process):
             self.done_q.put(('CONTINUE', self.test_case))
 
     def download(self, saveas=None):
+        """Downloads the user's system in .tgz format"""
         test_case = self.test_case
         # don't attempt an impossible download
         if not 'jobid' in test_case:
-            return
+            return None
 
         jobid = test_case['jobid']
 
@@ -130,8 +162,8 @@ class CGUIBrowserProcess(Process):
             idx = urlname.find('@')
             user, password = urlname[:idx].split(':')
 
-        r = requests.get(url, headers=headers, auth=(user, password))
-        open(saveas, "wb").write(r.content)
+        req = requests.get(url, headers=headers, auth=(user, password))
+        open(saveas, "wb").write(req.content)
         fsize = float(os.stat(saveas).st_size) / (1024.0 * 1024.0)
         print("download complete, file size is %5.2f MB" % fsize)
 
@@ -143,24 +175,30 @@ class CGUIBrowserProcess(Process):
         """
         if expr == 'INTERACT' and self.interactive:
             self.interact(locals())
-            return
+            return None
         try:
             # isolate the function name
             fname = expr[:expr.index('(')]
-        except ValueError:
-            raise SyntaxError("invalid syntax: " + expr)
+        except ValueError as exc:
+            raise SyntaxError("invalid syntax: " + expr) from exc
         if fname in dir(self):
             # make it a method call
             expr = 'self.'+expr
         return eval(expr)
 
-    def first_visible(self, elems):
+    @staticmethod
+    def first_visible(elems):
+        """Returns the first visible in elems, according to splinter
+
+        Note that splinter may be wrong about element visibility
+        """
         if not isinstance(elems, ElementList):
             elems = ElementList([elems])
 
         return ElementList(filter(lambda elem: elem.visible, elems))
 
     def get_jobid(self):
+        """Returns the user's job ID"""
         elems = self.browser.find_by_css('.jobid')
         if not elems:
             jobid = '-1'
@@ -171,6 +209,39 @@ class CGUIBrowserProcess(Process):
         return jobid
 
     def go_next(self, test_text=None, alert=None, invalid_alert_text=None, next_button=None):
+        """Proceeds to the next step by clicking the Next button
+
+        Parameters
+        ==========
+            test_text           str  text to wait for after clicking Next
+            alert               str  either 'accept' or 'dismiss'
+            invalid_alert_text  str  alert text indicating a serious error
+            next_button         obj  described below
+
+        Any alert will raise splinter.UnexpectedAlertPresentException by
+        default, unless alert is passed. The value of `alert` indicates
+        whether to accept (click OK) or dismiss (click Cancel) the alert.
+        The two options are equivalent if the alert has only one button
+        (usually "OK"). Use this ONLY if you expect the user input to cause
+        a warning message that is not an actual error.
+
+        If only some alert messages indicate that a serious error has
+        occurred, then invalid_alert_text should be passed. If this
+        substring is found in the alert's text, it will cause a
+        splinter.UnexpectedAlertPresentException to be raised.
+
+        If more than one next button is present on the page, it should be
+        provided as `next_button`, which can be any of:
+            - tuple of strings: (finder, selector)
+            - a splinter.driver.ElementAPI or other clickable object
+            - a function that clicks the desired element
+
+        `finder` is the name of a splinter function that finds an element,
+        but not including the "find_by_" part. `selector` is the argument
+        that would be passed to that function. E.g. to find an element by
+        name using splinter.browser.find_by_name(element_name):
+            go_next(next_button=('name', element_name))
+        """
         if isinstance(alert, str):
             alert = alert.lower()
         assert alert in (None, 'accept', 'dismiss'), "unrecognized alert response: "+str(alert)
@@ -215,46 +286,84 @@ class CGUIBrowserProcess(Process):
             self.wait_text_multi([test_text, self.CHARMM_ERROR, self.PHP_ERROR])
 
     def handle_step(self, step_info):
+        """Fills all form values in this step's 'elems' dict.
+
+        Each element must be provided as {elem_name: elem_value}. This
+        function can handle textbox, radio, checkbox, and select options.
+
+        The default action if an element is not one of the above is to use:
+            splinter.driver.find_by_name(elem_name).fill(elem_value)
+        """
         for elem_info in step_info['elems']:
             name = list(elem_info.keys())[0]
             value = str(elem_info[name])
+            utils.set_form_value(self.browser, name, value)
 
-            # potentially returns more than one element
-            elem = self.browser.find_by_name(name)
+    def init_system(self, **kwargs):
+        """This method handles a module's front page, which is usually
+        substantially different from the other module steps.
 
-            # infer action from HTML tag
-            # fails if splinter/selenium changes their API
-            input_type = elem._element.get_property('type')
-            if input_type == "radio":
-                elem = ElementList(filter(lambda e: e.value == str(value), elem))
-                elem.check()
-            elif input_type == "checkbox":
-                if value:
-                    elem.check()
-            elif "select" in input_type:
-                elem.select(value)
-            else:
-                elem.fill(value)
+        Any non-abstract descendant of CGUIBrowserProcess that has a front
+        page should define this method. E.g., InputBrowserProcess does NOT
+        define this method, because Input Generator does not have a front
+        page.
 
-    def init_system(self, *args):
+        Parameters
+        ==========
+            resume  bool  whether this job is resumed via job retriever
+        """
         raise NotImplementedError("This must be implemented in a child class")
 
-    def interact(self, local={}):
-        """Provide piped instructions to a new Python interpreter"""
+    def interact(self, local=None):
+        """Provide piped instructions to a new Python interpreter
+
+        Expected usage:
+            self.interact(locals())
+
+        Alternatively, put INTERACT as a prestep/poststep in a test case to
+        run interaction at that step.
+
+        This is a debugging helper function that behaves like a Python
+        interpreter as much as possible. If you are using multiple threads,
+        then interaction occurs one thread at a time. Dismiss a thread with
+        quit() or EOF (Ctrl-d).
+
+        To stop all processes and exit testing, use Ctrl-c.
+
+        This method is called automatically in the following situations:
+            - A Python error occurs
+            - A PHP or CHARMM error message is observed on the page
+            - A PHP "notice" or "warning" message is observed and the -e
+              flag is NOT passed to run_tests.py.
+
+        If you are testing a CHARMM-GUI module and you see any PHP error,
+        warning, or notice message, YOU SHOULD INFORM THE MODULE'S DEVELOPER
+        so that the message is fixed, as this usually indicates bad PHP
+        design.
+        """
+        local = local or {}
         if not self.interactive:
+            warn_msg = os.linesep.join(
+                ["WARNING: called interact() but no inter_q was set up.",
+                 "Did you forget to use the -i flag?"])
+            print(self.name, warn_msg)
             return
+
         test_case = getattr(self, 'test_case', {})
         jobid = test_case.get('jobid', -1)
 
-        if not 'jobid' in local:
+        if 'jobid' not in local:
             local['jobid'] = jobid
-        if not 'label' in local:
+        if 'label' not in local:
             local['label'] = test_case.get('label')
 
         self.done_q.put(('INTERACT', self.name, jobid))
 
         # handle automatic printing of last command's uncaptured return value
-        print_last = "\n".join(["try:","{}","\tif _ != None: print(repr(_))","except:","\traise", ""])
+        print_last = "\n".join([ # run code in try/except block
+            "try:", "{}", "\tif _ != None: print(repr(_))",
+            "except:", "\traise", ""
+        ])
 
         assign_pattern = re.compile('[^=\'"]+=[^=]')
         need_more = False
@@ -291,7 +400,6 @@ class CGUIBrowserProcess(Process):
             try:
                 code_obj = code.compile_command(source)
             except SyntaxError: # abort this command
-                import sys, traceback
                 exc_str = ''.join(traceback.format_exception(*sys.exc_info()))
                 self.msg_q.put(exc_str)
 
@@ -299,7 +407,7 @@ class CGUIBrowserProcess(Process):
                 need_more = False
                 continue
 
-            need_more = (code_obj == None)
+            need_more = (code_obj is None)
 
             # intelligently prints _, if doing so would not cause error
             if use_prefix and not need_more and not assigned:
@@ -340,7 +448,7 @@ class CGUIBrowserProcess(Process):
         if found_text == failure:
             raise ValueError(failure)
 
-        if link_no != None:
+        if link_no is not None:
             assert isinstance(link_no, int), "link_no must be an integer"
             table = browser.find_by_css("#recovery_table tr:not(:first-child) td:nth-child(3)")
             table[link_no].click()
@@ -349,13 +457,18 @@ class CGUIBrowserProcess(Process):
             #assert project != None and step != None, "Missing args"
 
     def run(self):
-        # if user set --dry-run, print test case and return
+        """Evaluates the steps in a multiprocessing.Queue of test cases
+
+        If the --dry-run command-line option was used, the test's steps are
+        simply printed.
+        """
         if self.dry_run:
             self.run_dry()
         else:
             self.run_full()
 
     def run_dry(self):
+        """Print pre-processed test cases in YAML format"""
         for test_case in iter(self.todo_q.get, 'STOP'):
             try:
                 self.test_case = test_case
@@ -363,7 +476,6 @@ class CGUIBrowserProcess(Process):
                 test_case['jobid'] = -1
                 self.done_q.put(('SUCCESS', test_case, -1))
             except:
-                import sys, traceback
                 # give the full exception string
                 exc_str = ''.join(traceback.format_exception(*sys.exc_info()))
                 print(exc_str)
@@ -372,9 +484,18 @@ class CGUIBrowserProcess(Process):
                 self.done_q.put(('EXCEPTION', test_case, -1, exc_str))
 
     def run_full(self):
+        """Execute test cases and log results"""
         with Browser(self.browser_type) as browser:
             self.browser = browser
             self.step = step_num = -1
+
+            # ensure we are logged in
+            if self.credentials is not None:
+                browser.visit(self.base_url+'?doc=sign')
+                browser.fill('email', self.credentials['user'])
+                browser.fill('password', self.credentials['pass'])
+                self.click_by_value('Submit')
+
             for test_case in iter(self.todo_q.get, 'STOP'):
                 try:
                     self.test_case = test_case
@@ -392,7 +513,7 @@ class CGUIBrowserProcess(Process):
 
                     # prevent Job ID race condition
                     with self.lock:
-                        self.init_system(test_case, resume)
+                        self.init_system(resume=resume)
 
                     jobid = test_case['jobid']
                     print(self.name, "Job ID:", jobid)
@@ -402,7 +523,8 @@ class CGUIBrowserProcess(Process):
                     for step_num, step in enumerate(steps):
                         self.step = step_num
                         if 'wait_text' in step:
-                            found_text = self.wait_text_multi([step['wait_text'], self.CHARMM_ERROR, self.PHP_FATAL_ERROR, self.PHP_ERROR])
+                            found_text = self.wait_text_multi([step['wait_text'],
+                                self.CHARMM_ERROR, self.PHP_FATAL_ERROR, self.PHP_ERROR])
                         if found_text != step['wait_text']:
                             failure = True
                             break
@@ -410,7 +532,8 @@ class CGUIBrowserProcess(Process):
                         # Check for PHP errors, warnings, and notices
                         found_text = self.warn_if_text(self.PHP_MESSAGES)
                         if found_text and self.interactive:
-                            if not self.errors_only or found_text in (self.PHP_ERROR, self.PHP_FATAL_ERROR):
+                            if not self.errors_only or \
+                                    found_text in (self.PHP_ERROR, self.PHP_FATAL_ERROR):
                                 self.interact(locals())
 
                         for prestep in step.get('presteps', []):
@@ -438,7 +561,10 @@ class CGUIBrowserProcess(Process):
 
                     # late failure?
                     final_wait_text = steps[-1]['wait_text']
-                    found_text = self.wait_text_multi([final_wait_text, self.CHARMM_ERROR, self.PHP_ERROR, self.PHP_FATAL_ERROR])
+                    found_text = self.wait_text_multi([final_wait_text,
+                        self.CHARMM_ERROR, self.PHP_ERROR,
+                        self.PHP_FATAL_ERROR])
+
                     if found_text != final_wait_text:
                         self.done_q.put(('FAILURE', test_case, step_num, elapsed_time))
                         failure = False
@@ -447,7 +573,7 @@ class CGUIBrowserProcess(Process):
                         sys_archive = None
                         if not 'localhost' in self.base_url:
                             sys_archive = self.download()
-                            sys_dir, ext = os.path.splitext(sys_archive)
+                            sys_dir, _ext = os.path.splitext(sys_archive)
                         else:
                             sys_dir = pjoin(self.www_dir, jobid)
 
@@ -459,15 +585,15 @@ class CGUIBrowserProcess(Process):
 
                         self.done_q.put(validation_result)
 
-                except Exception as e:
-                    import sys, traceback
+                except:
                     # give the full exception string
                     exc_str = ''.join(traceback.format_exception(*sys.exc_info()))
                     print(exc_str)
                     if self.interactive:
                         self.interact(locals())
                     self.done_q.put(('EXCEPTION', test_case, step_num, exc_str))
-                    if not 'localhost' in self.base_url: self.download()
+                    if not 'localhost' in self.base_url:
+                        self.download()
 
     def stop(self, reason=None):
         """Message main thread to safely terminate all threads"""
@@ -523,18 +649,27 @@ class CGUIBrowserProcess(Process):
         return element_list
 
     def wait_script(self, script):
+        """Executes a Javascript expression in 1-second intervals.
+
+        Blocks until the expression's return value bool(ret) is True
+        """
         print(self.name, "waiting for Javascript expression to evaluate to True")
         print(self.name, "JS expr:", script)
         while not self.browser.evaluate_script(script):
             time.sleep(1)
 
-    def wait_text(self, text, wait_time=None):
+    def wait_text(self, text, wait_time=1):
+        """Blocks until text appears on a page"""
         print(self.name, "waiting for text:", text)
         while True:
-            if self.browser.is_text_present(text, wait_time=1):
+            if self.browser.is_text_present(text, wait_time=wait_time):
                 break
 
     def wait_text_multi(self, texts):
+        """Blocks until one of the texts in `texts` appears on a page
+
+        Use this is more than one result is expected.
+        """
         print(self.name, "waiting for any text in:", texts)
         wait_time = 1
         while True:
@@ -542,7 +677,8 @@ class CGUIBrowserProcess(Process):
                 if self.browser.is_text_present(text, wait_time):
                     return text
 
-    def wait_visible(self, element, wait=None, click=False):
+    @staticmethod
+    def wait_visible(element, wait=None, click=False):
         """Waits until an element is visible and optionally clicks it.
 
         If wait is not None, then after wait seconds, this function raises a
@@ -552,31 +688,47 @@ class CGUIBrowserProcess(Process):
         Returns the element on success.
         """
         start_time = time.time()
-        while wait == None or time.time() - start_time < wait:
+        while wait is None or time.time() - start_time < wait:
             if element.visible:
                 if click:
                     element.click()
                 return
         raise TimeoutException
 
-    def warn_if_text(self, text):
+    def warn_if_text(self, text_or_texts):
+        """Warns if one or more strings appear on the page
+
+        Parameters
+        ==========
+            text_or_texts   str or seq  one or more messages to find
+
+        Returns
+        =======
+            First observed string (if any), else None
+        """
         msg = "Warning: {} ({}) found '{{}}' on step {}"
         if not 'jobid' in self.test_case:
             jobid = '-1'
         else:
             jobid = str(self.test_case['jobid'])
         msg = msg.format(self.name, jobid, self.step)
-        if isinstance(text, list) or isinstance(text, tuple):
-            texts = text
+        if isinstance(text_or_texts, (list, tuple)):
+            texts = text_or_texts
             for text in texts:
                 if self.browser.is_text_present(text):
                     print(msg.format(text))
                     return text
-        elif self.browser.is_text_present(text):
+        elif self.browser.is_text_present(text_or_texts):
             print(msg.format(text))
             return text
+        return None
 
     def uncheck(self, check_elem_id, wait=None):
+        """Unchecks a checkbox and optionally waits for text to appear
+
+        Note that uncheck() is not the same as click(): uncheck() will never
+        check a checkbox, whereas click() can if it was not already checked.
+        """
         elem = self.browser.find_by_id(check_elem_id)
         elem.uncheck()
         if wait:

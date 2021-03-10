@@ -1,9 +1,12 @@
+"""Common helper functions"""
 import os
 import re
 import shutil
-import yaml
 import sys
 from os.path import join as pjoin
+
+import yaml
+from splinter.element_list import ElementList
 
 def find_test_file(filename, module=None, root_dir='test_cases', ext='.yml'):
     """Looks for a test case or related file in the following order:
@@ -26,9 +29,10 @@ def find_test_file(filename, module=None, root_dir='test_cases', ext='.yml'):
         # try joining all args + .yml
         if os.path.isfile(path):
             return path
-        else:
-            path += ext
-            tried.append(path)
+
+        path += ext
+        tried.append(path)
+
         if os.path.isfile(path):
             return path
 
@@ -47,9 +51,9 @@ def find_test_file(filename, module=None, root_dir='test_cases', ext='.yml'):
 
     if os.path.isfile(path):
         return path
-    else:
-        path += ext
-        tried.append(path)
+
+    path += ext
+    tried.append(path)
 
     if not os.path.isfile(path):
         raise FileNotFoundError("No such file: " + repr(tried))
@@ -129,7 +133,7 @@ def setup_custom_options(test_case, module):
 
             # obtain user's desired slice of module's steps
             index = module_info.get('index', None)
-            if index == None:
+            if index is None:
                 start = module_info.get('start', None)
                 stop = module_info.get('stop', None)
                 step_slice = slice(start, stop)
@@ -150,6 +154,16 @@ def setup_custom_options(test_case, module):
     return test_case
 
 def setup_test_inheritance(child_case, module):
+    """Option inheritance logic is handled here.
+
+    Test cases can inherit options from another test case. Option resolution
+    works similarly to variable-name resolution in Python's object inheritance
+    scheme, except that multiple inheritance is not allowed; i.e., test cases
+    may have only one parent.
+
+    If an option is defined in both the child and the parent, then the child's
+    value for that option used.
+    """
     if not 'parent' in child_case:
         child_case['parent'] = module
 
@@ -158,10 +172,8 @@ def setup_test_inheritance(child_case, module):
     parent = child_case.get('parent', module)
     while parent != False:
         # defaults to module name
-        if parent == None:
+        if parent is None:
             parent = module
-        else:
-            parent = parent
 
         # break if module has itself as parent
         parent = find_test_file(parent, module=module)
@@ -184,22 +196,55 @@ def setup_test_inheritance(child_case, module):
     return parent_case
 
 def read_yaml(filename):
-    with open(filename) as fh:
-        return yaml.full_load(fh.read())
+    """Shortcut for reading a YAML file referred by a filename"""
+    with open(filename) as file_obj:
+        return yaml.full_load(file_obj.read())
 
-def psf_seek_title(fh):
+def set_elem_value(elem, value):
+    """Same as set_form_value, but if you have a ref to the actual element
+
+    Infers action from HTML tag.
+
+    Warning: This will fail if splinter/slelenium changes their API!
+    """
+    input_type = elem._element.get_property('type')
+    if input_type == "radio":
+        elem = ElementList(filter(lambda e, value: e.value == str(value), elem, value))
+        elem.check()
+    elif input_type == "checkbox":
+        if value:
+            elem.check()
+        else:
+            elem.uncheck()
+    elif "select" in input_type:
+        elem.select(value)
+    else:
+        elem.fill(value)
+
+def set_form_value(browser, name, value):
+    """A smarter version of browser.fill
+
+    Handles text, radio, checkbox, and select inputs with unified interface.
+    The default action for any other element is to use:
+        splinter.driver.find_by_name(name).fill(value)
+    """
+    # potentially returns more than one element
+    elem = browser.find_by_name(name)
+    set_elem_value(elem, value)
+
+def psf_seek_title(file_obj):
     """Advances the file pointer to the first line after the title
 
-    Assumes fh is newly-opened and pointing at the first character
+    Assumes file_obj is newly-opened and pointing at the first character
 
     Return
     ======
         success, num_lines_read
     """
-    psf_format = fh.readline()
+    _psf_format = file_obj.readline()
     in_section = None
     line_no = 1
-    for line in fh:
+    for line in file_obj:
         line_no += 1
 
         line = line.strip()
@@ -237,34 +282,33 @@ def diff_psf(target, reference):
         Otherwise, a tuple showing the first difference is returned:
             target_line_no, reference_line_no, target_line, reference_line
     """
-    INVALID_PSF = 'Error: {} is not a valid PSF: {}'
-    INVALID_FILE = 'Error: {} is not a regular file: {}'
-    FILE_DOES_NOT_EXIST = 'Error: {} does not exist: {}'
-    INVALID_TITLE = 'Error: invalid title format for PSF: {}'
+    invalid_file = 'Error: {} is not a regular file: {}'
+    file_does_not_exist = 'Error: {} does not exist: {}'
+    invalid_title = 'Error: invalid title format for PSF: {}'
 
     if isinstance(target, str):
         if not os.path.exists(target):
-            return FILE_DOES_NOT_EXIST.format('target', target)
-        elif not os.path.isfile(target):
-            return INVALID_FILE.format('target', target)
+            return file_does_not_exist.format('target', target)
+        if not os.path.isfile(target):
+            return invalid_file.format('target', target)
         target = open(target)
 
     if isinstance(reference, str):
         if not os.path.exists(reference):
-            return FILE_DOES_NOT_EXIST.format('reference', reference)
-        elif not os.path.isfile(reference):
-            return INVALID_FILE.format('reference', reference)
+            return file_does_not_exist.format('reference', reference)
+        if not os.path.isfile(reference):
+            return invalid_file.format('reference', reference)
         reference = open(reference)
 
     with target:
         with reference:
             success, target_line_no = psf_seek_title(target)
             if not success:
-                return INVALID_TITLE.format(target.name)
+                return invalid_title.format(target.name)
 
             success, ref_line_no = psf_seek_title(reference)
             if not success:
-                return INVALID_TITLE.format(reference.name)
+                return invalid_title.format(reference.name)
 
             for target_line, reference_line in zip(target, reference):
                 target_line_no += 1
@@ -281,10 +325,14 @@ def diff_psf(target, reference):
     if target_data != reference_data:
         return target_line_no, ref_line_no, target_data, reference_data
 
+    return None
+
 def ref_from_label(label):
+    """Returns an os-friendly filename from a test case label"""
     return label.strip().lower().replace(' ', '_')+'.psf'
 
-def validate_test_case(test_case, sys_dir, sys_archive=None, module=None, elapsed_time=-1., printer_name=None):
+def validate_test_case(test_case, sys_dir, sys_archive=None, module=None,
+        elapsed_time=-1., printer_name=None):
     """Attempts to infer a test's reference PSF, then validates it
 
     Parameters
@@ -341,9 +389,8 @@ def validate_test_case(test_case, sys_dir, sys_archive=None, module=None, elapse
         if os.path.exists(sys_dir):
             msg = "'{}' already exists and is not a directory"
             raise FileExistsError(msg.format(sys_dir))
-        else:
-            msg = "could not find project at '{}/'"
-            raise FileNotFoundError(msg.format(sys_dir))
+        msg = "could not find project at '{}/'"
+        raise FileNotFoundError(msg.format(sys_dir))
 
     # finally, do the actual PSF comparison
     target = pjoin(sys_dir, target)
@@ -365,10 +412,9 @@ def validate_test_case(test_case, sys_dir, sys_archive=None, module=None, elapse
         errmsg = os.linesep.join(errmsg)
         errmsg = errmsg.format(target, ref, target, target_line_no, ref, ref_line_no)
     # result is None on success
-    if result == None:
+    if result is None:
         return 'VALID', test_case, elapsed_time
-    else:
-        return 'INVALID', test_case, elapsed_time, errmsg
+    return 'INVALID', test_case, elapsed_time, errmsg
 
 def parse_jobid(result_str):
     """Given a line from a results.log file, returns the job ID"""
@@ -388,9 +434,11 @@ def parse_module(result_str):
     return re.search(r"'([^']+)'", result_str).group(1)
 
 def get_sys_dirname(jobid):
+    """Returns the directory name associated with a job ID"""
     return 'charmm-gui-{}'.format(jobid)
 
 def get_archive_name(jobid):
+    """Returns the archive (.tgz) file associated with a job ID"""
     return 'charmm-gui-{}.tgz'.format(jobid)
 
 def warn(*strs):

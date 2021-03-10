@@ -1,0 +1,173 @@
+linker:
+  title: Linker
+  default: THSLK
+  sub:
+    THSLK:
+       left: C1
+       left_rm: [H12]
+       right: S1
+       right_rm: [HS1]
+       name: '-S-CH<sub>2</sub>-'
+    THDLK:
+       left: C2
+       left_rm: [H22]
+       right: S1
+       right_rm: [HS1]
+       name: '-S-(CH<sub>2</sub>)<sub>2</sub>-'
+spacer:
+  title: Spacer
+  sub:
+    none:
+      name: '-H'
+      preview: false
+      hide_right: true
+    ETHY:
+      left: C2
+      left_rm: [H22]
+      right: C1
+      right_rm: [H12]
+      seed: [H11, C1, C2]
+      name: '-CH<sub>2</sub>-CH<sub>2</sub>-'
+    PROR:
+      left: C2
+      left_rm: [H22]
+      patch: 1ETHL
+      right: C1
+      right_rm: [H12]
+      seed: [H11, C1, C2]
+      name: '-CH<sub>2</sub>-CH(CH<sub>3</sub>)-'
+    PIBUT:
+      left: C2
+      left_rm: [H21]
+      patch: 2ETHL
+      right: C1
+      right_rm: [H12]
+      seed: [H11, C1, C2]
+      name: '-CH<sub>2</sub>-C(CH<sub>3</sub>)<sub>2</sub>-'
+    13BDT:
+      left: C4
+      left_rm: [H42]
+      right: C1
+      right_rm: [H12]
+      seed: [C1, C2, C3]
+      name: '-(CH<sub>2</sub>)CH=CH(CH<sub>2</sub>)-'
+    14IPT:
+      left: C4
+      left_rm: [H42]
+      right: C1
+      right_rm: [H12]
+      seed: [C1, C2, C3]
+      name: '-(CH<sub>2</sub>)CH<sub>3</sub>C=CH(CH<sub>2</sub>)-'
+    EIMIN:
+      left: C2
+      left_rm: [H22]
+      patch: EIMINL
+      right: N1
+      right_rm: [HN2]
+      seed: [N1, C1, C2]
+      name: '-NH-(CH<sub>2</sub>)<sub>2</sub>-'
+    ETHOX:
+      left: C2
+      left_rm: [H22]
+      patch: ETHOXL
+      right: O1
+      right_rm: [HO1]
+      seed: [O1, C1, C2]
+      name: '-O-(CH<sub>2</sub>)<sub>2</sub>-'
+    PROXR:
+      left: C2
+      left_rm: [H22]
+      patch: PROXL
+      right: O1
+      right_rm: [HO1]
+      #seed: [HO1, O1, C1]
+      seed: [O1, C1, C2]
+      name: '-O-(CH<sub>2</sub>)-CH(CH<sub>3</sub>)-'
+    VIALR:
+      left: C2
+      left_rm: [H22]
+      patch: VIALL
+      right: C1
+      right_rm: [H12]
+      seed: [H11, C1, C2]
+      name: '-CH<sub>2</sub>-CH(OH)-'
+    AACR:
+      left: C2
+      left_rm: [H22]
+      patch: MACL
+      right: C1
+      right_rm: [H12]
+      seed: [H11, C1, C2]
+      name: '-(CH<sub>2</sub>)CHCOOH-'
+    AACIR:
+      left: C2
+      left_rm: [H22]
+      patch: MACL
+      right: C1
+      right_rm: [H12]
+      seed: [H11, C1, C2]
+      name: '-(CH<sub>2</sub>)CHCOO<sup>-</sup>-'
+    AAMDR:
+      left: C2
+      left_rm: [H22]
+      patch: AMDL
+      right: C1
+      right_rm: [H12]
+      seed: [H11, C1, C2]
+      name: '-(CH<sub>2</sub>)CH(CONH<sub>2</sub>)-'
+    ACNR:
+      left: C2
+      left_rm: [H22]
+      patch: ACNL
+      right: C1
+      right_rm: [H12]
+      seed: [H11, C1, C2]
+      name: '-(CH<sub>2</sub>)CH(C&equiv;N)-'
+    ETKTR:
+      left: C2
+      left_rm: [H22]
+      patch: ETKTL
+      right: C1
+      right_rm: [H12]
+      seed: [H11, C1, C2]
+      name: '-(CH<sub>2</sub>)-CH(COCH<sub>3</sub>)-'
+    AMIDU:
+      left: CE
+      left_rm: [HE2]
+      patch: AMIDL
+      right: N1
+      right_rm: [H12]
+      seed: [N1, C1, CE]
+      name: '-NHCOCH<sub>2</sub>-'
+#    NYL3:
+#      left: CE
+#      left_rm: [HE2]
+#      patch: NYL3L
+#      right: N1
+#      right_rm: [H12]
+#      seed: [N1, C1, C2]
+#      name: '-NHCOCH<sub>2</sub>-CH<sub>2</sub>-'
+functional:
+  title: Functional Group
+  sub:
+    none:
+      name: '-H'
+      preview: false
+    TMAET:
+      left: C5
+      left_rm: [H52]
+      right: C1
+      right_rm: [H12]
+      name: '-(CH<sub>2</sub>)<sub>2</sub>-N<sup>+</sup>(CH<sub>3</sub>)<sub>3</sub>'
+    EAMTI:
+      left: N1
+      left_rm: [HN3]
+      right: C1
+      right_rm: [H12]
+      name: '-(CH<sub>2</sub>)<sub>2</sub>-NH<sub>3</sub><sup>+</sup>'
+    EAMT:
+      left: N1
+      left_rm: [HN2]
+      right: C1
+      right_rm: [H12]
+      name: '-(CH<sub>2</sub>)<sub>2</sub>-NH<sub>2</sub>'

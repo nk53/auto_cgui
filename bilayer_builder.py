@@ -1,15 +1,15 @@
-import os
-import ast
+"""Handles bilayer preparation options"""
 import time
 import utils
-import yaml
-from os.path import join as pjoin
-from splinter import Browser
-from splinter.exceptions import ElementDoesNotExist
-from SolutionBrowserProcess import SolutionBrowserProcess
-from InputBrowserProcess import InputBrowserProcess
+from solution_builder import SolutionBrowserProcess
+from input_generator import InputBrowserProcess
+
+_BROWSER_PROCESS = 'BilayerBrowserProcess'
 
 class BilayerBrowserProcess(SolutionBrowserProcess, InputBrowserProcess):
+    """Implements options for bilayer/protein alignment, lipid selection,
+    and bilayer size determination.
+    """
     next_button = None # for resolving multiple next buttons on initial step
 
     def __init__(self, *args, **kwargs):
@@ -65,13 +65,14 @@ class BilayerBrowserProcess(SolutionBrowserProcess, InputBrowserProcess):
                 cnt = 0
 
     def align_ppm(self):
+        """Align a protein using PPM server"""
         if not 'orient_ppm' in self.test_case:
             raise KeyError("Missing PPM chains")
 
         self.click_by_attrs(name="align_option", value="4")
 
         chains = self.test_case.get('orient_ppm')
-        if chains != None:
+        if chains is not None:
             if not isinstance(chains, list):
                 raise TypeError("Please specify chains as a list")
 
@@ -88,6 +89,7 @@ class BilayerBrowserProcess(SolutionBrowserProcess, InputBrowserProcess):
                     chain_elem.uncheck()
 
     def align_vector(self):
+        """Align a protein with a user-defined vector"""
         orient_vector = self.test_case.get('orient_vector')
 
         if not isinstance(orient_vector, list):
@@ -116,16 +118,16 @@ class BilayerBrowserProcess(SolutionBrowserProcess, InputBrowserProcess):
             return
 
         self.activate_lipid_category(self.lipid_map['glp'])
-        for i in range(1, len(glycolipids)):
+        for _ in range(1, len(glycolipids)):
             self.browser.execute_script('addGlycolipid()')
 
         for lipid, lipid_info in glycolipids.items():
-            Ulipid = lipid.upper()
+            lipid = lipid.upper()
 
             predefined = lipid_info.get('predefined')
             lipid_type = lipid_info.get('lipid')
 
-            lipids_root.find_by_value(Ulipid).click()
+            lipids_root.find_by_value(lipid).click()
             self.switch_to_window(1)
 
             # wait for HTML to stop changing
@@ -151,23 +153,23 @@ class BilayerBrowserProcess(SolutionBrowserProcess, InputBrowserProcess):
             self.browser.evaluate_script('updateGlycolipid();')
             self.switch_to_window(0)
 
-    def _build_LPS(self, lps_lipids, lipids_root):
+    def _build_lps(self, lps_lipids, lipids_root):
         if not lps_lipids:
             return
 
         self.activate_lipid_category(self.lipid_map['lps'])
-        for i in range(1, len(lps_lipids)):
+        for _ in range(1, len(lps_lipids)):
             self.browser.execute_script('addLPS()')
 
         for lipid, lipid_info in lps_lipids.items():
-            Ulipid = lipid.upper()
+            lipid = lipid.upper()
 
             species = lipid_info['species']
-            lipid_A = lipid_info['lip']
+            lipid_a = lipid_info['lip']
             core = lipid_info['core']
             oanti = lipid_info.get('oanti')
 
-            lipids_root.find_by_value(Ulipid).click()
+            lipids_root.find_by_value(lipid).click()
             self.switch_to_window(1)
 
             # wait for HTML to stop changing
@@ -179,8 +181,8 @@ class BilayerBrowserProcess(SolutionBrowserProcess, InputBrowserProcess):
             self.browser.select('lps[species]', species)
 
             # may need to wait for options to repopulate
-            self.wait_exists(self.browser.find_by_css('#lps_lipa option[value='+lipid_A+']'))
-            self.browser.select('lps[lipa]', lipid_A)
+            self.wait_exists(self.browser.find_by_css('#lps_lipa option[value='+lipid_a+']'))
+            self.browser.select('lps[lipa]', lipid_a)
 
             self.wait_exists(self.browser.find_by_css('#lps_core option[value='+core+']'))
             self.browser.select('lps[core]', core)
@@ -193,13 +195,14 @@ class BilayerBrowserProcess(SolutionBrowserProcess, InputBrowserProcess):
 
                 self.browser.find_by_id(oanti).click()
 
-                if ocount != None:
+                if ocount is not None:
                     self.browser.fill('lps[nounit]', ocount)
 
             self.browser.execute_script('updateLPS();')
             self.switch_to_window(0)
 
     def select_lipids(self):
+        """Handles most options on the lipid selection page"""
         lipids = self.test_case.get('lipids')
         if not lipids:
             raise KeyError("Missing 'lipids' option")
@@ -232,8 +235,8 @@ class BilayerBrowserProcess(SolutionBrowserProcess, InputBrowserProcess):
             size_method = 'number'
 
         # chrome times out too quickly
-        self.browser.driver.set_script_timeout(10000);
-        self.browser.driver.set_page_load_timeout(10000);
+        self.browser.driver.set_script_timeout(10000)
+        self.browser.driver.set_page_load_timeout(10000)
 
         if self.module_title != "Nanodisc Builder":
             self.click_by_attrs(name='hetero_xy_option', value=size_id)
@@ -258,7 +261,7 @@ class BilayerBrowserProcess(SolutionBrowserProcess, InputBrowserProcess):
                         custom_type = custom_lipids[prefix]
                         break
 
-                if custom_type != None:
+                if custom_type is not None:
                     if isinstance(lipid_info, int) or not lipid_info:
                         if not lipid in custom_type:
                             tpl = "Missing lipid info for {} lipid: '{}'"
@@ -278,7 +281,7 @@ class BilayerBrowserProcess(SolutionBrowserProcess, InputBrowserProcess):
                 lipid_tup = name_tpl.format(layer, lipid), count
                 lipid_elems.append(lipid_tup)
 
-        self._build_LPS(custom_lipids['lps'], all_lipids_root)
+        self._build_lps(custom_lipids['lps'], all_lipids_root)
         self._build_glycolipids(custom_lipids['glp'], all_lipids_root)
 
         # activate all categories
@@ -290,66 +293,27 @@ class BilayerBrowserProcess(SolutionBrowserProcess, InputBrowserProcess):
             self.browser.fill(name, value)
 
     def calc_size(self):
+        """Finds the correct size calculation button, then clicks it"""
         # due to bad HTML design, the ID is not actually unique
         calc_button = self.browser.find_by_css('[id=hetero_size_button]')
         calc_button = self.first_visible(calc_button)
         calc_button.click()
 
-        self.wait_script('is_updated');
+        self.wait_script('is_updated')
 
-    def init_system(self, test_case, resume=False):
-        module_title = self.module_title
+    def init_system(self, **kwargs):
+        """Handles front page of Bilayer Builder"""
         url = self.base_url + self.module_url
         browser = self.browser
+        test_case = self.test_case
 
-        if 'pdb' in self.test_case:
-            pdb = self.pdb = test_case['pdb']
-            if not resume:
-                browser.visit(url)
-                # infer as much as possible about the PDB format
-                if isinstance(pdb, dict):
-                    if 'format' in pdb:
-                        pdb_fmt = pdb['format']
-                    else:
-                        pdb_fmt = pdb['name'].split('.')[-1]
+        if 'pdb' in test_case:
+            kwargs.setdefault('next_button', self.next_button)
+            self._handle_pdb_selection(**kwargs)
+        elif not kwargs.get('resume'):
+            browser.visit(url)
+            browser.find_by_xpath("//*[@id='pdb']/h4[2]/input").click()
 
-                    source = 'source' in pdb and pdb['source']
-                    pdb_name = test_case['pdb']['name']
-                else:
-                    pdb_name = test_case['pdb']
-                    pdb_fmt = '.' in pdb_name and pdb_name.split('.')[-1]
-                    source = not pdb_fmt and 'RCSB'
-
-                if pdb_fmt:
-                    pdb_fmt = {
-                        'pdb': 'PDB',
-                        'pqr': 'PDB',
-                        'cif': 'mmCIF',
-                        'charmm': 'CHARMM',
-                    }[pdb_fmt]
-
-                if source and self.name.split('-')[-1] != '1':
-                    reason = "Multithreading is not allowed for "+module_title+\
-                             " when downloading from RCSB/OPM. Please use an"\
-                             " upload option instead."
-                    self.stop(reason)
-
-                if source:
-                    browser.fill('pdb_id', pdb_name)
-                else:
-                    pdb_path = pjoin(self.base, pdb_name)
-                    browser.attach_file("file", pdb_path)
-                    browser.find_by_value(pdb_fmt).click()
-
-                self.go_next(test_case['steps'][0]['wait_text'],
-                        next_button=self.next_button)
-                self.get_jobid()
-        else:
-            if not resume:
-                browser.visit(url)
-                browser.find_by_xpath("//*[@id='pdb']/h4[2]/input").click()
-
-                self.go_next(test_case['steps'][0]['wait_text'],
-                        next_button=self.next_button)
-                self.get_jobid()
-
+            self.go_next(test_case['steps'][0]['wait_text'],
+                    next_button=self.next_button)
+            self.get_jobid()

@@ -1,39 +1,33 @@
-import os
-import time
-import requests
+"""Handles polymer builder options"""
 import yaml
-from os.path import join as pjoin
-from splinter import Browser
-from splinter.exceptions import ElementDoesNotExist
-from CGUIBrowserProcess import CGUIBrowserProcess
+from cgui_browser_process import CGUIBrowserProcess
+
+_BROWSER_PROCESS = 'PBBrowserProcess'
 
 class PBBrowserProcess(CGUIBrowserProcess):
+    """Implements option selection for all polymer pages"""
     def __init__(self, *args, **kwargs):
         self.jobid = None
         self.polydic = None
         self.output = None # charmm-gui-jobid.tgz
-        super(PBBrowserProcess, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
-    def getpath(self, nested_dict, value, prepath=()):
+    def _getpath(self, nested_dict, value, prepath=()):
         for k, v in nested_dict.items():
             path = prepath + (k,)
             if v == value: # found value
                 return path
-            elif hasattr(v, 'items'): # v is a dict
-                p = self.getpath(v, value, path) # recursive call
+            if hasattr(v, 'items'): # v is a dict
+                p = self._getpath(v, value, path) # recursive call
                 if p is not None:
                     return p
-
-    def select(self, element, value):
-        self.browser.select(element, value)
-
-    def choose(self, element, value):
-        self.browser.choose(element, value)
+        return None
 
     def run_step0(self, pchains, wait_text):
+        """Handles front page"""
         browser = self.browser
         browser.choose('model', self.model)
-        if (len(pchains) > 1):
+        if len(pchains) > 1:
             clickcnt = 0
             while clickcnt < len(pchains) - 1:
                 browser.find_by_id('chainBtn').click()
@@ -53,7 +47,8 @@ class PBBrowserProcess(CGUIBrowserProcess):
             # count typeX in pchain
             tcnt = 0
             for i in pchain:
-                if i.startswith('type'): tcnt += 1
+                if i.startswith('type'):
+                    tcnt += 1
             moncnt = 1
             if tcnt > 1:
                 # click Add
@@ -66,8 +61,8 @@ class PBBrowserProcess(CGUIBrowserProcess):
                 typ = 'type' + str(i + 1)
                 name = pchain[typ]['name']
                 length = pchain[typ]['leng']
-                path_junk = self.getpath(self.polydic, name)
-                idx = (len(path_junk) / 2) - 1
+                path_junk = self._getpath(self.polydic, name)
+                idx = (len(path_junk) / 2) - 1 # unused?
                 polyclass = path_junk[2]
                 fullname = path_junk[4]
                 resi = self.polydic['Polymer']['sub'][polyclass]['sub'][fullname]['resi']
@@ -79,12 +74,16 @@ class PBBrowserProcess(CGUIBrowserProcess):
                 poly_elem.click()
                 poly_elem.find_by_text(polyclass).click()
                 poly_elem.find_by_text(fullname).click()
-                if polytact != None:
-                    if polytact[0] == 'i' and polytact[-2] == 'R': tacidx = 1
-                    if polytact[0] == 'i' and polytact[-2] == 'S': tacidx = 2
-                    if polytact[0] == 's': tacidx = 3
-                    if polytact[0] == 'a': tacidx = -1
-                    x = poly_elem.find_by_value(resi)[tacidx].click()
+                if polytact is not None:
+                    if polytact[0] == 'i' and polytact[-2] == 'R':
+                        tacidx = 1 # unused in this case?
+                    if polytact[0] == 'i' and polytact[-2] == 'S':
+                        tacidx = 2
+                    if polytact[0] == 's':
+                        tacidx = 3
+                    if polytact[0] == 'a':
+                        tacidx = -1
+                    x = poly_elem.find_by_value(resi)[tacidx].click() # unused?
                 subtext = 'subtext[%s][%s]' % (key[6:], str(i + 1))
 
                 browser.find_by_name(subtext).fill(length)
@@ -97,16 +96,12 @@ class PBBrowserProcess(CGUIBrowserProcess):
 
     def resume_step(self, jobid, project=None, step=None, link_no=None):
         self.jobid = jobid
-        super(PBBrowserProcess, self).resume_step(jobid, link_no=link_no)
+        super().resume_step(jobid, link_no=link_no)
 
-    def run(self):
-        super(PBBrowserProcess, self).run()
-        if self.output:
-            self.download(self.output + '.tgz')
-
-    def init_system(self, test_case, resume=False):
+    def init_system(self, **kwargs):
         url = self.base_url + "?doc=input/polymer"
         self.browser.visit(url)
+        test_case = self.test_case
 
         # attach files for this test case
         self.model = test_case['label']

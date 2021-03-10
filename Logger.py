@@ -1,16 +1,11 @@
-#!/usr/bin/env python3
-import readline
-import sys
-import utils
-from multiprocessing import Queue
-from time import sleep
+"""Central interface for message logging"""
 
 class Logger:
-    def __init__(self, logfile, module=''):
-        """Writes log information in a single-threaded context.
+    """Writes log information in a single-threaded context.
 
-        N.B.: This class is NOT thread-safe.
-        """
+    N.B.: This class is NOT thread-safe.
+    """
+    def __init__(self, logfile, module=''):
         self.logfile = logfile
         self.module = module and " in module '{}'".format(module)
 
@@ -25,10 +20,11 @@ class Logger:
 
     def write_append_filename(self, msg):
         """Get a new file handle and append to it"""
-        with open(self.logfile, 'a') as fh:
-            fh.write(msg)
+        with open(self.logfile, 'a') as file_obj:
+            file_obj.write(msg)
 
     def log_exception(self, case_info, step_num, exc_info):
+        """Writes test cases resulting in a Python exception to logfile"""
         templ = 'Job "{}" ({}){} encountered an exception on step {}:\n{}\n'
         if not 'jobid' in case_info:
             case_info['jobid'] = '-1'
@@ -37,6 +33,7 @@ class Logger:
         self.write(templ.format(label, jobid, self.module, step_num, exc_info))
 
     def log_failure(self, case_info, step, elapsed_time=-1.):
+        """Writes test cases resulting in CHARMM error to logfile"""
         templ = 'Job "{}" ({}){} failed on step {} after {:.2f} seconds\n'
         if not 'jobid' in case_info:
             case_info['jobid'] = '-1'
@@ -45,6 +42,7 @@ class Logger:
         self.write(templ.format(label, jobid, self.module, step, elapsed_time))
 
     def log_success(self, case_info, elapsed_time=-1., ran_validation=False):
+        """Writes test cases that reach final page without error to logfile"""
         if ran_validation:
             ran_validation = ' and passed validation'
         else:
@@ -56,6 +54,7 @@ class Logger:
         self.write(templ.format(label, jobid, self.module, elapsed_time, ran_validation))
 
     def log_invalid(self, case_info, elapsed_time=-1., reason=''):
+        """Writes test cases that finish, but failed validation to logfile"""
         templ = 'Job "{}" ({}){} finished after {:.2f} seconds, but was invalid:\n{}\n'
         if not 'jobid' in case_info:
             case_info['jobid'] = '-1'
@@ -88,4 +87,3 @@ class Logger:
             print(exc_info)
         else:
             print('Warning: got unknown result:', result)
-

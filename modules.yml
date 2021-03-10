@@ -1,13 +1,14 @@
 # abbreviation (case insensitive): module filename base
-BILAYER: BilayerBrowserProcess
-FEP: FEPBrowserProcess
-GLYCOLIPID: GlycolipidBrowserProcess
-HMMM: HMMMBrowserProcess
-NANODISC: NanodiscBrowserProcess
-LPS: LPSBrowserProcess
-NMM: NMMBrowserProcess
-MCA: MCABrowserProcess
-POLYMER: PBBrowserProcess
-PDB: PDBBrowserProcess
-SOLUTION: SolutionBrowserProcess
-GLYCAN: GlycanOnlyBrowserProcess
+BILAYER: bilayer_builder
+FEP: free_energy_calculator
+FEC: free_energy_calculator
+GLYCOLIPID: glycolipid_modeler
+HMMM: hmmm_builder
+NANODISC: nanodisc_builder
+LPS: lps_modeler
+NMM: nanomaterial_modeler
+MCA: multicomponent_assembler
+POLYMER: polymer_builder
+PDB: pdb_reader
+SOLUTION: solution_builder
+GLYCAN: glycan_only

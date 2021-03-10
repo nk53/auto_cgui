@@ -11,8 +11,7 @@ steps:
   - wait_text: drag
   - wait_text: Force Field Options
     presteps:
-      - fill('lfitedge', 10)    # Waterbox Size
-
+      - browser.fill('lfitedge', 10)    # Waterbox Size
   - module:
       name: input
       start: 1

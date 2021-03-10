@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
+"""When run as a program, gets the total Python runtime of all simulations
+in logfile"""
 import sys
 import os
 
-class ClockTime(object):
+class ClockTime:
     """A helper class for dealing with clock time math and str/int
     conversions
 
@@ -37,7 +39,7 @@ class ClockTime(object):
         int_type = type(int())
         str_type = type(str())
         val_type = type(value)
-        if value == None:
+        if value is None:
             self.value = 0
         elif isinstance(value, ClockTime):
             self.value = value.value
@@ -50,6 +52,7 @@ class ClockTime(object):
 
     @staticmethod
     def str_to_time(strtime):
+        """Converts a string like "1:00[:00]" to seconds since 0:00[:00]"""
         conversions = 1, 60, 3600
         times = list(map(int, strtime.split(":")))
         times.reverse()
@@ -61,6 +64,7 @@ class ClockTime(object):
 
     @staticmethod
     def time_to_str(time):
+        """Converts number of seconds to a human-readable time string"""
         conversions = 3600, 60, 1
         parts = []
         printed = False # print 00 when
@@ -72,10 +76,9 @@ class ClockTime(object):
                 parts.append(str(int(time/conv)))
                 time = time % conv
                 printed = True
-        if not len(parts):
+        if not parts:
             return "0"
-        else:
-            return ":".join(parts)
+        return ":".join(parts)
 
     def __str__(self):
         return ClockTime.time_to_str(self.value)
@@ -83,38 +86,35 @@ class ClockTime(object):
     def __repr__(self):
         return "ClockTime('"+self.__str__()+"')"
 
-    def __add__(self, y):
-        return ClockTime(self.value + ClockTime(y).value)
+    def __add__(self, other):
+        return ClockTime(self.value + ClockTime(other).value)
 
-    def __sub__(self, y):
-        return ClockTime(self.value - ClockTime(y).value)
+    def __sub__(self, other):
+        return ClockTime(self.value - ClockTime(other).value)
 
-    def __mul__(self, y):
-        if type(y) == type(0.):
-            return ClockTime(int(self.value * y))
-        else:
-            return ClockTime(self.value * ClockTime(y).value)
+    def __mul__(self, other):
+        if isinstance(other, float):
+            return ClockTime(int(self.value * other))
+        return ClockTime(self.value * ClockTime(other).value)
 
-    def __div__(self, y):
+    def __div__(self, other):
         """For Python 2 compatibility, result is truncated to int"""
-        if type(y) == type(0.):
-            return ClockTime(int(self.value / y))
-        else:
-            return ClockTime(int(self.value / ClockTime(y).value))
+        if isinstance(other, float):
+            return ClockTime(int(self.value / other))
+        return ClockTime(int(self.value / ClockTime(other).value))
 
-    def __truediv__(self, y):
+    def __truediv__(self, other):
         """Not actually true division. Converts result to integer"""
-        return self.__div__(y)
+        return self.__div__(other)
 
-    def __floordiv__(self, y):
+    def __floordiv__(self, other):
         """Same as __truediv__, since both convert to integer"""
-        return self.__truediv__(y)
+        return self.__truediv__(other)
 
-    def __mod__(self, y):
-        if type(y) == type(0.):
-            return ClockTime(int(self.value % y))
-        else:
-            return ClockTime(self.value % ClockTime(y).value)
+    def __mod__(self, other):
+        if isinstance(other, float):
+            return ClockTime(int(self.value % other))
+        return ClockTime(self.value % ClockTime(other).value)
 
     def __gt__(self, value):
         return self.value > ClockTime(value).value
@@ -131,7 +131,7 @@ class ClockTime(object):
     def __eq__(self, value):
         return self.value == ClockTime(value).value
 
-if __name__ == '__main__':
+def _main():
     def usage():
         print("Usage:", sys.argv[0], "[logfile]", file=sys.stderr)
 
@@ -149,11 +149,14 @@ if __name__ == '__main__':
         usage()
         sys.exit(2)
 
-    import re
     expr = re.compile(r'(\d+\.\d+)')
-    with open(infile) as fh:
-        times = [expr.search(line).group(1) for line in fh]
+    with open(infile) as file_obj:
+        times = [expr.search(line).group(1) for line in file_obj]
 
     tot_time = sum(map(float, times))
 
     print("Total running time: {:.2f} seconds {!s}".format(tot_time, ClockTime(int(tot_time))))
+
+if __name__ == '__main__':
+    import re
+    _main()

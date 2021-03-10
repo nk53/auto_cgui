@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
+"""Command-line interface to autosave PSF references from previous tests"""
 import argparse
 import os
-import re
 import shutil
 import sys
 import utils
@@ -48,14 +48,14 @@ with args.results_file as fh:
         ref_archive = ref_dir+'.tgz'
         if os.path.exists(ref_dir):
             if not os.path.isdir(ref_dir):
-                errmsg = "Warning: '{}' exists but is not a directory; skipping"
-                print(errmsg.format(ref_dir), file=sys.stderr)
+                ERRMSG = "Warning: '{}' exists but is not a directory; skipping"
+                print(ERRMSG.format(ref_dir), file=sys.stderr)
                 continue
         elif os.path.exists(ref_archive):
             shutil.unpack_archive(ref_archive)
         else:
-            errmsg = "Warning: couldn't find '{}'; skipping"
-            print(errmsg.format(ref_archive), file=sys.stderr)
+            ERRMSG = "Warning: couldn't find '{}'; skipping"
+            print(ERRMSG.format(ref_archive), file=sys.stderr)
             continue
 
         # allow reference naming scheme to be modified in one place
@@ -73,4 +73,3 @@ with args.results_file as fh:
 
         print('copying', src, '->', dest)
         shutil.copy(src, dest)
-

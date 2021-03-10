@@ -1,58 +1,44 @@
-import ast
+"""Handles Glycan Reader & Modeler options for glycan-only systems"""
 import re
-import time
-import os
-import sys
-import yaml
-from splinter import Browser
-from CGUIBrowserProcess import CGUIBrowserProcess
+from cgui_browser_process import CGUIBrowserProcess
 
-def init_module(test_cases, args):
-    """Preprocesses test cases
-
-    Returns: (2-tuple)
-    =======
-        base_cases  Cases that can begin immediately
-        wait_cases  Cases that need one of the base cases to complete first
-    """
-    base_cases = []
-    wait_cases = {}
-    for test_case in test_cases:
-        base_cases.append(test_case)
-    return base_cases, wait_cases
-
-
+_BROWSER_PROCESS = 'GlycanOnlyBrowserProcess'
 
 class GlycanOnlyBrowserProcess(CGUIBrowserProcess):
+    """Implements Glycan Only front page options for Glycan Reader & Modeler"""
     def __init__(self, *args, **kwargs):
         self.module_title = "Glycan Reader & Modeler"
         self.module_url = "?doc=input/glycan&step=0"
-        super(GlycanOnlyBrowserProcess, self).__init__(*args, **kwargs)
-
-    def run(self):
-        super(GlycanOnlyBrowserProcess, self).run()
+        super().__init__(*args, **kwargs)
 
     def set_glycan(self):
-        if not 'glycan' in self.test_case:
+        """Builds glycan from GRS sequence"""
+        glycan = self.test_case.get('glycan')
+        if not glycan:
             raise ValueError("Missing glycan options")
-        glycan = self.test_case['glycan']
+
         _d = re.compile('- ')
         chemod_init = False
         nchem = 0
         for i,residue in enumerate(glycan['grs'].split('\n')):
-            if not residue.strip(): continue
+            if not residue.strip():
+                continue
+
             depth = len(_d.findall(residue))
             linkage, resname = residue.split('- ')[-1].split()
-            idx = resname.find('_') #... chemical modification
             chemod = None
+
+            idx = resname.find('_') #... chemical modification
             if idx > 0:
                 chemod = resname[idx+1:].split('_')
                 resname = resname[:idx]
+
             if i > 0:
                 self.browser.find_by_id(str(depth)).find_by_css('.add').first.click()
-                self.browser.select("sequence[%d][linkage]" % (i+1), linkage[1])
-                self.browser.select("sequence[%d][type]" % (i+1), resname[0])
-            self.browser.select("sequence[%d][name]" % (i+1), resname[1:])
+                self.browser.select(f"sequence[{i+1}][linkage]", linkage[1])
+                self.browser.select(f"sequence[{i+1}][type]", resname[0])
+            self.browser.select(f"sequence[{i+1}][name]", resname[1:])
+
             if chemod:
                 for chm in chemod:
                     if not chemod_init:
@@ -67,15 +53,14 @@ class GlycanOnlyBrowserProcess(CGUIBrowserProcess):
                     self.browser.select("chem[%d][patch]" % nchem, patch)
                     self.browser.select("chem[%d][site]" % nchem, site)
                     nchem += 1
+
         self.go_next(self.test_case['steps'][0]['wait_text'])
 
-
-    def init_system(self, test_case, resume=False):
-        module_title = self.module_title
+    def init_system(self, **kwargs):
         url = self.base_url + self.module_url
         browser = self.browser
 
-        if not resume:
+        if not kwargs.get('resume'):
             browser.visit(url)
             self.browser.click_link_by_text("Glycan Only System")
             self.set_glycan()

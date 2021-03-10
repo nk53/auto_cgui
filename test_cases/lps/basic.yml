@@ -2,19 +2,13 @@
 - label: Escherichia coli with lipid A type 1 and 5 O-antigens
   download: no
   species: ec
-  lip:
-    lipa:
-      type: type1
-  core:
-    - R1
+  lipa: type1
+  core: R1
 - label: Helicobacter pylori lipid A type 1 and all options
   download: yes
   species: hp
-  lip:
-    lipa:
-      type: type1
-  core:
-    - A
+  lipa: type1
+  core: A
   oanti:
     - Lex
     - Ley

@@ -10,23 +10,9 @@
     numligand: 2
     system: vac
 
-    first_linker: THDLK        # THSLK or THDLK
-    first_spacer:
-    - numspacer: 2
-    - name: ETKTR
-      numrepeat: 2
-    - name: PROR
-      numrepeat: 2
-    first_functional: TMAET
-
-    second_linker: THDLK        # THSLK or THDLK
-    second_spacer:
-    - numspacer: 1
-    - name: ETHY
-      numrepeat: 3
-    - name: PROR
-      numrepeat: 2
-    second_functional: TMAET
+    ligands:
+      - [THDLK, "ETKTR,2", "PROR,2", TMAET]
+      - [THDLK, "ETHY,3", "PROR,2", TMAET]
 
     nano_structure:
 #    - cluster:

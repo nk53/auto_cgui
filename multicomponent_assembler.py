@@ -1,11 +1,11 @@
+"""Handles Multicomponent Assembler options"""
 import copy
-import os
-import time
 from os.path import join as pjoin
-from splinter import Browser
 from splinter.exceptions import ElementDoesNotExist
-from BilayerBrowserProcess import BilayerBrowserProcess
-from InputBrowserProcess import InputBrowserProcess
+from bilayer_builder import BilayerBrowserProcess
+from input_generator import InputBrowserProcess
+
+_BROWSER_PROCESS = 'MCABrowserProcess'
 
 def init_module(test_cases, args):
     """Preprocesses test cases
@@ -48,6 +48,7 @@ def handle_solvent_memb_tests(test_case, do_copy=False):
     placeholder = 'SOLVENT_TEST_PLACEHOLDER'
     found = False
     index = None
+    step_num = None
     check_lists = 'presteps', 'poststeps'
     for step_num, step in enumerate(test_case['steps']):
         for check_list in check_lists:
@@ -113,6 +114,7 @@ def handle_solvent_tests(test_case, do_copy=False):
     placeholder = 'SOLVENT_TEST_PLACEHOLDER'
     found = False
     index = None
+    step_num = None
     check_lists = 'presteps', 'poststeps'
     for step_num, step in enumerate(test_case['steps']):
         for check_list in check_lists:
@@ -160,35 +162,49 @@ def handle_solvent_tests(test_case, do_copy=False):
     return cases
 
 class MCABrowserProcess(BilayerBrowserProcess, InputBrowserProcess):
+    """Implements front page, solvent, and membrane selection for MCA"""
     def find_comp_row(self, comp_name, step):
         """Returns the row element page corresponding to the given uploaded
         component basename"""
+        def molpacking_selector():
+            return self.browser.find_by_css(
+                ".component_list table tr:not(:first-child) td:nth-child(2)")
+        def solvent_options_selector():
+            return self.browser.find_by_text("Component ID").\
+                   find_by_xpath('../..').\
+                   find_by_css("tr:not(:first-child) td:nth-child(2)")
+
         selectors = {
-            'molpacking': lambda: self.browser.find_by_css(".component_list table tr:not(:first-child) td:nth-child(2)"),
-            'solvent options': lambda: self.browser.find_by_text("Component ID").find_by_xpath('../..').find_by_css("tr:not(:first-child) td:nth-child(2)")
+            'molpacking': molpacking_selector,
+            'solvent options': solvent_options_selector,
         }
+
         rows = selectors[step]()
+        row = None
         found = False
         for row in rows:
             if row.text == comp_name:
                 found = True
                 break
+
         if not found:
             raise ElementDoesNotExist("Could not find component: "+comp_name)
+
         comp_row = row.find_by_xpath('..')
         return comp_row
 
     def set_component_density(self):
+        """Sets solvent density of uploaded components on the solvent options page"""
         components = self.components
         for comp_name, comp_info in components.items():
             if not 'density' in comp_info:
                 continue
             row = self.find_comp_row(comp_name, 'solvent options')
-            comp_type = comp_info['type']
             comp_type_elem = row.find_by_css("[id^=solv_density]")
             comp_type_elem.fill(comp_info['density'])
 
     def select_components(self):
+        """Handles most options on the size determination step"""
         test_case = self.test_case
 
         components = self.components
@@ -225,12 +241,12 @@ class MCABrowserProcess(BilayerBrowserProcess, InputBrowserProcess):
             # can't set number of some component types in this step
             if comp_type in ['solvent', 'ion', 'periodic']:
                 continue
-            elif comp_type == 'membrane':
+            if comp_type == 'membrane':
                 has_membrane = True
             num_non_solvents += 1
 
             count_type = count_types[comp_type]
-            if count_type == None:
+            if count_type is None:
                 if 'count' in comp_info:
                     count_types[comp_type] = count_type = 'count'
                 elif 'ratio' in comp_info:
@@ -260,31 +276,34 @@ class MCABrowserProcess(BilayerBrowserProcess, InputBrowserProcess):
 
         test_case['has_membrane'] = has_membrane
         if num_non_solvents:
-            ps = test_case['steps'][0].setdefault('poststeps', [])
-            ps.insert(0, "click('size_button', 'Calculated System Size')")
+            poststeps = test_case['steps'][0].setdefault('poststeps', [])
+            poststeps.insert(0, "click('size_button', 'Calculated System Size')")
 
     def setup_afrac(self, validate=True):
+        """Handles options specific to area fraction for membrane components"""
         test_case = self.test_case
 
         # look in XYZ, then XY, then default to None
         xy_dim = test_case.get('XYZ', test_case.get('XY', None))
         count_type = test_case.get('memb_count_type')
         size_type = test_case.get('memb_size_type', None)
-        if size_type != None: size_type = size_type.lower()
+
+        if size_type is not None:
+            size_type = size_type.lower()
 
         if validate:
             if not test_case['has_memb_comps']:
                 raise ValueError("Can't use area fraction without membrane components")
-            if xy_dim != None:
+            if xy_dim is not None:
                 if count_type == 'count':
                     raise ValueError("Can't use mixed size type with component count")
-                elif size_type == None:
+                if size_type is None:
                     raise KeyError("Missing 'memb_size_type'; use one of: 'afrac', 'xy', 'xyz'")
-                elif size_type not in ('xy', 'xyz'):
+                if size_type not in ('xy', 'xyz'):
                     raise ValueError("Invalid 'memb_size_type'; use one of: 'afrac', 'xy', 'xyz'")
 
         # set form values
-        if xy_dim == None:
+        if xy_dim is None:
             self.click_by_attrs(name='memb_size_type', value="area_fraction")
         else:
             if size_type == 'afrac':
@@ -294,25 +313,28 @@ class MCABrowserProcess(BilayerBrowserProcess, InputBrowserProcess):
                 self.click_by_attrs(name='memb_size_type', value='memb_side_length')
 
     def setup_vfrac(self, validate=True):
+        """Handles options specific to volume fraction for solvated components"""
         test_case = self.test_case
 
         # look in XYZ, then Z, then default to None
         z_dim = test_case.get('XYZ', test_case.get('Z', None))
         count_type = test_case.get('solv_count_type')
         size_type = test_case.get('solv_size_type', None)
-        if size_type != None: size_type = size_type.lower()
+
+        if size_type is not None:
+            size_type = size_type.lower()
 
         if validate:
-            if z_dim != None:
+            if z_dim is not None:
                 if count_type == 'count':
                     raise ValueError("Can't use mixed size type with component count")
-                elif size_type == None:
+                if size_type is None:
                     raise KeyError("Missing 'solv_size_type'; use one of: 'vfrac', 'z', 'xyz'")
-                elif size_type not in ('z', 'xyz'):
+                if size_type not in ('z', 'xyz'):
                     raise ValueError("Invalid 'solv_size_type'; use one of: 'vfrac', 'z', 'xyz'")
 
         # set form values
-        if z_dim == None:
+        if z_dim is None:
             self.click_by_attrs(name='size_type', value="volume_fraction")
         else:
             if size_type == 'vfrac':
@@ -324,11 +346,11 @@ class MCABrowserProcess(BilayerBrowserProcess, InputBrowserProcess):
                 # already selected by default, but helps check form/test consistency
                 self.click_by_attrs(name='size_type', value='cube_side_length')
 
-    def init_system(self, test_case, resume=False):
+    def init_system(self, **kwargs):
         browser = self.browser
-        self.components = test_case['components']
+        self.components = self.test_case['components']
 
-        if not resume:
+        if not kwargs.get('resume'):
             url = self.base_url + "?doc=input/multicomp"
             browser.visit(url)
 
@@ -341,10 +363,10 @@ class MCABrowserProcess(BilayerBrowserProcess, InputBrowserProcess):
                 if other_files:
                     if not isinstance(other_files, (list, tuple)):
                         other_files = [other_files]
-                    for fn in other_files:
-                        browser.attach_file("files[]", pjoin(self.base, fn))
+                    for filename in other_files:
+                        browser.attach_file("files[]",
+                            pjoin(self.base, filename))
 
-            self.go_next(test_case['steps'][0]['wait_text'])
+            self.go_next(self.test_case['steps'][0]['wait_text'])
 
             self.get_jobid()
-
