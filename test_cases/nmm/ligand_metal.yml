@@ -1,56 +1,49 @@
 - label: gold surface with ligand
   parent: nmm_vacuum
   nanomaterial_type:
-    metals: aum_surface    # Options for ligand protected gold nanoparticle systems:
-                           # aum_nanoparticle, aum_nanocluster, aum_surface
-                           #
-    shape: box         # sphere, cylinder, rod, polygon, box, wulff
-
-    # For Ligand-protected Au models
-    numligand: 2
-    system: vac
-
+    material: aum_surface
+    ligands: # equivalently: [THDLK, "ETKTR,2", "PROR,2", 2, TMAET]
+      - [THDLK, [ETKTR, 2], [PROR, 2], 2, TMAET]
+      - [THDLK, "ETHY,3", "PROR,2", TMAET] # outer subtext default: 1
+    ligand_pattern: random
+    ligand_ratio_1: 7
+    ligand_ratio_2: 2
+    coverage: 10
+    lx: 30
+    ly: 30
+    lz: 30
+    systype: vacuum
+  input: gmx
+- label: nanocluster generation
+  parent: nmm_vacuum
+  nanomaterial_type:
+    material: aum_nanocluster
     ligands:
-      - [THDLK, "ETKTR,2", "PROR,2", TMAET]
-      - [THDLK, "ETHY,3", "PROR,2", TMAET]
-
-    nano_structure:
-#    - cluster:
-#      core_type: au102
-#      ligand_distribution: random   # random, strip, janus
-#      ratio_ligand1: 4              # option for ramdom
-#      ratio_ligand2: 3              # option for ramdom
-#      num_strips: 4                 # option for strip
-#  input: gmx
-
-#
-#    - particle:
-#      core_type: icosahedron        # icosahedron, cube
-#      attach_type: staple+bridge    # option for icosahedron (staple or staple+bridge)
-#      chirality: S                  # option for icosahedron (R or S)
-#      radius: 20                    # option for icosahedron
-#      cube_xlen: 33                 # option for Cube
-#      cube_ylen: 33                 # option for Cube
-#      cube_zlen: 33                 # option for Cube
-#      ligand_distribution: random   # random, janus
-#      ratio_ligand1: 7              # option for random
-#      ratio_ligand2: 2              # option for random
-#      coverage: 10                  # option for random and janus
-#    input: gmx
-
-    - surface:
-      ligand_distribution: random   # random, strip
-      ratio_ligand1: 7              # option for random
-      ratio_ligand2: 2              # option for random
-      num_strips_x: 6               # option for strip along X
-      num_strips_y: 4               # option for strip along Y
-      coverage: 10                  # option for random and janus
-      surf_midx: ['100']            # ['100'] or ['111']
-      surf_xlen: 30                 # Box length X
-      surf_ylen: 30                 # Box length Y
-      surf_zlen: 30                 # Box length Z
-      system: vac        # sol, vac (if pbc is set to xyz, system becomes "vaccum")
-    input: gmx
-
-################################################################################################
-
+      - THDLK, "ETKTR,2", "PROR,2", TMAET
+      - THDLK, "ETHY,3", "PROR,2", TMAET
+    core_type: au102
+    ligand_distribution: random  # random, strip, janus
+    ligand_ratio_1: 4            # option for ramdom
+    ligand_ratio_2: 3            # option for ramdom
+    systype: vac
+  input: gmx
+- label: nanoparticle generation
+  parent: nmm_vacuum
+  nanomaterial_type:
+    material: aum_nanoparticle
+    ligands:
+      - THDLK, "ETKTR,2", "PROR,2", TMAET
+      - THDLK, "ETHY,3", "PROR,2", TMAET
+    core_type: icosahedron            # icosahedron, cube
+    attachment_pattern: staple+bridge # option for icosahedron (staple or staple+bridge)
+    core_chirality: S                 # option for icosahedron (R or S)
+    radius: 20                        # option for icosahedron
+    core_x: 33                        # option for Cube
+    core_y: 33                        # option for Cube
+    core_z: 33                        # option for Cube
+    ligand_distribution: random       # random, janus
+    ligand_ratio_1: 7                 # option for random
+    ligand_ratio_2: 2                 # option for random
+    coverage: 10                      # option for random and janus
+    systype: vac
+  input: gmx

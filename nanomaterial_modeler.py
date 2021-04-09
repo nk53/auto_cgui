@@ -3,7 +3,7 @@ from solution_builder import SolutionBrowserProcess
 from utils import read_yaml, set_elem_value, set_form_value
 
 _BROWSER_PROCESS = 'NMMBrowserProcess'
-_nanomaterial_menu = read_yaml('nanomaterial.yml')['nanomaterial']['sub']
+_nanomaterial_menu = read_yaml('nanomaterials.yml')['nanomaterial']['sub']
 _ligand_menu = read_yaml('lig.enabled.yml')
 
 # Some settings have aliases, e.g. 'lx' can also be 'height'. In all cases,
@@ -38,7 +38,16 @@ def _build_material_settings(mat_info, category):
     material = mat_info['material']
     mat_config = _nanomaterial_menu[category]['sub'][material]
 
-    settings = [s for s in mat_config.keys() if s not in ignore_names]
+    settings = []
+    for key in mat_config.keys():
+        if key in ignore_names:
+            continue
+        if isinstance(mat_config[key], dict):
+            for key in mat_config[key].keys():
+                settings.append(key)
+        else:
+            settings.append(key)
+
     general = mat_config.get('general')
     if general:
         fields = general.get('fields')
@@ -80,16 +89,17 @@ class NMMBrowserProcess(SolutionBrowserProcess):
         # select material
         self.click_by_attrs(wait=wait, data_value=material)
 
-    def _set_pbc(self, mat_info):
+    def _set_pbc(self, mat_info, category):
         material = mat_info['material']
         pbc = mat_info.get('pbc')
         if pbc is not None:
-            allowed_pbc = _get_allowed_pbc(mat_info, material)
+            allowed_pbc = _get_allowed_pbc(mat_info, category)
             for dim, allowed in zip('xyz', allowed_pbc):
                 if allowed in 'uc': # don't change disabled PBC dims
                     set_form_value(self.browser, 'pbc_'+dim, dim in pbc)
 
     def _set_from_possible(self, possible_settings, mat_info):
+        special_handling = {'miller_index[]': self._check_wulff_rows}
         for setting in possible_settings:
             # get the setting's value, if it is set
             if isinstance(setting, (list, tuple)):
@@ -104,6 +114,8 @@ class NMMBrowserProcess(SolutionBrowserProcess):
 
             # change form value, if it is set in test_case
             if value is not None:
+                if setting in special_handling.keys():
+                    special_handling[setting](setting)
                 if setting.endswith('[]'):
                     # set all values in the order they are given in the form
                     values = value if isinstance(value, list) else [value]
@@ -112,6 +124,14 @@ class NMMBrowserProcess(SolutionBrowserProcess):
                         set_elem_value(elem, value)
                 else:
                     set_form_value(self.browser, setting, value)
+
+    def _check_wulff_rows(self, miller_index):
+        num_mindex_rows = len(self.browser.find_by_name('miller_index[]'))
+        if not isinstance(miller_index, (list, tuple)):
+            mindex_type = type(miller_index).__name__
+            raise TypeError(f"Expected list for 'miller_index', but got {mindex_type}")
+        for _ in range(len(miller_index) - num_mindex_rows):
+            self.browser.evaluate_script('add_wulff_row()')
 
     def _set_monomer(self, elem_list, index, value, count=None):
         # open the menu
@@ -133,16 +153,39 @@ class NMMBrowserProcess(SolutionBrowserProcess):
         if not ligands:
             return
 
+        self.browser.select('num_ligands', len(ligands))
+
         if not len(ligands) in (1, 2):
             raise IndexError("Ligand count out of range: {len(ligands)}")
 
         functionals = _ligand_menu['functional']['sub'].keys()
         add_monomer_btns = self.browser.find_by_text('Add monomer unit')
 
-        for ligand_ind, ligand in enumerate(ligands, start=1):
+        for ligand_ind, ligand in enumerate(ligands):
             linker = ligand.pop(0)
             functional = ligand.pop() if ligand[-1] in functionals else 'none'
-            spacers = ligand
+            spacers = []
+            spacer_repeat = None
+
+            # preprocess spacers to look like [monomer_name, monomer_count]
+            while ligand:
+                spacer = ligand.pop(0)
+                if isinstance(spacer, str):
+                    if ',' in spacer:
+                        spacer, count = spacer.split(',')
+                    else:
+                        count = 1
+                    spacers.append((spacer, count))
+                elif isinstance(spacer, int):
+                    if spacer_repeat is not None:
+                        raise ValueError("Got more than one spacer repeat value")
+                    if ligand:
+                        raise ValueError("Bad position for spacer repeat")
+                    spacer_repeat = spacer
+                elif isinstance(spacer, (list, tuple)):
+                    spacers.append(spacer)
+                else:
+                    raise TypeError(f"Unknown spacer data type: {type(spacer).__name__}")
 
             monomer_list = self.browser.find_by_name(f"linker[{ligand_ind}][]")
             self._set_monomer(monomer_list, 0, linker)
@@ -160,11 +203,12 @@ class NMMBrowserProcess(SolutionBrowserProcess):
 
             # set all spacers and their counts
             for monomer_ind, monomer in enumerate(spacers):
-                count = 1
-                if ',' in monomer:
-                    monomer, count = monomer.split(',')
-                    count = int(count)
+                monomer, count = monomer
                 self._set_monomer(monomer_list, monomer_ind, monomer, count)
+
+            if spacer_repeat is not None:
+                # set outer subtext (spacer pattern repeat)
+                self.browser.find_by_name("subtext_outer[]")[ligand_ind].fill(spacer_repeat)
 
             # set functional group for ligands that have a spacer
             monomer_list = self.browser.find_by_name(f"functional[{ligand_ind}][]")
@@ -189,8 +233,12 @@ class NMMBrowserProcess(SolutionBrowserProcess):
 
         self._set_from_possible(_shape_settings, mat_info)
         self._set_ligand(mat_info)
-        self._set_pbc(mat_info)
+        self._set_pbc(mat_info, category)
 
         # autogenerate and set other fields from _nanomaterial_menu
         other_settings = _build_material_settings(mat_info, category)
+        self.interact(locals())
         self._set_from_possible(other_settings, mat_info)
+
+        self.go_next(self.test_case['steps'][0]['wait_text'])
+        self.get_jobid()

@@ -1,40 +1,27 @@
 - label: palladium solution
   parent: nmm_vacuum
   nanomaterial_type:
-    metals: pdm        # alm, cum, aum, pbm, nim, pdm, ptm, agm
-
-    shape: box         # sphere, cylinder, rod, polygon, box, wulff
-    radius: 10         # for sphere, cylinder, rod, wulff
-    height: 50         # for cylinder, rod, polygon
-    edgeLength: 10     # for polygon
-    numEdge: 3         # for polygon
-    mindex: ['210']    # mindex for Box, wmindex for Wulff
-    wmindex: ['210', '310', '332']
-    lx: 30             # box size or Height of cylinder/rod
-    ly: 30             # box size
-    lz: 30             # box size
-    xpbc: yes          # pbc: yes, no
-    ypbc: yes
-    zpbc: no
-    system: vac        # sol, vac (if pbc is set to xyz, system becomes "vaccum")
+    material: pdm
+    shape: sphere
+    radius: 10
+    systype: solution
   input: gmx
-
-- label: palladium vacuum
+- label: palladium vacuum xyz pbc
   nanomaterial_type:
-    metals: pdm        # alm, cum, aum, pbm, nim, pdm, ptm, agm
-
-    shape: box         # sphere, cylinder, rod, polygon, box, wulff
-    radius: 10         # for sphere, cylinder, rod, wulff
-    height: 50         # for cylinder, rod, polygon
-    edgeLength: 10     # for polygon
-    numEdge: 3         # for polygon
-    mindex: ['311']    # mindex for Box, wmindex for Wulff
+    material: pdm
+    shape: box
+    mindex: '311'
     wmindex: ['210', '310', '332']
-    lx: 30             # box size or Height of cylinder/rod
-    ly: 30             # box size
-    lz: 30             # box size
-    xpbc: yes          # pbc: yes, no
-    ypbc: yes
-    zpbc: yes
-    system: sol        # sol, vac (if pbc is set to xyz, system becomes "vaccum")
+    lx: 30
+    ly: 30
+    lz: 30
+    pbc: xyz
+    systype: vacuum
+  input: gmx
+- label: palladium wulff vacuum
+  nanomaterial_type:
+    material: pdm
+    shape: wulff
+    miller_index: ['210', '310', '332']
+    systype: vacuum
   input: gmx
