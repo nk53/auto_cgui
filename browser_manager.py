@@ -6,7 +6,6 @@ import readline
 
 import sys
 from multiprocessing import Lock, Queue
-from signal import SIGINT
 from time import sleep
 from random import uniform
 
@@ -121,9 +120,7 @@ class BrowserManager:
                     del wait_cases[done_label]
             elif result[0] == 'STOP':
                 for proc in self.processes:
-                    # for whatever reason, if not called in exactly this way, the browser window
-                    # is left open in a zombie process
-                    proc._popen._send_signal(SIGINT)
+                    proc.terminate()
 
                 for proc in self.processes:
                     proc.join()

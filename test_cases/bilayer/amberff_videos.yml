@@ -1,6 +1,4 @@
 - label: 5O8F, Amber FF video demo 1
-  jobid: 0383625692
-  resume_link: 2
   # pdb options
   pdb: 5o8f.cif
   chains: all
@@ -22,8 +20,6 @@
   hmr: True
   temperature: 303.15
 - label: 6IYC, Amber FF video demo 3
-  jobid: 0383625716
-  resume_link: 2
   # pdb options
   pdb: 6iyc.pqr
   # protonation state (pstate) info should be pre-selected by C-GUI

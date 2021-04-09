@@ -6,6 +6,7 @@ import os.path
 import re
 import time
 import traceback
+import signal
 import sys
 from os.path import join as pjoin
 from multiprocessing import Process
@@ -108,7 +109,7 @@ class CGUIBrowserProcess(Process):
         elem = self.browser.find_by_value(value)
         self._click(elem, wait)
 
-    def copy_dir(self, ncopy, signal=True):
+    def copy_dir(self, ncopy, send_continue=True):
         """Make `ncopy` copies of the current project directory.
 
         Requirements:
@@ -131,7 +132,7 @@ class CGUIBrowserProcess(Process):
                 continue
             shutil.copytree(src, dst)
 
-        if signal:
+        if send_continue:
             self.done_q.put(('CONTINUE', self.test_case))
 
     def download(self, saveas=None):
@@ -585,6 +586,8 @@ class CGUIBrowserProcess(Process):
 
                         self.done_q.put(validation_result)
 
+                except KeyboardInterrupt:
+                    raise # reraise and cleanup browser context
                 except:
                     # give the full exception string
                     exc_str = ''.join(traceback.format_exception(*sys.exc_info()))
@@ -628,6 +631,10 @@ class CGUIBrowserProcess(Process):
 
         # window took too long to load
         raise TimeoutException("Failed to get window " +str(index))
+
+    def terminate(self):
+        """Default SIGTERM does not allow adequate browser cleanup"""
+        self._popen._send_signal(signal.SIGINT)
 
     def wait_exists(self, element_list, verbose=True):
         """Waits until the query used to create element_list finds at least one
