@@ -86,6 +86,10 @@ class FEPBrowserProcess(BilayerBrowserProcess):
             else:
                 return
 
+    def set_path(self):
+        path = self.test_case['path']
+        self.browser.find_by_value(path).click()
+
     def init_system(self, **kwargs):
         test_case = self.test_case
         url = self.base_url + test_case['url_ym']
@@ -103,6 +107,7 @@ class FEPBrowserProcess(BilayerBrowserProcess):
             self.click_by_value(system_type)
 
             # let PDBBrowserProcess handle the rest
+            self.module_url = test_case['url_ym']
             self._handle_pdb_selection(**kwargs)
         elif test_case['url_ym'] in solvating_urls:
             browser.visit(url)

@@ -123,6 +123,15 @@ if __name__ == '__main__':
                 ERRMSG = ERRMSG.format(MODULES, all_arg)
                 raise argparse.ArgumentTypeError(ERRMSG)
 
+            # some module names have duplicate keys for convenience
+            values = []
+            for key, value in list(cgui_modules.items()):
+                if value in values:
+                    del cgui_modules[key]
+                else:
+                    values.append(value)
+            del values
+
             args.modules = cgui_modules
 
     test_cases = []

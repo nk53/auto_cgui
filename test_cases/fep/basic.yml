@@ -1,4 +1,4 @@
-- label: relative ligand binder with membrane
+- label: relative ligand binder with membrane 3pwh
   parent: rbinding_membrane
   system_type: bilayer
   pdb: 3pwh.pdb
@@ -20,7 +20,7 @@
   ffs:
     - cgenff
 
-- label: absolute ligand binder with membrane
+- label: absolute ligand binder with membrane 3pwh
   parent: abinding_membrane
   system_type: bilayer
   pdb: 3pwh.pdb
@@ -41,7 +41,7 @@
   ffs:
     - cgenff
 
-- label: absolute ligand solvation
+- label: absolute ligand solvation with tcl
   parent: asolv
   drags:
     - tc11.mol2
@@ -53,7 +53,7 @@
   ffs:
     - cgenff
 
-- label: absolute ligand binder
+- label: absolute ligand binder 4w53
   parent: abinding
   system_type: solution
   pdb: 4w53.pdb
@@ -70,7 +70,7 @@
   ffs:
     - cgenff
 
-- label: relative ligand binder
+- label: relative ligand binder with 4djw
   parent: rbinding
   system_type: solution
   pdb: 4djw.pdb
@@ -97,7 +97,7 @@
   protocols:
     - unified
 
-- label: absolute ligand binder
+- label: absolute ligand binder with thrombin
   parent: abinding
   system_type: solution
   pdb: thrombin.pdb
@@ -112,7 +112,7 @@
   ffs:
     - cgenff
 
-- label: absolute ligand solvation
+- label: absolute ligand solvation with ligand 1 and 2
   parent: asolv
   drags:
     - ligand1.mol2
@@ -122,7 +122,7 @@
   ffs:
     - cgenff
 
-- label: relative ligand binder
+- label: relative ligand binder with thrombin
   parent: rbinding
   system_type: solution
   pdb: thrombin.pdb
@@ -137,7 +137,7 @@
   ffs:
     - cgenff
 
-- label: relative ligand solvation
+- label: relative ligand solvation with ligand 1 and 2
   parent: rsolv
   drags:
     - ligand1.mol2

@@ -5,8 +5,7 @@ steps:
   - wait_text: Force Field Options
     presteps:
       - click_by_attrs(value='CGenFF Checker') # FF checker
-      - browser.fill('lfitedge', 10)    # Waterbox Size
+      - self.browser.fill('lfitedge', 10)    # Waterbox Size
   - module:
       name: input
       start: 1
-
