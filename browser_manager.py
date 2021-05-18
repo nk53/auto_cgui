@@ -5,24 +5,11 @@ BrowserProcess by passing messages through multiprocessing.Queue
 import readline
 
 import sys
-from multiprocessing import Lock, Queue
+from multiprocessing import Queue
 from time import sleep
 from random import uniform
 
 from logger import Logger
-
-class _DummyLock:
-    """A context manager that pretends to be a lock, but actually just waits randomly"""
-    def __init__(self, n_threads):
-        wait_time = (n_threads - 1)*4 if n_threads >= 1 else 0
-        self.wait_time = wait_time
-
-    def __enter__(self):
-        if self.wait_time:
-            sleep(uniform(0, self.wait_time))
-
-    def __exit__(self, exc_type, exc_value, traceback):
-        pass
 
 class BrowserManager:
     """A class to manage instances of BrowserProcess
@@ -35,7 +22,7 @@ class BrowserManager:
 
     process_type should be an instance of a class that extends BrowserProcess
     """
-    def __init__(self, BrowserProcess, logfile, num_threads=1, use_lock=True, **browser_kwargs):
+    def __init__(self, BrowserProcess, logfile, num_threads=1, **browser_kwargs):
         """Initializes BrowserProcess instances
 
         args in browser_kwargs are passed directly to BrowserProcess.__init__
@@ -44,7 +31,6 @@ class BrowserManager:
 
         self.todo_queue = todo_queue = Queue()
         self.done_queue = done_queue = Queue()
-        lock = Lock() if use_lock else _DummyLock
 
         if browser_kwargs.get('interactive'):
             self.inter_queue = browser_kwargs['inter_q'] = Queue()
@@ -55,7 +41,7 @@ class BrowserManager:
 
         self.dry_run = browser_kwargs.get('dry_run')
 
-        self.processes = [BrowserProcess(todo_queue, done_queue, lock, **browser_kwargs)
+        self.processes = [BrowserProcess(todo_queue, done_queue, **browser_kwargs)
                 for i in range(num_threads)]
 
     def run(self, base_cases, wait_cases=None):

@@ -51,9 +51,6 @@ if __name__ == '__main__':
                  "cases after preprocessing")
     parser.add_argument('--validate-only', action='store_true',
             help="Reads logfile and attempts to infer and validate PSFs of all logged test cases")
-    parser.add_argument('--no-lock', action='store_true',
-            help="Don't wait for other jobs to get past front page. "+\
-                 "Useful for jobs with a long front page")
 
     args = parser.parse_args()
 
@@ -236,7 +233,6 @@ if __name__ == '__main__':
             settings['dry_run'] = args.dry_run
             settings['interactive'] = args.interactive
             settings['errors_only'] = args.errors_only
-            settings['use_lock'] = not args.no_lock
 
             # sets up multiprocessing info
             manager = BrowserManager(BrowserProcess, LOGFILE, args.num_threads, **settings)

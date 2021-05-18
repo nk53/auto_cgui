@@ -33,7 +33,7 @@ class CGUIBrowserProcess(Process):
     PHP_FATAL_ERROR = "Fatal error:"
     PHP_MESSAGES = PHP_NOTICE, PHP_WARNING, PHP_ERROR
 
-    def __init__(self, todo_q, done_q, lock, **kwargs):
+    def __init__(self, todo_q, done_q, **kwargs):
         """Setup Queues, browser settings, and delegate rest to multiprocessing.Process"""
         self.browser_type = kwargs.pop('browser_type', 'firefox')
         self.base_url = kwargs.pop('base_url', 'http://charmm-gui.org/')
@@ -53,7 +53,6 @@ class CGUIBrowserProcess(Process):
 
         self.todo_q = todo_q
         self.done_q = done_q
-        self.lock = lock
 
     def _click(self, elem, wait=None):
         """Implements common click-and-wait procedure"""
@@ -512,9 +511,7 @@ class CGUIBrowserProcess(Process):
                         resume_link = test_case['resume_link']
                         self.resume_step(jobid, link_no=resume_link)
 
-                    # prevent Job ID race condition
-                    with self.lock:
-                        self.init_system(resume=resume)
+                    self.init_system(resume=resume)
 
                     jobid = test_case['jobid']
                     print(self.name, "Job ID:", jobid)
