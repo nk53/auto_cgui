@@ -27,8 +27,6 @@ class BrowserManager:
 
         args in browser_kwargs are passed directly to BrowserProcess.__init__
         """
-        self.logger = Logger(logfile, browser_kwargs['module'])
-
         self.todo_queue = todo_queue = Queue()
         self.done_queue = done_queue = Queue()
 
@@ -40,6 +38,9 @@ class BrowserManager:
             self.msg_queue = browser_kwargs['msg_q'] = None
 
         self.dry_run = browser_kwargs.get('dry_run')
+
+        logfile = sys.stdout if self.dry_run else logfile
+        self.logger = Logger(logfile, browser_kwargs['module'])
 
         self.processes = [BrowserProcess(todo_queue, done_queue, **browser_kwargs)
                 for i in range(num_threads)]

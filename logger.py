@@ -1,4 +1,6 @@
 """Central interface for message logging"""
+import re
+import utils
 
 class Logger:
     """Writes log information in a single-threaded context.
@@ -28,6 +30,8 @@ class Logger:
         templ = 'Job "{}" ({}){} encountered an exception on step {}:\n{}\n'
         if not 'jobid' in case_info:
             case_info['jobid'] = '-1'
+        if 'resume_link' in case_info and step_num == 0:
+            step_num = case_info['resume_link']
         jobid = case_info['jobid']
         label = case_info['label']
         self.write(templ.format(label, jobid, self.module, step_num, exc_info))
@@ -52,6 +56,9 @@ class Logger:
         jobid = case_info['jobid']
         label = case_info['label']
         self.write(templ.format(label, jobid, self.module, elapsed_time, ran_validation))
+
+    def log_notice(self, case_info, step, elapsed_time=-1.):
+        templ = 'Job "{}" ({}){} encountered PHP message on step {}:\n{}\n'
 
     def log_invalid(self, case_info, elapsed_time=-1., reason=''):
         """Writes test cases that finish, but failed validation to logfile"""
@@ -87,3 +94,49 @@ class Logger:
             print(exc_info)
         else:
             print('Warning: got unknown result:', result)
+
+def parse_logfile(logfile):
+    regexes = ( # varname, regex
+        ('jobid', re.compile(r'Job.*\((\d+)\)')),
+        ('label', re.compile(r'Job.*"([^"]+)"')),
+        ('module', re.compile(r"Job.*'([^']+)'")),
+        ('step', re.compile(r"Job.*on step (-?\d+)")),
+    )
+
+    sys_info = {}
+    notices = {}
+
+    if isinstance(logfile, str):
+        logfile = open(logfile)
+
+    with logfile as results_file:
+        for line in results_file:
+            jobinfo = {}
+            for key, regex in regexes:
+                result = regex.search(line)
+                jobinfo[key] = result.group(1) if result else None
+
+            if jobinfo['jobid'] is None:
+                continue
+
+            for sentinel in ('exception', 'failed', 'invalid', 'success'):
+                if sentinel in line:
+                    jobinfo['result'] = sentinel
+                    break
+
+            module = jobinfo.pop('module')
+            jobid = jobinfo['jobid']
+            if 'encountered PHP message' in line:
+                notices.setdefault(jobid, [])
+                notices[jobid].append({'step': jobinfo['step']})
+            else:
+                label = jobinfo.pop('label')
+
+                jobinfo['dirname'] = utils.get_sys_dirname(jobid)
+                jobinfo['archive'] = utils.get_archive_name(jobid)
+                jobinfo['notices'] = notices.pop(jobid, [])
+
+                sys_info.setdefault(module, {})
+                sys_info[module][label] = jobinfo
+
+    return sys_info

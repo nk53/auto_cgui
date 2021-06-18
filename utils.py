@@ -416,23 +416,6 @@ def validate_test_case(test_case, sys_dir, sys_archive=None, module=None,
         return 'VALID', test_case, elapsed_time
     return 'INVALID', test_case, elapsed_time, errmsg
 
-def parse_jobid(result_str):
-    """Given a line from a results.log file, returns the job ID"""
-    return re.search(r'\(([0-9]+)\)', result_str).group(1)
-
-def parse_jobinfo(result_str):
-    """Given a line from a results.log file, returns a tuple containing
-    the job ID, test case label, and module name"""
-    return parse_jobid(result_str), parse_label(result_str), parse_module(result_str)
-
-def parse_label(result_str):
-    """Given a line from a results.log file, returns the test case label"""
-    return re.search(r'"([^"]+)"', result_str).group(1)
-
-def parse_module(result_str):
-    """Given a line from a results.log file, returns the test case module"""
-    return re.search(r"'([^']+)'", result_str).group(1)
-
 def get_sys_dirname(jobid):
     """Returns the directory name associated with a job ID"""
     return 'charmm-gui-{}'.format(jobid)
