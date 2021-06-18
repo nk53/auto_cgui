@@ -21,7 +21,7 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser(
             description="Test a C-GUI project by simulating browser interactions")
-    parser.add_argument('-m', '--modules', type=str, nargs='+', metavar='MODULE',
+    parser.add_argument('-m', '--modules', nargs='+', metavar='MODULE',
             help="One or more C-GUI modules to test")
     parser.add_argument('-t', '--test-name',
             help="Name of test to run (default: standard)")
@@ -51,8 +51,13 @@ if __name__ == '__main__':
                  "cases after preprocessing")
     parser.add_argument('--validate-only', action='store_true',
             help="Reads logfile and attempts to infer and validate PSFs of all logged test cases")
+    parser.add_argument('-s', '--skip-success', action='store_true',
+            help="Don't repeat tests that have already succeeded")
+    parser.add_argument('-r', '--resume', action='store_true',
+            help="Resume failed test cases from the step that failed (implies --skip-success)")
 
     args = parser.parse_args()
+    args.skip_success = args.skip_success or args.resume
 
     # because dictionary unpacking looks cleaner, all kwargs are placed here
     settings = {}
@@ -62,11 +67,18 @@ if __name__ == '__main__':
     if args.validate_only:
         if not os.path.exists(LOGFILE):
             warn("Can't validate: logfile ({}) does not exist".format(LOGFILE))
+
+        from logger import Logger, parse_logfile
+        sys_info = parse_logfile(LOGFILE)
     else:
         if os.path.exists(LOGFILE):
             warn("Appending to existing logfile:", LOGFILE)
+
+            from logger import parse_logfile
+            sys_info = parse_logfile(LOGFILE)
         else:
             warn("Creating new logfile:", LOGFILE)
+            sys_info = {}
 
     # read configuration
     with args.config:
@@ -197,10 +209,45 @@ if __name__ == '__main__':
         base_cases = [utils.setup_custom_options(test_case, cgui_module)
                       for test_case in pre_test_cases]
 
+        # check for duplicate labels, which make debugging very difficult
+        labels = []
+        duplicates = False
+        for case in base_cases:
+            if case['label'] in labels:
+                warn(f"Error: found duplicate label in module '{cgui_module}': {case['label']}")
+                duplicates = True
+            else:
+                labels.append(case['label'])
+        if duplicates:
+            sys.exit(1)
+        del labels, duplicates
+
         if callable(init_module):
             base_cases, wait_cases = init_module(base_cases, args)
         else:
             wait_cases = {}
+
+        if args.skip_success:
+            module_info = sys_info.get(cgui_module, {})
+            case_no = 0
+            while case_no < len(base_cases):
+                case = base_cases[case_no]
+                if case_log := module_info.pop(case['label'], None):
+                    if step := case_log['step']:
+                        step = int(step)
+                        if args.resume and step > 0:
+                            case['jobid'] = case_log['jobid']
+                            if case_log['result'] == 'failed':
+                                step -= 1
+                            case['resume_link'] = step
+                            print(f"will resume '{case['label']}' on step {step}")
+                        else:
+                            print(f"restarting '{case['label']}'")
+                    else:
+                        print(f"skipping completed job: '{case['label']}")
+                        base_cases.pop(case_no)
+                else:
+                    case_no += 1
 
         if args.validate_only:
             if wait_cases:
@@ -208,29 +255,19 @@ if __name__ == '__main__':
                 warn("Warning: wait_cases can only be checked at their "+\
                      "original runtime; skipping ...")
 
-            with open(LOGFILE) as results_file:
-                sys_info = {}
-                for line in results_file:
-                    jobid, label, module = utils.parse_jobinfo(line)
-                    if module.lower() == cgui_module:
-                        sys_info[label] = {
-                            'dirname': utils.get_sys_dirname(jobid),
-                            'archive': utils.get_archive_name(jobid),
-                            'jobid': jobid,
-                        }
+            module_info = sys_info[cgui_module]
 
             # log messages directly to stdout
-            from Logger import Logger
             logger = Logger(sys.stdout, cgui_module)
 
             for test_case in base_cases:
                 # try to find the system directory for this test case
                 label = test_case['label']
-                if not label in sys_info:
+                if not label in module_info:
                     continue
 
                 # add jobid to test case
-                case_info = sys_info[label]
+                case_info = module_info[label]
                 test_case['jobid'] = case_info['jobid']
 
                 result = utils.validate_test_case(test_case, case_info['dirname'],

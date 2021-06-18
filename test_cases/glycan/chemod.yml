@@ -1,5 +1,5 @@
 # this file uses mostly default options to test different component types
-- label: reader
+- label: unbranched glycan with chemical modifications
   glycan:
     grs: |
       1 AGLC_2NSF_6SUF

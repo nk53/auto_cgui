@@ -17,7 +17,7 @@ steps:
   # them separately
   - wait_text: Component Building Options
     poststeps:
-      - click_by_value('Calculate number of ions')
+      - click_by_value('Calculate Solvent Composition')
       - wait_script('is_updated')
   - wait_text: Building Ion and Waterbox
   - wait_text: Assemble Generated Components

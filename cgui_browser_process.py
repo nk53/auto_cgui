@@ -150,11 +150,22 @@ class CGUIBrowserProcess(Process):
         else:
             saveas = utils.get_archive_name(jobid)
 
+        if os.path.exists(saveas):
+            print(saveas, 'already exists, overwriting')
+            os.unlink(saveas)
+
         url = "{url}?doc=input/download&jobid={jobid}".format(url=self.base_url, jobid=jobid)
         print("downloading %s to %s" % (url, saveas))
 
         user_agent = 'Mozilla/4.0 (compatible; MSIE 5.5; Windows NT)'
         headers = {'User-Agent': user_agent}
+        session = {}
+
+        for cookie in self.browser.driver.get_cookies():
+            if cookie['name'] == 'PHPSESSID':
+                session['PHPSESSID'] = cookie['value']
+                break
+
         user = ''
         password = ''
         if '@' in self.base_url:
@@ -162,8 +173,9 @@ class CGUIBrowserProcess(Process):
             idx = urlname.find('@')
             user, password = urlname[:idx].split(':')
 
-        req = requests.get(url, headers=headers, auth=(user, password))
-        open(saveas, "wb").write(req.content)
+        req = requests.get(url, headers=headers, auth=(user, password), cookies=session)
+        with open(saveas, 'wb') as download_file:
+            download_file.write(req.content)
         fsize = float(os.stat(saveas).st_size) / (1024.0 * 1024.0)
         print("download complete, file size is %5.2f MB" % fsize)
 
@@ -451,7 +463,10 @@ class CGUIBrowserProcess(Process):
         if link_no is not None:
             assert isinstance(link_no, int), "link_no must be an integer"
             table = browser.find_by_css("#recovery_table tr:not(:first-child) td:nth-child(3)")
-            table[link_no].click()
+            if link_no >= len(table):
+                table[-1].click()
+            else:
+                table[link_no].click()
         else:
             raise NotImplementedError
             #assert project != None and step != None, "Missing args"

@@ -80,6 +80,9 @@ def handle_solvent_memb_tests(test_case, do_copy=False):
 
         if not 'ions' in test:
             ion_step_proc['presteps'].insert(0, test_map['ions'])
+            ion_step_proc['poststeps'].remove("click_by_value('Calculate Solvent Composition')")
+            ion_step_proc['poststeps'].remove("wait_script('is_updated')")
+            case['ion_type'] = False
         if not 'water' in test:
             step_proc.insert(index, test_map['water'])
 
@@ -129,8 +132,8 @@ def handle_solvent_tests(test_case, do_copy=False):
 
     # action to do to *uncheck* an option
     test_map = {
-        'water': "click('water_checked')",
-        'ions': "click('ion_checked')",
+        'water': "uncheck('water_checked')",
+        'ions': "uncheck('ion_checked')",
     }
 
     cases = []
@@ -171,7 +174,7 @@ class MCABrowserProcess(BilayerBrowserProcess, InputBrowserProcess):
                 ".component_list table tr:not(:first-child) td:nth-child(2)")
         def solvent_options_selector():
             return self.browser.find_by_text("Component ID").\
-                   find_by_xpath('../..').\
+                   find_by_xpath('../../..').\
                    find_by_css("tr:not(:first-child) td:nth-child(2)")
 
         selectors = {

@@ -53,7 +53,7 @@ ions:
 ion_conc:
   step: 2
   elems:
-    - ion_conc: ion_conc
+    - "ion_conc[]": ion_conc
 ion_type:
   step: 2
   elems:

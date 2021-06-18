@@ -104,7 +104,7 @@ ions:
 ion_conc:
   step: 4
   elems:
-    - ion_conc: ion_conc
+    - "ion_conc[]": ion_conc
 ion_type:
   step: 4
   elems:

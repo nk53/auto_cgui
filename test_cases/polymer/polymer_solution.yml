@@ -42,7 +42,7 @@
         - "ncha[0]": 10 # number of pchain1
         - "ncha[1]": 10 # number of pchain2
       poststeps:
-        - select('organic_solvent', 'acetone') # water, acetone, acetonitrile, benzene
+        - self.browser.select('organic_solvent', 'acetone') # water, acetone, acetonitrile, benzene
         - click('size_button')
     # step 2
     - wait_text: Generate Equilibrium

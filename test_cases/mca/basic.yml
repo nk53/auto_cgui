@@ -93,7 +93,7 @@
     kn_sheet:
       type: periodic
       files: kn_sheet.image.psf
-- label: periodic_impatch
+- label: periodic_impatch and exclude length
   parent: multicomp_solution
   solvent_tests: [water+ions, water, ions, None]
   PBCX: 82.464

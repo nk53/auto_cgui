@@ -1,5 +1,5 @@
 # this file uses mostly default options to test different component types
-- label: reader
+- label: branched glycan without chemical modifications
   glycan:
     grs: |
       1 BGLCNA

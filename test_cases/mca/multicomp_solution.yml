@@ -14,7 +14,7 @@ steps:
       - SOLVENT_TEST_PLACEHOLDER
       - set_component_density()
       - click_by_attrs(value='Calculate Solvent Composition')
-      - wait_script('is_valid')
+      - wait_script('is_updated')
   - wait_text: Periodic Boundary Condition Options
   - module:
       name: input

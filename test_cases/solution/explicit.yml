@@ -1,4 +1,4 @@
-- label: 1UBQ with two staples in solution
+- label: 1UBQ with two staples in solution with explicit size
   staples:
     - RMETA3 PROA 1 PROA 3
     - META5 PROA 25 PROA 29
@@ -9,7 +9,7 @@
   X: 50
   Y: 60
   Z: 70
-- label: 186L modified
+- label: 186L modified with explicit size
   base: pdb/basic
   pdb: 186l_modified.charmm
   ligand: ligands/basic
@@ -26,7 +26,7 @@
   X: 50
   Y: 60
   Z: 70
-- label: 2OI0_modified parameterized
+- label: 2OI0_modified parameterized with explicit size
   base: pdb/basic
   pdb: 2oi0_modified.pdb
   ligand: ligands/basic

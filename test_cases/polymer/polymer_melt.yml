@@ -36,8 +36,8 @@
     # step 1
     - wait_text: Generate Systems
       presteps:
-        - select('boxtype', 'tetra') # tetra, cubic
-        - choose('component_type', 'component_ratio') # component_ratio, num_components
+        - self.browser.select('boxtype', 'tetra') # tetra, cubic
+        - self.browser.choose('component_type', 'component_ratio') # component_ratio, num_components
       elems:    # system size( cubic: lxyz, tetra: lxy, lz )
         - lxy: 80
         - lz: 100

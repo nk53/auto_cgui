@@ -9,7 +9,7 @@ steps:
       stop: -1
   - wait_text: Size Options
     poststeps:
-      - click_by_value('Calculate number of ions')
+      - click_by_value('Calculate Solvent Composition')
       - wait_script('is_updated')
   - wait_text: Periodic Boundary Condition Options
   - module:
