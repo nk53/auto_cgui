@@ -1,7 +1,7 @@
 # abbreviation (case insensitive): module filename base
 BILAYER: bilayer_builder
-FEP: free_energy_calculator
-FEC: free_energy_calculator
+#FEP: free_energy_calculator
+#FEC: free_energy_calculator
 GLYCOLIPID: glycolipid_modeler
 HMMM: hmmm_builder
 NANODISC: nanodisc_builder
