@@ -307,6 +307,10 @@ nanomaterial:
             ionization_info:
               label: x
               cells: [0.321, 0.333, 0.400, 0.533]
+        pp:
+          name: "Pyrophyllite Al<sub>2</sub>Si<sub>4</sub>O<sub>10</sub>(OH)<sub>2</sub>"
+          shapes: box
+          mindex: "001"
     mica:
       title: Mica
       sub:
@@ -372,7 +376,7 @@ nanomaterial:
       sub:
         tb:
           name: Tobermorite (Ca<sub>4</sub>Si<sub>6</sub>O<sub>15</sub>(OH)<sub>2</sub>&middot;5H<sub>2</sub>O)
-          mindex: "001"
+          mindex: "004"
           shapes: box
     silicate_minerals:
       title: Silica
@@ -380,7 +384,7 @@ nanomaterial:
         cr:
           name: "α-Cristobalite (SiO<sub>2</sub>)"
           shapes: box sphere
-          mindex: "001"
+          mindex: "20-2"
           min_radius: 9
           surf:
             ion_percent:
@@ -468,12 +472,6 @@ nanomaterial:
           mindex: "001"
           shapes: box
           pbc: "++u"
-          unitcell:
-            x: 12.642
-            y: 5.474
-            z: 12.295
-            nlayers: 2
-            layer_dim: z
           info_table:
             title: "Unit Cell Info"
             unitcell_x:
@@ -507,21 +505,33 @@ nanomaterial:
                   default: 3
                   variable_title: chirality_n
                   size: 3
-                  onchange: "get_tube_dims()"
+                  onchange: "update_system_volume()"
                 chirality_m:
                   default: 3
                   variable_title: chirality_m
                   size: 3
-                  onchange: "get_tube_dims()"
+                  onchange: "update_system_volume()"
             cell_copies:
               label: Cell Copies
               type: text
               default: 1
               size: 3
-              onchange: "get_tube_dims()"
+              onchange: "update_system_volume()"
+            filltube:
+              label: Fill tube with water
+              type: checkbox
+              variable_title: filltube
+              allowed_systype: solution
+              allowed_pbc: x y z
+              onchange: "update_system_volume()"
+            velectron:
+              variable_title: Virtual Electron
+              label: Use virtual electron model
+              type: checkbox
+              checked: false
           info_table:
             title: Calculated Tube Info
-            onload: "get_tube_dims()"
+            onload: "update_system_volume()"
             tube_length:
               type: span
               label: Tube Length
@@ -543,12 +553,6 @@ nanomaterial:
           shapes: "box"
           pbc: "uuu"
           mindex: "001"
-          unitcell:
-            x: 4.934
-            y: 4.273
-            z: 3.903
-            nlayers: 1
-            layer_dim: z
           general:
             n_rings:
               variable_title: Number of Rings
@@ -565,6 +569,12 @@ nanomaterial:
               validation:
                 min: 0
               onchange: "toggle_defect(this)"
+            velectron:
+              variable_title: Virtual Electron
+              label: Use virtual electron model
+              type: checkbox
+              checked: false
+              allowed_defect: "0"
             dense_defect:
               type: checkbox
               variable_title: Dense defect
@@ -597,12 +607,12 @@ nanomaterial:
           shapes: "box"
           pbc: "uuu"
           mindex: "001"
-          unitcell:
-            x: 4.934
-            y: 4.273
-            z: 7.803
-            nlayers: 2
-            layer_dim: z
+          general:
+            velectron:
+              variable_title: Virtual Electron
+              label: Use virtual electron model
+              type: checkbox
+              checked: false
           info_table:
             title: "Unit Cell Info"
             unitcell_x:
