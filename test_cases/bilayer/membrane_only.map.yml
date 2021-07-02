@@ -56,8 +56,8 @@ ion_conc:
     - "ion_conc[]": ion_conc
 ion_type:
   step: 2
-  elems:
-    - ion_type: ion_type
+  presteps:
+    - set_ion_type()
 ion_method:
   step: 2
   presteps:

@@ -20,6 +20,10 @@ class BilayerBrowserProcess(SolutionBrowserProcess, InputBrowserProcess):
         # reorder the config into a map of lipid name -> lipid cateogry
         self.lipid_config = utils.read_yaml("membrane.lipids.enabled.yml")['default']
 
+        # not present in config, but needed for lipid category activation
+        self.lipid_config['glp'] = {'name': 'Glycolipids'}
+        self.lipid_config['lps'] = {'name': 'LPS (lipopolysaccharides)'}
+
         custom_categories = 'glp', 'lps' # glycolipids and LPS
         lipid_map = dict()
         for category_key, category_info in self.lipid_config.items():

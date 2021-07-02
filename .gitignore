@@ -6,5 +6,6 @@ __pycache__/*
 *.gz
 *.bak
 *.txt
+charmm-gui-*
 config.yml
 www

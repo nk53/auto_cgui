@@ -22,6 +22,8 @@
     - PROA ASP -3
     - PROA ARG 26
   XY: 40
+  ion_type: KCl
+  ion_conc: 0.15
   lipids:
     lower:
       chl1: 1
