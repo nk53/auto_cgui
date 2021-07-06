@@ -113,8 +113,6 @@
   XY: 133.74
   Z: 77.415
 - label: PEO40_PEE37 + proteins (5%)
-  jobid: 0762743028
-  resume_link: 1
   parent: multicomp_solution
   solvent_tests: [water+ions]
   PBCX: 107.875134
@@ -135,8 +133,6 @@
       type: solvated
       count: 2
 - label: HA + proteins (30%)
-  jobid: 0762671253
-  resume_link: 1
   parent: multicomp_solution
   solvent_tests: [water+ions]
   PBCX: 103.587
@@ -157,8 +153,6 @@
       type: solvated
       count: 12
 - label: QZ + proteins (10%)
-  jobid: 0762694349
-  resume_link: 1
   parent: multicomp_solution
   solvent_tests: [water+ions]
   PBCX: 103.173
