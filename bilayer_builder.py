@@ -282,7 +282,7 @@ class BilayerBrowserProcess(SolutionBrowserProcess, InputBrowserProcess):
                     category = self.lipid_map[lipid]
                     categories.add(category)
 
-                lipid_tup = name_tpl.format(layer, lipid), count
+                lipid_tup = name_tpl.format(layer, lipid), str(count)
                 lipid_elems.append(lipid_tup)
 
         self._build_lps(custom_lipids['lps'], all_lipids_root)
