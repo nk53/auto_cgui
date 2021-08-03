@@ -56,3 +56,11 @@ vfrac_novalidate:
     - "setup_vfrac(validate=False)"
   elems:
     - volume_fraction: vfrac
+water_density:
+  step: 2
+  elems:
+    - water_density: water_density
+water_ratio:
+  step: 2
+  elems:
+    - water_vol_frac: water_ratio

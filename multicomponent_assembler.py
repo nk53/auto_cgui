@@ -204,7 +204,9 @@ class MCABrowserProcess(BilayerBrowserProcess, InputBrowserProcess):
                 continue
             row = self.find_comp_row(comp_name, 'solvent options')
             comp_type_elem = row.find_by_css("[id^=solv_density]")
-            comp_type_elem.fill(comp_info['density'])
+            comp_type_elem.fill(str(comp_info['density']))
+            if ratio := comp_info.get('ratio'):
+                row.find_by_css("[id&=solv_vol_frac]").fill(str(ratio))
 
     def select_components(self):
         """Handles most options on the size determination step"""

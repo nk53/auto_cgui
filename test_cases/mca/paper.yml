@@ -1,3 +1,4 @@
+# Feig paper's systems
 - label: Feig paper, solvated only (5%)
   parent: multicomp_solution
   solvent_tests: [water+ions]
@@ -112,13 +113,88 @@
       psm: 1
   XY: 133.74
   Z: 77.415
+# Pre-equilibrated membrane systems from Jumin
+- label: Axolemma + proteins (5%)
+  parent: multicomp_solution
+  solvent_tests: [water+ions]
+  PBCX: 100.11
+  PBCY: 100.11
+  PBCZ: 50
+  Z: 76.495 # target Z = 202.99
+  exclude_length: 10
+  components:
+    axolemma:
+      type: periodic
+    1ubq:
+      type: solvated
+      count: 4
+    1vii:
+      type: solvated
+      count: 4
+    3gb1:
+      type: solvated
+      count: 4
+- label: Axolemma + proteins (10%)
+  parent: multicomp_solution
+  solvent_tests: [water+ions]
+  PBCX: 100.11
+  PBCY: 100.11
+  PBCZ: 50
+  Z: 76.495 # target Z = 202.99
+  exclude_length: 10
+  components:
+    axolemma:
+      type: periodic
+    1ubq:
+      type: solvated
+      count: 8
+    1vii:
+      type: solvated
+      count: 8
+    3gb1:
+      type: solvated
+      count: 8
+- label: Axolemma + proteins (30%)
+  parent: multicomp_solution
+  solvent_tests: [water+ions]
+  PBCX: 100.11
+  PBCY: 100.11
+  PBCZ: 50
+  Z: 78.10 # target Z = 206.20 v/v% = 30%
+  exclude_length: 0
+  components:
+    axolemma:
+      type: periodic
+    1ubq:
+      type: solvated
+      count: 23
+    1vii:
+      type: solvated
+      count: 23
+    3gb1:
+      type: solvated
+      count: 23
+# Polymer-bio systems from YK
+- label: PET + CO2
+  parent: multicomp_solution
+  solvent_test: [None]
+  PBCX: 108.4
+  PBCY: 108.4
+  PBCZ: 120
+  exclude_length: 10
+  components:
+    poly_pet:
+      type: periodic
+    co2:
+      type: solvent
+      density: 1.98
 - label: PEO40_PEE37 + proteins (5%)
   parent: multicomp_solution
   solvent_tests: [water+ions]
   PBCX: 107.875134
   PBCY: 107.875134
   PBCZ: 120
-  Z: 35.09
+  Z: 34.755
   exclude_length: 10
   components:
     peo_pee:
@@ -132,7 +208,48 @@
     3gb1:
       type: solvated
       count: 2
-- label: HA + proteins (30%)
+- label: PEO40_PEE37 + proteins (10%)
+  parent: multicomp_solution
+  solvent_tests: [water+ions]
+  PBCX: 107.875134
+  PBCY: 107.875134
+  PBCZ: 120
+  Z: 34.755
+  exclude_length: 10
+  components:
+    peo_pee:
+      type: periodic
+    1ubq:
+      type: solvated
+      count: 4
+    1vii:
+      type: solvated
+      count: 4
+    3gb1:
+      type: solvated
+      count: 4
+- label: PEO40_PEE37 + proteins (30%)
+  parent: multicomp_solution
+  solvent_tests: [water+ions]
+  PBCX: 107.875134
+  PBCY: 107.875134
+  PBCZ: 120
+  Z: 38.02 # target Z = 196.04
+  exclude_length: 0
+  components:
+    peo_pee:
+      type: periodic
+    1ubq:
+      type: solvated
+      count: 13
+    1vii:
+      type: solvated
+      count: 13
+    3gb1:
+      type: solvated
+      count: 13
+# Nano-bio systems
+- label: HA + proteins (5%)
   parent: multicomp_solution
   solvent_tests: [water+ions]
   PBCX: 103.587
@@ -145,20 +262,20 @@
       type: periodic
     1ubq:
       type: solvated
-      count: 12
+      count: 2
     1vii:
       type: solvated
-      count: 12
+      count: 2
     3gb1:
       type: solvated
-      count: 12
-- label: QZ + proteins (10%)
+      count: 2
+- label: HA + proteins (10%)
   parent: multicomp_solution
   solvent_tests: [water+ions]
-  PBCX: 103.173
-  PBCY: 102.1152
-  PBCZ: 44
-  Z: 38.76
+  PBCX: 103.587
+  PBCY: 114.1749
+  PBCZ: 42
+  Z: 34.53
   exclude_length: 5
   components:
     ha:
@@ -172,3 +289,138 @@
     3gb1:
       type: solvated
       count: 4
+- label: HA + proteins (30%)
+  parent: multicomp_solution
+  solvent_tests: [water+ions]
+  PBCX: 103.587
+  PBCY: 114.1749
+  PBCZ: 42
+  Z: 48.91
+  exclude_length: 5
+  components:
+    ha:
+      type: periodic
+    1ubq:
+      type: solvated
+      count: 17
+    1vii:
+      type: solvated
+      count: 17
+    3gb1:
+      type: solvated
+      count: 17
+- label: QZ + proteins (5%)
+  parent: multicomp_solution
+  solvent_tests: [water+ions]
+  PBCX: 103.173
+  PBCY: 102.1152
+  PBCZ: 44
+  Z: 38.76
+  exclude_length: 5
+  components:
+    qz:
+      type: periodic
+    1ubq:
+      type: solvated
+      count: 2
+    1vii:
+      type: solvated
+      count: 2
+    3gb1:
+      type: solvated
+      count: 2
+- label: QZ + proteins (10%)
+  parent: multicomp_solution
+  solvent_tests: [water+ions]
+  PBCX: 103.173
+  PBCY: 102.1152
+  PBCZ: 44
+  Z: 38.76
+  exclude_length: 5
+  components:
+    qz:
+      type: periodic
+    1ubq:
+      type: solvated
+      count: 4
+    1vii:
+      type: solvated
+      count: 4
+    3gb1:
+      type: solvated
+      count: 4
+- label: QZ + proteins (30%)
+  parent: multicomp_solution
+  solvent_tests: [water+ions]
+  PBCX: 103.173
+  PBCY: 102.1152
+  PBCZ: 44
+  Z: 38.76
+  exclude_length: 0
+  components:
+    qz:
+      type: periodic
+    1ubq:
+      type: solvated
+      count: 12
+    1vii:
+      type: solvated
+      count: 12
+    3gb1:
+      type: solvated
+      count: 12
+# Mixed solvent systems
+- label: water + ethanol (3% v/v)
+  parent: multicomp_solution
+  solvent_tests: [water]
+  water_ratio: 10.356
+  components:
+    etoh:
+      type: solvent
+      density: 789.45
+  XYZ: 154.06
+- label: water + ethanol (6% v/v)
+  parent: multicomp_solution
+  solvent_tests: [water]
+  water_ratio: 5.018
+  components:
+    etoh:
+      type: solvent
+      density: 789.45
+  XYZ: 154.06
+- label: water + ethanol (9% v/v)
+  parent: multicomp_solution
+  solvent_tests: [water]
+  water_ratio: 3.239
+  components:
+    etoh:
+      type: solvent
+      density: 789.45
+  XYZ: 154.06
+- label: water + toluene (3% v/v)
+  parent: multicomp_solution
+  solvent_tests: [water]
+  water_ratio: 5.706
+  components:
+    tolu:
+      type: solvent
+      density: 870
+  XYZ: 154.06
+- label: water + toluene (6% v/v)
+  parent: multicomp_solution
+  solvent_tests: [water]
+  water_ratio: 2.765
+  components:
+    tolu:
+      type: solvent
+      density: 870
+  XYZ: 154.06
+- label: water + toluene (9% v/v)
+  parent: multicomp_solution
+  solvent_tests: [water]
+  water_ratio: 1.784
+  components:
+    tolu:
+      type: solvent
+      density: 870
+  XYZ: 154.06
