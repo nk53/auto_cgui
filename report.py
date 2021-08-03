@@ -24,6 +24,8 @@ parser.add_argument('-f', '--failed', action='store_true',
         help="Include failures in results (default: include all)")
 parser.add_argument('-e', '--exception', action='store_true',
         help="Include exceptions in results (default: include all)")
+parser.add_argument('-a', '--attempts', action='store_true',
+        help="Include jobs with more than one attempt")
 
 args = parser.parse_args()
 modules = args.modules if args.modules else ['all']
@@ -51,6 +53,8 @@ for module, jobs in sys_info.items():
         continue
     printed_module = False
     for job, info in jobs.items():
+        if args.attempts and not info.get('attempts', False):
+            continue
         if getattr(args, info.get('result', 'exception'), False):
             if not printed_module:
                 print(module)

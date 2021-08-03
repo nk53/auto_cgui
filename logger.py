@@ -137,6 +137,8 @@ def parse_logfile(logfile):
                 jobinfo['notices'] = notices.pop(jobid, [])
 
                 sys_info.setdefault(module, {})
+                if prev_job := sys_info[module].get(label, None):
+                    jobinfo['attempts'] = prev_job.get('attempts', 1) + 1
                 sys_info[module][label] = jobinfo
 
     return sys_info
