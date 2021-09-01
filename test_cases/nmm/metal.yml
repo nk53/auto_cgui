@@ -1,5 +1,4 @@
 - label: palladium solution
-  parent: nmm_vacuum
   nanomaterial_type:
     material: pdm
     shape: sphere
@@ -7,11 +6,11 @@
     systype: solution
   input: gmx
 - label: palladium vacuum xyz pbc
+  parent: nmm_xyzpbc
   nanomaterial_type:
     material: pdm
     shape: box
     mindex: '311'
-    wmindex: ['210', '310', '332']
     lx: 30
     ly: 30
     lz: 30
@@ -19,8 +18,10 @@
     systype: vacuum
   input: gmx
 - label: palladium wulff vacuum
+  parent: nmm_vacuum
   nanomaterial_type:
     material: pdm
+    radius: 20
     shape: wulff
     miller_index: ['210', '310', '332']
     systype: vacuum

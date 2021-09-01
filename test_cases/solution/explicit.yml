@@ -10,7 +10,6 @@
   Y: 60
   Z: 70
 - label: 186L modified with explicit size
-  base: pdb/basic
   pdb: 186l_modified.charmm
   ligand: ligands/basic
   chains:
@@ -27,7 +26,6 @@
   Y: 60
   Z: 70
 - label: 2OI0_modified parameterized with explicit size
-  base: pdb/basic
   pdb: 2oi0_modified.pdb
   ligand: ligands/basic
   chains:

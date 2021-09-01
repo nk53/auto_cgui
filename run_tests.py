@@ -249,6 +249,10 @@ if __name__ == '__main__':
                 else:
                     case_no += 1
 
+        if not base_cases and not wait_cases:
+            print("nothing to do for", cgui_module)
+            continue
+
         if args.validate_only:
             if wait_cases:
                 # processing the wait cases is too complicated and rare for now
@@ -276,12 +280,18 @@ if __name__ == '__main__':
 
                 logger.log_result(result)
         else:
+            print("starting", cgui_module)
             settings['dry_run'] = args.dry_run
             settings['interactive'] = args.interactive
             settings['errors_only'] = args.errors_only
 
+            # set max threads to higher of number of jobs and CLI argument
+            num_threads = len(base_cases) + len(wait_cases)
+            if num_threads > args.num_threads:
+                num_threads = args.num_threads
+
             # sets up multiprocessing info
-            manager = BrowserManager(BrowserProcess, LOGFILE, args.num_threads, **settings)
+            manager = BrowserManager(BrowserProcess, LOGFILE, num_threads, **settings)
 
             # initializes the other threads
             manager.start()

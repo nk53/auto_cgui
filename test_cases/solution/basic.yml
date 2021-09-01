@@ -7,7 +7,6 @@
   input: openmm
   hmr: True
 - label: 186L modified
-  base: pdb/basic
   pdb: 186l_modified.charmm
   ligand: ligands/basic
   chains:
@@ -21,7 +20,6 @@
     - HED charmm
     - LIG ctop_upload
 - label: 2OI0_modified parameterized
-  base: pdb/basic
   pdb: 2oi0_modified.pdb
   ligand: ligands/basic
   chains:
@@ -29,7 +27,6 @@
   hcr:
     - LIG param
 - label: solvation 5JY6
-  base: pdb/basic
   pdb: 5jy6.pdb
   ligand: ligands/basic
   chains:
@@ -49,7 +46,6 @@
   hcr:
     - NAD NAD
 - label: solvation 4HG6
-  base: pdb/basic
   pdb: 4hg6.pdb
   ligand: ligands/basic
   # chain1 resid1 chain2 resid2

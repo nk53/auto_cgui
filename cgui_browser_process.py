@@ -142,6 +142,8 @@ class CGUIBrowserProcess(Process):
             return None
 
         jobid = test_case['jobid']
+        if str(jobid) == '-1':
+            return # nothing to download
 
         if saveas:
             saveas = saveas + '.tgz'
@@ -648,21 +650,21 @@ class CGUIBrowserProcess(Process):
         """Default SIGTERM does not allow adequate browser cleanup"""
         self._popen._send_signal(signal.SIGINT)
 
-    def wait_exists(self, element_list, verbose=True):
-        """Waits until the query used to create element_list finds at least one
-        element and returns the new list
+    def wait_exists(self, element_list, min_length=1, verbose=True):
+        """Waits until the query used to create element_list finds at least
+        min_length elements and returns the new list
 
-        By default, prints a warning every time bool(element_list) is False
+        By default, prints a warning every time len(element_list) < min_length
         """
         # get a reference to the actual function, and save its arguments
         find_by_str = element_list.find_by
         finder = getattr(element_list, 'find_by_'+find_by_str)
         query = element_list.query
 
-        tpl = "{} waiting for element by {}: '{}'"
-        while not element_list:
+        tpl = "{} waiting for element by {}: '{}' (min_length: {})"
+        while len(element_list) < min_length:
             if verbose:
-                print(tpl.format(self.name, find_by_str, query))
+                print(tpl.format(self.name, find_by_str, query, min_length))
             element_list = self.browser.find_by(finder, query)
 
         return element_list

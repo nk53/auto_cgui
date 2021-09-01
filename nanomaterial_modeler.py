@@ -38,6 +38,9 @@ def _build_material_settings(mat_info, category):
     material = mat_info['material']
     mat_config = _nanomaterial_menu[category]['sub'][material]
 
+    if isinstance(mat_config, str):
+        mat_config = {'name': mat_config}
+
     settings = []
     for key in mat_config.keys():
         if key in ignore_names:
@@ -50,10 +53,12 @@ def _build_material_settings(mat_info, category):
 
     general = mat_config.get('general')
     if general:
-        fields = general.get('fields')
-        if fields:
-            general = fields
-        general = [s for s in general.keys() if not s.get('type') == 'span']
+        for key, value in tuple(general.items()):
+            if 'fields' in value and not '[]' in key:
+                general[key+'[]'] = general.pop(key)
+
+        # spans are not settable
+        general = [k for k,v in general.items() if not v.get('type') == 'span']
         settings += general
 
     return settings
@@ -61,6 +66,10 @@ def _build_material_settings(mat_info, category):
 def _get_allowed_pbc(mat_info, category):
     material = mat_info['material']
     mat_config = _nanomaterial_menu[category]['sub'][material]
+
+    if isinstance(mat_config, str):
+        mat_config = {'name': mat_config}
+
     pbc = mat_config.get('pbc')
 
     if pbc is None:
@@ -115,7 +124,7 @@ class NMMBrowserProcess(SolutionBrowserProcess):
             # change form value, if it is set in test_case
             if value is not None:
                 if setting in special_handling.keys():
-                    special_handling[setting](setting)
+                    special_handling[setting](value)
                 if setting.endswith('[]'):
                     # set all values in the order they are given in the form
                     values = value if isinstance(value, list) else [value]
@@ -237,7 +246,6 @@ class NMMBrowserProcess(SolutionBrowserProcess):
 
         # autogenerate and set other fields from _nanomaterial_menu
         other_settings = _build_material_settings(mat_info, category)
-        self.interact(locals())
         self._set_from_possible(other_settings, mat_info)
 
         self.go_next(self.test_case['steps'][0]['wait_text'])

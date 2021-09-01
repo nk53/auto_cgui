@@ -1,7 +1,7 @@
 dict: vacuum.map.yml
 parent: False
 steps:
-  - wait_text: Box Size Options
+  - wait_text: Size Options
   - module:
       name: solution
       start: 3

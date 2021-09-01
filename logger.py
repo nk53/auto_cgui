@@ -1,4 +1,5 @@
 """Central interface for message logging"""
+import os
 import re
 import utils
 
@@ -97,7 +98,7 @@ class Logger:
 
 def parse_logfile(logfile):
     regexes = ( # varname, regex
-        ('jobid', re.compile(r'Job.*\((\d+)\)')),
+        ('jobid', re.compile(r'Job.*\((-?\d+)\)')),
         ('label', re.compile(r'Job.*"([^"]+)"')),
         ('module', re.compile(r"Job.*'([^']+)'")),
         ('step', re.compile(r"Job.*on step (-?\d+)")),
@@ -132,8 +133,11 @@ def parse_logfile(logfile):
             else:
                 label = jobinfo.pop('label')
 
+                archive = utils.get_archive_name(jobid)
+                if os.path.exists(archive):
+                    jobinfo['archive'] = archive
+
                 jobinfo['dirname'] = utils.get_sys_dirname(jobid)
-                jobinfo['archive'] = utils.get_archive_name(jobid)
                 jobinfo['notices'] = notices.pop(jobid, [])
 
                 sys_info.setdefault(module, {})

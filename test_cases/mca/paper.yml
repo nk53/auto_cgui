@@ -1,5 +1,8 @@
 # Feig paper's systems
 - label: Feig paper, solvated only (5%)
+  temp: 310.15
+  input: openmm
+  hmr: true
   parent: multicomp_solution
   solvent_tests: [water+ions]
   components:
@@ -14,6 +17,9 @@
       count: 5
   XYZ: 153.32
 - label: Feig paper, solvated only (10%)
+  temp: 310.15
+  input: openmm
+  hmr: true
   parent: multicomp_solution
   solvent_tests: [water+ions]
   components:
@@ -28,6 +34,9 @@
       count: 10
   XYZ: 154.06
 - label: Feig paper, solvated only (30%)
+  temp: 310.15
+  input: openmm
+  hmr: true
   parent: multicomp_solution
   solvent_tests: [water+ions]
   components:
@@ -42,6 +51,9 @@
       count: 10
   XYZ: 106.31
 - label: Feig paper, membrane_only + solvated (5%)
+  temp: 310.15
+  input: openmm
+  hmr: true
   parent: multicomp_bilayer
   solvent_tests: [water+ions]
   components:
@@ -66,6 +78,9 @@
   XY: 134.21
   Z: 76.855
 - label: Feig paper, membrane_only + solvated (10%)
+  temp: 310.15
+  input: openmm
+  hmr: true
   parent: multicomp_bilayer
   solvent_tests: [water+ions]
   components:
@@ -90,6 +105,9 @@
   XY: 134.18
   Z: 77.67
 - label: Feig paper, membrane_only + solvated (30%)
+  temp: 310.15
+  input: openmm
+  hmr: true
   parent: multicomp_bilayer
   solvent_tests: [water+ions]
   components:
@@ -115,6 +133,9 @@
   Z: 77.415
 # Pre-equilibrated membrane systems from Jumin
 - label: Axolemma + proteins (5%)
+  temp: 310.15
+  input: openmm
+  hmr: true
   parent: multicomp_solution
   solvent_tests: [water+ions]
   PBCX: 100.11
@@ -135,6 +156,9 @@
       type: solvated
       count: 4
 - label: Axolemma + proteins (10%)
+  temp: 310.15
+  input: openmm
+  hmr: true
   parent: multicomp_solution
   solvent_tests: [water+ions]
   PBCX: 100.11
@@ -155,6 +179,9 @@
       type: solvated
       count: 8
 - label: Axolemma + proteins (30%)
+  temp: 310.15
+  input: openmm
+  hmr: true
   parent: multicomp_solution
   solvent_tests: [water+ions]
   PBCX: 100.11
@@ -176,6 +203,8 @@
       count: 23
 # Polymer-bio systems from YK
 - label: PET + CO2
+  input: openmm
+  hmr: true
   parent: multicomp_solution
   solvent_test: [None]
   PBCX: 108.4
@@ -189,6 +218,8 @@
       type: solvent
       density: 1.98
 - label: PEO40_PEE37 + proteins (5%)
+  input: openmm
+  hmr: true
   parent: multicomp_solution
   solvent_tests: [water+ions]
   PBCX: 107.875134
@@ -209,6 +240,8 @@
       type: solvated
       count: 2
 - label: PEO40_PEE37 + proteins (10%)
+  input: openmm
+  hmr: true
   parent: multicomp_solution
   solvent_tests: [water+ions]
   PBCX: 107.875134
@@ -229,6 +262,8 @@
       type: solvated
       count: 4
 - label: PEO40_PEE37 + proteins (30%)
+  input: openmm
+  hmr: true
   parent: multicomp_solution
   solvent_tests: [water+ions]
   PBCX: 107.875134
@@ -250,6 +285,7 @@
       count: 13
 # Nano-bio systems
 - label: HA + proteins (5%)
+  input: openmm
   parent: multicomp_solution
   solvent_tests: [water+ions]
   PBCX: 103.587
@@ -270,6 +306,7 @@
       type: solvated
       count: 2
 - label: HA + proteins (10%)
+  input: openmm
   parent: multicomp_solution
   solvent_tests: [water+ions]
   PBCX: 103.587
@@ -290,6 +327,7 @@
       type: solvated
       count: 4
 - label: HA + proteins (30%)
+  input: openmm
   parent: multicomp_solution
   solvent_tests: [water+ions]
   PBCX: 103.587
@@ -310,6 +348,7 @@
       type: solvated
       count: 17
 - label: QZ + proteins (5%)
+  input: openmm
   parent: multicomp_solution
   solvent_tests: [water+ions]
   PBCX: 103.173
@@ -330,6 +369,7 @@
       type: solvated
       count: 2
 - label: QZ + proteins (10%)
+  input: openmm
   parent: multicomp_solution
   solvent_tests: [water+ions]
   PBCX: 103.173
@@ -350,6 +390,7 @@
       type: solvated
       count: 4
 - label: QZ + proteins (30%)
+  input: openmm
   parent: multicomp_solution
   solvent_tests: [water+ions]
   PBCX: 103.173
@@ -371,6 +412,9 @@
       count: 12
 # Mixed solvent systems
 - label: water + ethanol (3% v/v)
+  temp: 310.15
+  input: openmm
+  hmr: true
   parent: multicomp_solution
   solvent_tests: [water]
   water_ratio: 10.356
@@ -380,6 +424,9 @@
       density: 789.45
   XYZ: 154.06
 - label: water + ethanol (6% v/v)
+  temp: 310.15
+  input: openmm
+  hmr: true
   parent: multicomp_solution
   solvent_tests: [water]
   water_ratio: 5.018
@@ -389,6 +436,9 @@
       density: 789.45
   XYZ: 154.06
 - label: water + ethanol (9% v/v)
+  temp: 310.15
+  input: openmm
+  hmr: true
   parent: multicomp_solution
   solvent_tests: [water]
   water_ratio: 3.239
@@ -398,6 +448,9 @@
       density: 789.45
   XYZ: 154.06
 - label: water + toluene (3% v/v)
+  temp: 310.15
+  input: openmm
+  hmr: true
   parent: multicomp_solution
   solvent_tests: [water]
   water_ratio: 5.706
@@ -407,6 +460,9 @@
       density: 870
   XYZ: 154.06
 - label: water + toluene (6% v/v)
+  temp: 310.15
+  input: openmm
+  hmr: true
   parent: multicomp_solution
   solvent_tests: [water]
   water_ratio: 2.765
@@ -416,6 +472,9 @@
       density: 870
   XYZ: 154.06
 - label: water + toluene (9% v/v)
+  temp: 310.15
+  input: openmm
+  hmr: true
   parent: multicomp_solution
   solvent_tests: [water]
   water_ratio: 1.784

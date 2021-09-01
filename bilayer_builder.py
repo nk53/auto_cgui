@@ -1,5 +1,7 @@
 """Handles bilayer preparation options"""
 import time
+from selenium.common.exceptions import WebDriverException
+
 import utils
 from solution_builder import SolutionBrowserProcess
 from input_generator import InputBrowserProcess
@@ -136,9 +138,16 @@ class BilayerBrowserProcess(SolutionBrowserProcess, InputBrowserProcess):
 
             # wait for HTML to stop changing
             html = None
-            while html != self.browser.html:
-                html = self.browser.html
-                time.sleep(1)
+            while True:
+                try:
+                    if html == self.browser.html:
+                        break
+                    html = self.browser.html
+                    time.sleep(1)
+                except WebDriverException as e:
+                    print("got a WebDriverException")
+                    self.interact(locals())
+                    time.sleep(2)
 
             if predefined:
                 tpl = 'loadGRS("{}")'
@@ -178,9 +187,16 @@ class BilayerBrowserProcess(SolutionBrowserProcess, InputBrowserProcess):
 
             # wait for HTML to stop changing
             html = None
-            while html != self.browser.html:
-                html = self.browser.html
-                time.sleep(1)
+            while True:
+                try:
+                    if html == self.browser.html:
+                        break
+                    html = self.browser.html
+                    time.sleep(1)
+                except WebDriverException as e:
+                    print("got a WebDriverException")
+                    self.interact(locals())
+                    time.sleep(2)
 
             self.browser.select('lps[species]', species)
 

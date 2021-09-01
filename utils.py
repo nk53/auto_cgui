@@ -209,7 +209,8 @@ def set_elem_value(elem, value):
     """
     input_type = elem._element.get_property('type')
     if input_type == "radio":
-        elem = ElementList(filter(lambda e: e.value == str(value), elem))
+        elem = ElementList(filter(lambda e: e.value == str(value), elem),
+                find_by=elem.find_by, query=elem.query)
         elem.check()
     elif input_type == "checkbox":
         if value:
@@ -219,7 +220,7 @@ def set_elem_value(elem, value):
     elif "select" in input_type:
         elem.select(value)
     else:
-        elem.fill(value)
+        elem.fill(str(value))
 
 def set_form_value(browser, name, value):
     """A smarter version of browser.fill

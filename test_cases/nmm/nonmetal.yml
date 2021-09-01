@@ -2,7 +2,7 @@
   nanomaterial_type:
     material: cr
     shape: box
-    mindex: '001'
+    mindex: '20-2'
     lx: 30
     ly: 30
     lz: 30
@@ -25,3 +25,7 @@
   input: gmx
 - label: carbon nanotube
   parent: nmm_vacuum
+  nanomaterial_type:
+    material: tube
+    chirality: [5, 5]
+    cell_copies: 6

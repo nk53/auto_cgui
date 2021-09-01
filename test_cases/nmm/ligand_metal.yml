@@ -2,9 +2,9 @@
   parent: nmm_vacuum
   nanomaterial_type:
     material: aum_surface
-    ligands: # equivalently: [THDLK, "ETKTR,2", "PROR,2", 2, TMAET]
+    ligands:
       - [THDLK, [ETKTR, 2], [PROR, 2], 2, TMAET]
-      - [THDLK, "ETHY,3", "PROR,2", TMAET] # outer subtext default: 1
+      - [THDLK, [ETHY, 3], [PROR, 2], TMAET] # outer subtext default: 1
     ligand_pattern: random
     ligand_ratio_1: 7
     ligand_ratio_2: 2
@@ -19,31 +19,28 @@
   nanomaterial_type:
     material: aum_nanocluster
     ligands:
-      - THDLK, "ETKTR,2", "PROR,2", TMAET
-      - THDLK, "ETHY,3", "PROR,2", TMAET
+      - [THDLK, [ETKTR, 2], [PROR, 2], TMAET]
+      - [THDLK, [ETHY, 3], [PROR, 2], TMAET]
     core_type: au102
     ligand_distribution: random  # random, strip, janus
     ligand_ratio_1: 4            # option for ramdom
     ligand_ratio_2: 3            # option for ramdom
-    systype: vac
+    systype: vacuum
   input: gmx
 - label: nanoparticle generation
   parent: nmm_vacuum
   nanomaterial_type:
     material: aum_nanoparticle
     ligands:
-      - THDLK, "ETKTR,2", "PROR,2", TMAET
-      - THDLK, "ETHY,3", "PROR,2", TMAET
+      - [THDLK, [ETKTR, 2], [PROR, 2], TMAET]
+      - [THDLK, [ETHY, 3], [PROR, 2], TMAET]
     core_type: icosahedron            # icosahedron, cube
     attachment_pattern: staple+bridge # option for icosahedron (staple or staple+bridge)
     core_chirality: S                 # option for icosahedron (R or S)
-    radius: 20                        # option for icosahedron
-    core_x: 33                        # option for Cube
-    core_y: 33                        # option for Cube
-    core_z: 33                        # option for Cube
+    core_radius: 20                   # option for icosahedron
     ligand_distribution: random       # random, janus
     ligand_ratio_1: 7                 # option for random
     ligand_ratio_2: 2                 # option for random
     coverage: 10                      # option for random and janus
-    systype: vac
+    systype: vacuum
   input: gmx

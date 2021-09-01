@@ -5,7 +5,7 @@ BILAYER: bilayer_builder
 GLYCOLIPID: glycolipid_modeler
 HMMM: hmmm_builder
 NANODISC: nanodisc_builder
-LPS: lps_modeler
+#LPS: lps_modeler
 NMM: nanomaterial_modeler
 MCA: multicomponent_assembler
 POLYMER: polymer_builder
