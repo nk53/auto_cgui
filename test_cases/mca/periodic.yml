@@ -1,5 +1,5 @@
 - label: periodic_impatch
-  parent: multicomp_solution
+  parent: multicomp_periodic
   solvent_tests: [None]
   PBCX: 82.464
   PBCY: 98.3614007
@@ -9,7 +9,7 @@
       type: periodic
       files: kn_sheet.image.psf
 - label: periodic_impatch
-  parent: multicomp_solution
+  parent: multicomp_periodic
   solvent_tests: [water+ions, water, ions, None]
   PBCX: 82.464
   PBCY: 98.3614007
@@ -20,7 +20,7 @@
       type: periodic
       files: kn_sheet.image.psf
 - label: periodic_impatch + solvated
-  parent: multicomp_solution
+  parent: multicomp_periodic
   solvent_tests: [water+ions, water, ions, None]
   PBCX: 82.464
   PBCY: 98.3614007
@@ -35,6 +35,7 @@
       type: solvated
       count: 3
 - label: periodic_noimpatch + solvated
+  parent: multicomp_periodic
   solvent_tests: [water+ions]
   PBCX: 56.7
   PBCY: 68.85
@@ -47,7 +48,7 @@
       type: solvated
       count: 3
 - label: periodic_impatch + custom_solvent
-  parent: multicomp_solution
+  parent: multicomp_periodic
   solvent_tests: [water+ions, water, ions, None]
   PBCX: 82.464
   PBCY: 98.3614007
@@ -62,7 +63,7 @@
       type: solvent
       density: 870
 - label: periodic_impatch + solvated +  custom_solvent
-  parent: multicomp_solution
+  parent: multicomp_periodic
   solvent_tests: [water+ions, water, ions, None]
   PBCX: 82.464
   PBCY: 98.3614007

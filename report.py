@@ -59,11 +59,11 @@ for module, jobs in sys_info.items():
             if not printed_module:
                 print(module)
                 printed_module = True
-            print(' '*4, job)
+            print(' '*4 + job)
             for key, value in info.items():
                 if key == 'dirname':
                     continue
                 if key == 'result' and not print_result:
                     continue
                 if value or value == 0:
-                    print(' '*8, f'{key}: {value}')
+                    print(' '*8 + f'{key}: {value}')

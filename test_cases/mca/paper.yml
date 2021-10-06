@@ -136,7 +136,7 @@
   temp: 310.15
   input: openmm
   hmr: true
-  parent: multicomp_solution
+  parent: multicomp_periodic
   solvent_tests: [water+ions]
   PBCX: 100.11
   PBCY: 100.11
@@ -159,7 +159,7 @@
   temp: 310.15
   input: openmm
   hmr: true
-  parent: multicomp_solution
+  parent: multicomp_periodic
   solvent_tests: [water+ions]
   PBCX: 100.11
   PBCY: 100.11
@@ -182,7 +182,7 @@
   temp: 310.15
   input: openmm
   hmr: true
-  parent: multicomp_solution
+  parent: multicomp_periodic
   solvent_tests: [water+ions]
   PBCX: 100.11
   PBCY: 100.11
@@ -205,8 +205,8 @@
 - label: PET + CO2
   input: openmm
   hmr: true
-  parent: multicomp_solution
-  solvent_test: [None]
+  parent: multicomp_periodic
+  solvent_tests: [None]
   PBCX: 108.4
   PBCY: 108.4
   PBCZ: 120
@@ -220,7 +220,7 @@
 - label: PEO40_PEE37 + proteins (5%)
   input: openmm
   hmr: true
-  parent: multicomp_solution
+  parent: multicomp_periodic
   solvent_tests: [water+ions]
   PBCX: 107.875134
   PBCY: 107.875134
@@ -242,7 +242,7 @@
 - label: PEO40_PEE37 + proteins (10%)
   input: openmm
   hmr: true
-  parent: multicomp_solution
+  parent: multicomp_periodic
   solvent_tests: [water+ions]
   PBCX: 107.875134
   PBCY: 107.875134
@@ -264,7 +264,7 @@
 - label: PEO40_PEE37 + proteins (30%)
   input: openmm
   hmr: true
-  parent: multicomp_solution
+  parent: multicomp_periodic
   solvent_tests: [water+ions]
   PBCX: 107.875134
   PBCY: 107.875134
@@ -286,7 +286,7 @@
 # Nano-bio systems
 - label: HA + proteins (5%)
   input: openmm
-  parent: multicomp_solution
+  parent: multicomp_periodic
   solvent_tests: [water+ions]
   PBCX: 103.587
   PBCY: 114.1749
@@ -307,7 +307,7 @@
       count: 2
 - label: HA + proteins (10%)
   input: openmm
-  parent: multicomp_solution
+  parent: multicomp_periodic
   solvent_tests: [water+ions]
   PBCX: 103.587
   PBCY: 114.1749
@@ -328,7 +328,7 @@
       count: 4
 - label: HA + proteins (30%)
   input: openmm
-  parent: multicomp_solution
+  parent: multicomp_periodic
   solvent_tests: [water+ions]
   PBCX: 103.587
   PBCY: 114.1749
@@ -349,7 +349,7 @@
       count: 17
 - label: QZ + proteins (5%)
   input: openmm
-  parent: multicomp_solution
+  parent: multicomp_periodic
   solvent_tests: [water+ions]
   PBCX: 103.173
   PBCY: 102.1152
@@ -370,7 +370,7 @@
       count: 2
 - label: QZ + proteins (10%)
   input: openmm
-  parent: multicomp_solution
+  parent: multicomp_periodic
   solvent_tests: [water+ions]
   PBCX: 103.173
   PBCY: 102.1152
@@ -391,7 +391,7 @@
       count: 4
 - label: QZ + proteins (30%)
   input: openmm
-  parent: multicomp_solution
+  parent: multicomp_periodic
   solvent_tests: [water+ions]
   PBCX: 103.173
   PBCY: 102.1152
