@@ -37,3 +37,7 @@ amber ion:
   step: 1
   elems:
     - amberff_ion_checked: amber ion
+charmm_mini:
+  step: 1
+  elems:
+    - charmm_mini: charmm_mini

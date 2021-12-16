@@ -204,12 +204,12 @@
 # Polymer-bio systems from YK
 - label: PET + CO2
   input: openmm
-  hmr: true
+  hmr: false
   parent: multicomp_periodic
   solvent_tests: [None]
-  PBCX: 108.4
-  PBCY: 108.4
-  PBCZ: 120
+  PBCX: 97.593956
+  PBCY: 97.593956
+  PBCZ: 100
   exclude_length: 10
   components:
     poly_pet:
