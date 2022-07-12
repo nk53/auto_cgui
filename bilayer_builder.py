@@ -241,7 +241,7 @@ class BilayerBrowserProcess(SolutionBrowserProcess, InputBrowserProcess):
 
         if size_method == 'ratio' and self.module_title != "Nanodisc Builder":
             valid_size = False
-            for key in ('X', 'Y', 'XY'):
+            for key in ('X', 'Y', 'XY', 'PBCX', 'PBCY'):
                 if key in self.test_case:
                     valid_size = True
                     break

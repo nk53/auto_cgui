@@ -16,7 +16,7 @@ import requests
 import yaml
 from splinter import Browser
 from splinter.element_list import ElementList
-from selenium.common.exceptions import TimeoutException
+from selenium.common.exceptions import UnexpectedAlertPresentException, TimeoutException
 
 # auto_cgui imports
 import utils
@@ -54,13 +54,13 @@ class CGUIBrowserProcess(Process):
         self.todo_q = todo_q
         self.done_q = done_q
 
-    def _click(self, elem, wait=None):
+    def _click(self, elem, wait=None, alert=None):
         """Implements common click-and-wait procedure"""
         elem.click()
         if wait:
-            self.wait_text(wait)
+            self.wait_text(wait, alert=alert)
 
-    def check(self, check_elem_id, wait=None):
+    def check(self, check_elem_id, wait=None, alert=None):
         """Checks a checkbox and optionally waits for text to appear
 
         Note that check() is not the same as click(): check() will never
@@ -69,14 +69,14 @@ class CGUIBrowserProcess(Process):
         elem = self.browser.find_by_id(check_elem_id)
         elem.check()
         if wait:
-            self.wait_text(wait)
+            self.wait_text(wait, alert=alert)
 
-    def click(self, click_elem_id, wait=None):
+    def click(self, click_elem_id, wait=None, alert=None):
         """Clicks an element and optionally waits for text to appear"""
         elem = self.browser.find_by_id(click_elem_id)
-        self._click(elem, wait)
+        self._click(elem, wait, alert=alert)
 
-    def click_by_attrs(self, wait=None, **attrs):
+    def click_by_attrs(self, wait=None, alert=None, **attrs):
         """Finds an element by attributes and clicks it
 
         Optionally waits for text to appear after clicking
@@ -89,24 +89,24 @@ class CGUIBrowserProcess(Process):
             attr = attr.replace('_', '-')
             css_str += css_templ.format(attr, value)
         elem = self.browser.find_by_css(css_str)
-        self._click(elem, wait)
+        self._click(elem, wait, alert=alert)
 
-    def click_by_text(self, text, wait=None):
+    def click_by_text(self, text, wait=None, alert=None):
         """Finds an element by its innerHTML and clicks it
 
         `text` must be an exact match for the inner text of the element to
         find. Optionally waits for other text to appear.
         """
         elem = self.browser.find_by_text(text)
-        self._click(elem, wait)
+        self._click(elem, wait, alert=alert)
 
-    def click_by_value(self, value, wait=None):
+    def click_by_value(self, value, wait=None, alert=None):
         """Finds an element by its DOM value and clicks it
 
         Optionally waits for text to appear after clicking
         """
         elem = self.browser.find_by_value(value)
-        self._click(elem, wait)
+        self._click(elem, wait, alert=alert)
 
     def copy_dir(self, ncopy, send_continue=True):
         """Make `ncopy` copies of the current project directory.
@@ -356,6 +356,7 @@ class CGUIBrowserProcess(Process):
         design.
         """
         local = local or {}
+        local.setdefault('tb', traceback)
         if not self.interactive:
             warn_msg = os.linesep.join(
                 ["WARNING: called interact() but no inter_q was set up.",
@@ -565,7 +566,7 @@ class CGUIBrowserProcess(Process):
 
                     elapsed_time = time.time() - start_time
 
-                    if self.interactive and not self.errors_only:
+                    if self.interactive and (failure or not self.errors_only):
                         self.interact(locals())
 
                     # early failure?
@@ -650,7 +651,7 @@ class CGUIBrowserProcess(Process):
         """Default SIGTERM does not allow adequate browser cleanup"""
         self._popen._send_signal(signal.SIGINT)
 
-    def wait_exists(self, element_list, min_length=1, verbose=True):
+    def wait_exists(self, element_list, min_length=1, verbose=True, alert=None):
         """Waits until the query used to create element_list finds at least
         min_length elements and returns the new list
 
@@ -663,13 +664,17 @@ class CGUIBrowserProcess(Process):
 
         tpl = "{} waiting for element by {}: '{}' (min_length: {})"
         while len(element_list) < min_length:
-            if verbose:
-                print(tpl.format(self.name, find_by_str, query, min_length))
-            element_list = self.browser.find_by(finder, query)
+            try:
+                if verbose:
+                    print(tpl.format(self.name, find_by_str, query, min_length))
+                element_list = self.browser.find_by(finder, query)
+            except UnexpectedAlertPresentException as exc:
+                if not alert:
+                    raise
 
         return element_list
 
-    def wait_script(self, script):
+    def wait_script(self, script, alert=None):
         """Executes a Javascript expression in 1-second intervals.
 
         Blocks until the expression's return value bool(ret) is True
@@ -679,14 +684,18 @@ class CGUIBrowserProcess(Process):
         while not self.browser.evaluate_script(script):
             time.sleep(1)
 
-    def wait_text(self, text, wait_time=1):
+    def wait_text(self, text, wait_time=1, alert=None):
         """Blocks until text appears on a page"""
         print(self.name, "waiting for text:", text)
         while True:
-            if self.browser.is_text_present(text, wait_time=wait_time):
-                break
+            try:
+                if self.browser.is_text_present(text, wait_time=wait_time):
+                    break
+            except UnexpectedAlertPresentException as exc:
+                if not alert:
+                    raise
 
-    def wait_text_multi(self, texts):
+    def wait_text_multi(self, texts, alert=None):
         """Blocks until one of the texts in `texts` appears on a page
 
         Use this is more than one result is expected.
@@ -695,11 +704,15 @@ class CGUIBrowserProcess(Process):
         wait_time = 1
         while True:
             for text in texts:
-                if self.browser.is_text_present(text, wait_time):
-                    return text
+                try:
+                    if self.browser.is_text_present(text, wait_time):
+                        return text
+                except UnexpectedAlertPresentException as exc:
+                    if not alert:
+                        raise
 
     @staticmethod
-    def wait_visible(element, wait=None, click=False):
+    def wait_visible(element, wait=None, click=False, alert=None):
         """Waits until an element is visible and optionally clicks it.
 
         If wait is not None, then after wait seconds, this function raises a
@@ -710,10 +723,14 @@ class CGUIBrowserProcess(Process):
         """
         start_time = time.time()
         while wait is None or time.time() - start_time < wait:
-            if element.visible:
-                if click:
-                    element.click()
-                return
+            try:
+                if element.visible:
+                    if click:
+                        element.click()
+                    return
+            except UnexpectedAlertPresentException as exc:
+                if not alert:
+                    raise
         raise TimeoutException
 
     def warn_if_text(self, text_or_texts):
@@ -744,7 +761,7 @@ class CGUIBrowserProcess(Process):
             return text
         return None
 
-    def uncheck(self, check_elem_id, wait=None):
+    def uncheck(self, check_elem_id, wait=None, alert=None):
         """Unchecks a checkbox and optionally waits for text to appear
 
         Note that uncheck() is not the same as click(): uncheck() will never
@@ -753,4 +770,4 @@ class CGUIBrowserProcess(Process):
         elem = self.browser.find_by_id(check_elem_id)
         elem.uncheck()
         if wait:
-            self.wait_text(wait)
+            self.wait_text(wait, alert=alert)

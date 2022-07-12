@@ -4,6 +4,7 @@ from os.path import join as pjoin
 from splinter.exceptions import ElementDoesNotExist
 from bilayer_builder import BilayerBrowserProcess
 from input_generator import InputBrowserProcess
+from utils import set_elem_value
 
 _BROWSER_PROCESS = 'MCABrowserProcess'
 
@@ -216,6 +217,7 @@ class MCABrowserProcess(BilayerBrowserProcess, InputBrowserProcess):
         count_types = {
             'solvated': None,
             'membrane': None,
+            'periodic': 'count',
         }
         radio_names = {
             'solvated': 'component_type',
@@ -244,10 +246,18 @@ class MCABrowserProcess(BilayerBrowserProcess, InputBrowserProcess):
             comp_type_elem.select(comp_type)
 
             # can't set number of some component types in this step
-            if comp_type in ['solvent', 'ion', 'periodic']:
+            if comp_type in ['solvent', 'ion']:
                 continue
             if comp_type == 'membrane':
                 has_membrane = True
+            elif comp_type == 'periodic':
+                has_periodic = True
+                pbc_z = comp_info['pbc_z']
+                exclude_length = comp_info.get('exclude_length', 0)
+                pbc_z_elem = self.browser.find_by_css('[name="pbc_z[{}]'.format(comp_name))
+                set_elem_value(pbc_z_elem, pbc_z)
+                exclude_elem = self.browser.find_by_css('[name="exclude_length[{}]'.format(comp_name))
+
             num_non_solvents += 1
 
             count_type = count_types[comp_type]
@@ -261,28 +271,90 @@ class MCABrowserProcess(BilayerBrowserProcess, InputBrowserProcess):
                 test_case[obj_attrs[comp_type]] = count_type
 
                 self.click_by_attrs(name=radio_names[comp_type], value=radio_values[count_type])
-            elif not count_type in comp_info:
+            elif not count_type in comp_info and comp_type != 'periodic':
                 raise ValueError("Can't mix 'count' and 'ratio' for same component type")
 
             # changing component type might change row element
             row = self.find_comp_row(comp_name, 'molpacking')
 
             num_comps = row.find_by_css("[name^=num_components")
-            num_comps.fill(comp_info['count'])
+            if count_type == 'count':
+                num_comps.fill(comp_info.get('count', 1))
+            else:
+                num_comps.fill(comp_info.get('ratio', 1))
 
         if test_case.get('lipids', False) and not has_membrane:
             # special case for membrane systems without membrane components
             test_case['solv_membrane'] = True
             test_case['has_memb_comps'] = False
 
-            self.check('solv_membrane_checkbox', 'Calculate membrane area using')
+            if not has_periodic:
+                self.check('solv_membrane_checkbox', 'Calculate membrane area using')
         else:
             test_case['has_memb_comps'] = has_membrane
 
         test_case['has_membrane'] = has_membrane
+
+        # position settings must be given last
+        for comp_name, comp_info in components.items():
+            row = self.find_comp_row(comp_name, 'molpacking')
+            comp_type = comp_info['type']
+            position = comp_info.get('pos')
+            if position is None:
+                continue
+
+            # can't set position of some component types in this step
+            if comp_type in ['solvent', 'ion']:
+                continue
+
+            row.find_by_value('Set Position').click()
+            self.switch_to_window(1)
+
+            # determine whether user's position settings are individualized
+            multi_pos = False
+            if len(position) > 1:
+                for dim, values in position.items():
+                    if isinstance(values, (list, tuple)):
+                        multi_pos = True
+                    break
+                if multi_pos:
+                    self.browser.find_by_id('position_type_single')
+                else:
+                    self.browser.find_by_id('position_type_all')
+
+                    if comp_type != 'periodic':
+                        # determine constraint type
+                        if values is None:
+                            self.browser.find_by_id(f'constraint_type_none[{comp_name}][0]').click()
+                        elif 'x' in position:
+                            self.browser.find_by_id(f'constraint_type_xyz_fixed[{comp_name}][0]').click()
+                        else:
+                            self.browser.find_by_id(f'constraint_type_z_planar[{comp_name}][0]').click()
+
+            for dim, values in position.items():
+                if isinstance(values, (list, tuple)):
+                    for index, value in enumerate(values, start=1):
+                        # determine constraint type
+                        if value is None:
+                            self.browser.find_by_id(f'constraint_type_none[{comp_name}][{index}]').click()
+                        elif 'x' in position:
+                            self.browser.find_by_id(f'constraint_type_xyz_fixed[{comp_name}][{index}]').click()
+                        else:
+                            self.browser.find_by_id(f'constraint_type_z_planar[{comp_name}][{index}]').click()
+
+                        pos_elem = self.browser.find_by_name(f'{dim}[{comp_name}][{index}]')
+                        set_elem_value(pos_elem, values)
+
+                else:
+                    pos_elem = self.browser.find_by_name(f'{dim}[{comp_name}][0]')
+                    set_elem_value(pos_elem, values)
+
+            self.browser.evaluate_script('apply()')
+            self.switch_to_window(0)
+
         if num_non_solvents:
             poststeps = test_case['steps'][0].setdefault('poststeps', [])
-            poststeps.insert(0, "click('size_button', 'Calculated System Size')")
+            poststeps.insert(0, "click('size_button', 'Calculated System Size', alert='accept')")
 
     def setup_afrac(self, validate=True):
         """Handles options specific to area fraction for membrane components"""

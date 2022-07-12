@@ -7,6 +7,7 @@ from os.path import join as pjoin
 
 import yaml
 from splinter.element_list import ElementList
+from selenium.common.exceptions import UnexpectedAlertPresentException
 
 def find_test_file(filename, module=None, root_dir='test_cases', ext='.yml'):
     """Looks for a test case or related file in the following order:
@@ -220,7 +221,17 @@ def set_elem_value(elem, value):
     elif "select" in input_type:
         elem.select(value)
     else:
-        elem.fill(str(value))
+        if not isinstance(value, int):
+            # selenium wants floats as strings, but ints as ints; no idea why
+            value = str(value)
+
+        # try goes here
+        try:
+            elem.fill('')
+        except UnexpectedAlertPresentException:
+            pass
+
+        elem.fill(value)
 
 def set_form_value(browser, name, value):
     """A smarter version of browser.fill

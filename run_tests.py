@@ -53,6 +53,8 @@ if __name__ == '__main__':
             help="Reads logfile and attempts to infer and validate PSFs of all logged test cases")
     parser.add_argument('-s', '--skip-success', action='store_true',
             help="Don't repeat tests that have already succeeded")
+    parser.add_argument('-d', '--skip-done', action='store_true',
+            help="Do not repeat any logged tests")
     parser.add_argument('-r', '--resume', action='store_true',
             help="Resume failed test cases from the step that failed (implies --skip-success)")
 
@@ -227,12 +229,14 @@ if __name__ == '__main__':
         else:
             wait_cases = {}
 
-        if args.skip_success:
+        if args.skip_success or args.skip_done:
             module_info = sys_info.get(cgui_module, {})
             case_no = 0
             while case_no < len(base_cases):
                 case = base_cases[case_no]
-                if case_log := module_info.pop(case['label'], None):
+                if args.skip_done:
+                    base_cases.pop(case_no)
+                elif case_log := module_info.pop(case['label'], None):
                     if step := case_log['step']:
                         step = int(step)
                         if args.resume and step > 0:

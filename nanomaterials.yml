@@ -23,6 +23,7 @@ nanomaterial:
               label: Core Type
               variable_title: core_type
               default: au25
+              onchange: "update_system_volume()"
               options:
                 au25: Au25(SR)18 (0.9 nm)
                 au36: Au36(SR)24 (1.1 nm)
@@ -116,6 +117,7 @@ nanomaterial:
               allowed_cores: cube
               size: 5
               default: "22"
+              onchange: "update_system_volume()"
               validation:
                 min: 5
             core_y:
@@ -125,6 +127,7 @@ nanomaterial:
               allowed_cores: cube
               size: 5
               default: "22"
+              onchange: "update_system_volume()"
               validation:
                 min: 5
             core_z:
@@ -134,6 +137,7 @@ nanomaterial:
               allowed_cores: cube
               size: 5
               default: "22"
+              onchange: "update_system_volume()"
               validation:
                 min: 5
             core_radius:
@@ -143,6 +147,7 @@ nanomaterial:
               allowed_cores: icosahedron
               size: 5
               default: "22"
+              onchange: "update_system_volume()"
               validation:
                 min: 5
           ligand_morphology:
@@ -198,7 +203,7 @@ nanomaterial:
         aum_surface:
           name: Gold Surface with Ligand (Au<sub>x</sub>SR<sub>y</sub>)
           shapes: "box"
-          mindex: "100 111"
+          mindex: "001 111"
           pbc: "++-"
           ligand: true
           ligand_morphology:
@@ -272,15 +277,57 @@ nanomaterial:
         srm: Strontium (Sr)
         thm: Thorium (Th)
         ybm: Ytterbium (Yb)
+    metaloxide:
+      title: Metal Oxides
+      sub:
+        ao:
+          name: "Aluminum Oxide (Al<sub>2</sub>O<sub>3</sub>)"
+          shapes: box
+          mindex: "001"
+        fo:
+          name: "Iron Oxide (Fe<sub>2</sub>O<sub>3</sub>)"
+          shapes: box
+          mindex: "001"
+        cro:
+          name: "Chromium Oxide (Cr<sub>2</sub>O<sub>3</sub>)"
+          shapes: box
+          mindex: "001"
+        cao:
+          name: "Calcium Oxide (CaO)"
+          shapes: box
+          mindex: "001"
+        mgo:
+          name: "Magnesium Oxide (MgO)"
+          shapes: box
+          mindex: "001"
+        nio:
+          name: "Nickel Oxide (NiO)"
+          shapes: box
+          mindex: "001"
+    metalhydroxide:
+      title: Metal Hydroxides
+      sub:
+        cah:
+          name: "Calcium Hydroxide (CaOH<sub>2</sub>)"
+          shapes: box
+          mindex: "001"
+        nih:
+          name: "Nickel Hydroxide (NiOH<sub>2</sub>)"
+          shapes: box
+          mindex: "001"
     clay_minerals:
       title: Clay Minerals
       sub:
         kn:
-          name: "Kaolinite Al<sub>2</sub>Si<sub>2</sub>O<sub>5</sub>(OH)<sub>4</sub>"
+          name: "Kaolinite (Al<sub>2</sub>Si<sub>2</sub>O<sub>5</sub>(OH)<sub>4</sub>)"
+          shapes: box
+          mindex: "001"
+        pp:
+          name: "Pyrophyllite (Al<sub>2</sub>Si<sub>4</sub>O<sub>10</sub>(OH)<sub>2</sub>)"
           shapes: box
           mindex: "001"
         mm:
-          name: "Montmorillonite (K, Na)<sub>n</sub>[Si<sub>4</sub>O<sub>8</sub>][Al<sub>2-n</sub>Mg<sub>n</sub>O<sub>2</sub>(OH)<sub>2</sub>]"
+          name: "Montmorillonite ((K, Na)<sub>n</sub>[Si<sub>4</sub>O<sub>8</sub>][Al<sub>2-n</sub>Mg<sub>n</sub>O<sub>2</sub>(OH)<sub>2</sub>])"
           shapes: box
           mindex: "001"
           ion:
@@ -307,18 +354,13 @@ nanomaterial:
             ionization_info:
               label: x
               cells: [0.321, 0.333, 0.400, 0.533]
-        pp:
-          name: "Pyrophyllite Al<sub>2</sub>Si<sub>4</sub>O<sub>10</sub>(OH)<sub>2</sub>"
-          shapes: box
-          mindex: "001"
     mica:
       title: Mica
       sub:
         mc:
-          name: "Muscovite KAl<sub>2</sub>(AlSi<sub>3</sub>)O<sub>10</sub>(OH)<sub>2</sub>"
+          name: "Muscovite (KAl<sub>2</sub>(AlSi<sub>3</sub>)O<sub>10</sub>(OH)<sub>2</sub>)"
           shapes: box
           mindex: "001"
-#        pyro: Pyrophyllite
     calcium_sulfates:
       title: Calcium Sulfates
       sub:
@@ -440,7 +482,7 @@ nanomaterial:
       title: Phosphate minerals
       sub:
         ha:
-          name: "Hydroxyapatite Ca<sub>5</sub>(PO<sub>4</sub>)<sub>3</sub>(OH)"
+          name: "Hydroxyapatite (Ca<sub>5</sub>(PO<sub>4</sub>)<sub>3</sub>(OH))"
           shapes: box wulff
           min_wulff_radius: 5
           mindex: "001 010 020 101"
