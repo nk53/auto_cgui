@@ -90,7 +90,7 @@
 - label: BtuB in E. coli outer membrane, Membrane video demo 5
   parent: bilayer.yml
   pdb: 1nqe.pdb
-  pdb_orientation: True
+  orient_axis: True
   area_calc: True
   water_thickness: 30
   size_method: nlipid
