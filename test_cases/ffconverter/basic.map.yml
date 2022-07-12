@@ -1,0 +1,43 @@
+input:
+  step: 1
+  presteps:
+    - set_input()
+ensemble:
+  step: 1
+  presteps:
+    - set_ensemble()
+temperature:
+  step: 1
+  elems:
+    - temperature: temperature
+# alias for temperature
+temp:
+  step: 1
+  elems:
+    - temperature: temp
+force_field:
+  step: 1
+  presteps:
+    - set_force_field()
+hydrogen_mass_repartitioning:
+  step: 1
+  elems:
+    - charmmff_hmr_checked: hydrogen_mass_repartitioning
+# far more likely to be used alias
+hmr:
+  step: 1
+  elems:
+    - charmmff_hmr_checked: hmr
+12-6-4 ion:
+  step: 1
+  elems:
+    - amberff_ion_checked: 12-6-4 ion
+# alias for 12-6-4
+amber ion:
+  step: 1
+  elems:
+    - amberff_ion_checked: amber ion
+charmm_mini:
+  step: 1
+  elems:
+    - charmm_mini: charmm_mini

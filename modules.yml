@@ -12,3 +12,4 @@ POLYMER: polymer_builder
 PDB: pdb_reader
 SOLUTION: solution_builder
 GLYCAN: glycan_only
+FFCONVERTER: ff_converter

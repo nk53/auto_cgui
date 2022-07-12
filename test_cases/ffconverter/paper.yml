@@ -1,0 +1,99 @@
+# Feig paper's systems
+- label: Feig paper, solvated only (5%)
+  input: gmx
+  base: systems/paper
+  psf: solvated_5.psf
+  crd: solvated_5.crd
+- label: Feig paper, solvated only (10%)
+  input: gmx
+  base: systems/paper
+  psf: solvated_10.psf
+  crd: solvated_10.crd
+- label: Feig paper, solvated only (30%)
+  input: gmx
+  base: systems/paper
+  psf: solvated_30.psf
+  crd: solvated_30.crd
+- label: Feig paper, membrane_only + solvated (5%)
+  input: gmx
+  base: systems/paper
+  psf: membrane_5.psf
+  crd: membrane_5.crd
+- label: Feig paper, membrane_only + solvated (10%)
+  input: gmx
+  base: systems/paper
+  psf: membrane_10.psf
+  crd: membrane_10.crd
+- label: Feig paper, membrane_only + solvated (30%)
+  input: gmx
+# Pre-equilibrated membrane systems from Jumin
+  base: systems/paper
+  psf: membrane_30.psf
+  crd: membrane_30.crd
+- label: Axolemma + proteins (5%)
+  input: gmx
+  base: systems/paper
+  psf: axolemma_5.psf
+  crd: axolemma_5.crd
+- label: Axolemma + proteins (10%)
+  input: gmx
+  base: systems/paper
+  psf: axolemma_10.psf
+  crd: axolemma_10.crd
+- label: Axolemma + proteins (30%)
+  input: gmx
+# Polymer-bio systems from YK
+  base: systems/paper
+  psf: axolemma_30.psf
+  crd: axolemma_30.crd
+- label: PET + CO2
+  input: gmx
+  base: systems/paper
+  psf: pet_co2.psf
+  crd: pet_co2.crd
+- label: PEO40_PEE37 + proteins (5%)
+  input: gmx
+  base: systems/paper
+  psf: peo_5.psf
+  crd: peo_5.crd
+- label: PEO40_PEE37 + proteins (10%)
+  input: gmx
+  base: systems/paper
+  psf: peo_10.psf
+  crd: peo_10.crd
+- label: PEO40_PEE37 + proteins (30%)
+  input: gmx
+# Nano-bio systems
+  base: systems/paper
+  psf: peo_30.psf
+  crd: peo_30.crd
+- label: HA + proteins (5%)
+  input: gmx
+  base: systems/paper
+  psf: ha_5.psf
+  crd: ha_5.crd
+- label: HA + proteins (10%)
+  input: gmx
+  base: systems/paper
+  psf: ha_10.psf
+  crd: ha_10.crd
+- label: HA + proteins (30%)
+  input: gmx
+  base: systems/paper
+  psf: ha_30.psf
+  crd: ha_30.crd
+- label: muscovite + membrane (1 nm)
+  input: gmx
+  base: systems/paper
+  psf: mcm1.psf
+  crd: mcm1.crd
+- label: muscovite + membrane (2 nm)
+  input: gmx
+  base: systems/paper
+  psf: mcm2.psf
+  crd: mcm2.crd
+- label: muscovite + membrane (3 nm)
+  input: gmx
+  base: systems/paper
+  psf: mcm3.psf
+  crd: mcm3.crd
