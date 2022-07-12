@@ -1,0 +1,39 @@
+ SET NCHARGE = 1.278976924E-12
+ SET XMAX = 52.6989101
+ SET YMAX = 53.579731
+ SET ZMAX = 14.9589996
+ SET XMIN = -54.7015822
+ SET YMIN = -53.7876348
+ SET ZMIN = -14.9579515
+ SET XCEN = -1.05304943
+ SET YCEN = -0.121098347
+ SET ZCEN = -3.758904794E-05
+ SET BOXTYPE = RECT
+ SET NX = 20
+ SET NY = 12
+ SET NZ = 3
+ SET IMPATCH = YES
+ SET XTLTYPE = TRICLINIC
+ SET ALPHA = 90
+ SET BETA = 90
+ SET GAMMA = 90
+ SET A = 103.836
+ SET B = 108.1836
+ SET C = 30
+
+POPC hydration was set to 50; POPC thickness is 23.37 + 23.49 = 46.86
+POPC box length = 90.60
+so water thickness = 90.60 - 46.86 = 43.74 ( ÷ 2 = 23.43 for MCA)
+
+POPC ZMAX =  23.37
+POPC ZMIN = -23.49
+
+MUSC ZMAX =  14.9589996
+MUSC ZMIN = -14.9579515
+MUSC ZT = 29.92
+
+POPC_ZMAX - MUSC_ZMIN = 38.33 (i.e., POPC and MUSC are touching at this distance between centers)
+1 nm = 10 Å = 48.33 Å
+2 nm = 20 Å = 58.33 Å
+3 nm = 30 Å = 68.33 Å
+4 nm = 40 Å = 78.33 Å

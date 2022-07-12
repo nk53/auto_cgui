@@ -3,33 +3,34 @@
   solvent_tests: [None]
   PBCX: 82.464
   PBCY: 98.3614007
-  PBCZ: 36
   components:
     kn_sheet:
       type: periodic
+      exclude_length: 5
+      pbc_z: 36
       files: kn_sheet.image.psf
 - label: periodic_impatch
   parent: multicomp_periodic
   solvent_tests: [water+ions, water, ions, None]
   PBCX: 82.464
   PBCY: 98.3614007
-  PBCZ: 36
-  exclude_length: 5
   components:
     kn_sheet:
       type: periodic
+      exclude_length: 5
+      pbc_z: 36
       files: kn_sheet.image.psf
 - label: periodic_impatch + solvated
   parent: multicomp_periodic
   solvent_tests: [water+ions, water, ions, None]
   PBCX: 82.464
   PBCY: 98.3614007
-  PBCZ: 36
   Z: 30
-  exclude_length: 5
   components:
     kn_sheet:
       type: periodic
+      exclude_length: 5
+      pbc_z: 36
       files: kn_sheet.image.psf
     1ubq:
       type: solvated
@@ -39,11 +40,11 @@
   solvent_tests: [water+ions]
   PBCX: 56.7
   PBCY: 68.85
-  PBCZ: 12.15
-  exclude_length: 10
   components:
     alu_sheet:
       type: periodic
+      exclude_length: 10
+      pbc_z: 12.15
     1ubq:
       type: solvated
       count: 3
@@ -52,12 +53,11 @@
   solvent_tests: [water+ions, water, ions, None]
   PBCX: 82.464
   PBCY: 98.3614007
-  PBCZ: 36
   Z: 30
-  exclude_length: 5
   components:
     kn_sheet:
       type: periodic
+      pbc_z: 36
       files: kn_sheet.image.psf
     tolu:
       type: solvent
@@ -67,12 +67,12 @@
   solvent_tests: [water+ions, water, ions, None]
   PBCX: 82.464
   PBCY: 98.3614007
-  PBCZ: 36
   Z: 30
-  exclude_length: 5
   components:
     kn_sheet:
       type: periodic
+      exclude_length: 5
+      pbc_z: 36
       files: kn_sheet.image.psf
     tolu:
       type: solvent

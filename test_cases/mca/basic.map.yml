@@ -11,6 +11,10 @@ Z:
   step: 1
   elems:
     - box_side_length: Z
+MEMB_Z:
+  step: 1
+  elems:
+    - membrane_thickness: MEMB_Z
 PBCX:
   step: 1
   elems:
@@ -19,18 +23,10 @@ PBCY:
   step: 1
   elems:
     - pbc_y: PBCY
-PBCZ:
-  step: 1
-  elems:
-    - pbc_z: PBCZ
-exclude_length:
-  step: 1
-  elems:
-    - exclude_length: exclude_length
 solv_membrane:
   step: 1
   presteps:
-    - check('solv_membrane_checkbox', 'Calculate membrane area')
+    - check('solv_membrane_checkbox', 'Membrane thickness')
 afrac:
   step: 1
   presteps:

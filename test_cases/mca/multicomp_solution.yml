@@ -9,6 +9,7 @@ steps:
   - wait_text: Component ID
     presteps:
       - select_components()
+    alert: accept
   - wait_text: Solvation Options
     poststeps:
       - SOLVENT_TEST_PLACEHOLDER

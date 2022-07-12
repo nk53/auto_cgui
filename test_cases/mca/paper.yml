@@ -140,12 +140,12 @@
   solvent_tests: [water+ions]
   PBCX: 100.11
   PBCY: 100.11
-  PBCZ: 50
   Z: 76.495 # target Z = 202.99
-  exclude_length: 10
   components:
     axolemma:
       type: periodic
+      pbc_z: 50
+      exclude_length: 10
     1ubq:
       type: solvated
       count: 4
@@ -163,12 +163,12 @@
   solvent_tests: [water+ions]
   PBCX: 100.11
   PBCY: 100.11
-  PBCZ: 50
   Z: 76.495 # target Z = 202.99
-  exclude_length: 10
   components:
     axolemma:
       type: periodic
+      pbc_z: 50
+      exclude_length: 10
     1ubq:
       type: solvated
       count: 8
@@ -186,12 +186,12 @@
   solvent_tests: [water+ions]
   PBCX: 100.11
   PBCY: 100.11
-  PBCZ: 50
   Z: 78.10 # target Z = 206.20 v/v% = 30%
-  exclude_length: 0
   components:
     axolemma:
       type: periodic
+      pbc_z: 50
+      exclude_length: 0
     1ubq:
       type: solvated
       count: 23
@@ -204,16 +204,16 @@
 # Polymer-bio systems from YK
 - label: PET + CO2
   input: openmm
-  hmr: false
+  temp: 293.15
   parent: multicomp_periodic
   solvent_tests: [None]
   PBCX: 97.593956
   PBCY: 97.593956
-  PBCZ: 100
-  exclude_length: 10
   components:
     poly_pet:
       type: periodic
+      exclude_length: 10
+      pbc_z: 100
     co2:
       type: solvent
       density: 1.98
@@ -224,12 +224,12 @@
   solvent_tests: [water+ions]
   PBCX: 107.875134
   PBCY: 107.875134
-  PBCZ: 120
   Z: 34.755
-  exclude_length: 10
   components:
     peo_pee:
       type: periodic
+      pbc_z: 120
+      exclude_length: 10
     1ubq:
       type: solvated
       count: 2
@@ -246,12 +246,12 @@
   solvent_tests: [water+ions]
   PBCX: 107.875134
   PBCY: 107.875134
-  PBCZ: 120
   Z: 34.755
-  exclude_length: 10
   components:
     peo_pee:
       type: periodic
+      pbc_z: 120
+      exclude_length: 10
     1ubq:
       type: solvated
       count: 4
@@ -268,12 +268,12 @@
   solvent_tests: [water+ions]
   PBCX: 107.875134
   PBCY: 107.875134
-  PBCZ: 120
   Z: 38.02 # target Z = 196.04
-  exclude_length: 0
   components:
     peo_pee:
       type: periodic
+      exclude_length: 0
+      pbc_z: 120
     1ubq:
       type: solvated
       count: 13
@@ -290,12 +290,12 @@
   solvent_tests: [water+ions]
   PBCX: 103.587
   PBCY: 114.1749
-  PBCZ: 42
   Z: 34.53
-  exclude_length: 5
   components:
     ha:
       type: periodic
+      pbc_z: 42
+      exclude_length: 5
     1ubq:
       type: solvated
       count: 2
@@ -311,12 +311,12 @@
   solvent_tests: [water+ions]
   PBCX: 103.587
   PBCY: 114.1749
-  PBCZ: 42
   Z: 34.53
-  exclude_length: 5
   components:
     ha:
       type: periodic
+      pbc_z: 42
+      exclude_length: 5
     1ubq:
       type: solvated
       count: 4
@@ -332,12 +332,12 @@
   solvent_tests: [water+ions]
   PBCX: 103.587
   PBCY: 114.1749
-  PBCZ: 42
   Z: 48.91
-  exclude_length: 5
   components:
     ha:
       type: periodic
+      pbc_z: 42
+      exclude_length: 5
     1ubq:
       type: solvated
       count: 17
@@ -353,12 +353,12 @@
   solvent_tests: [water+ions]
   PBCX: 103.173
   PBCY: 102.1152
-  PBCZ: 44
   Z: 38.76
-  exclude_length: 5
   components:
     qz:
       type: periodic
+      pbc_z: 44
+      exclude_length: 5
     1ubq:
       type: solvated
       count: 2
@@ -374,12 +374,12 @@
   solvent_tests: [water+ions]
   PBCX: 103.173
   PBCY: 102.1152
-  PBCZ: 44
   Z: 38.76
-  exclude_length: 5
   components:
     qz:
       type: periodic
+      pbc_z: 44
+      exclude_length: 5
     1ubq:
       type: solvated
       count: 4
@@ -395,12 +395,12 @@
   solvent_tests: [water+ions]
   PBCX: 103.173
   PBCY: 102.1152
-  PBCZ: 44
   Z: 38.76
-  exclude_length: 0
   components:
     qz:
       type: periodic
+      pbc_z: 44
+      exclude_length: 0
     1ubq:
       type: solvated
       count: 12
@@ -410,6 +410,69 @@
     3gb1:
       type: solvated
       count: 12
+- label: muscovite + membrane (1 nm)
+  temp: 298.15
+  input: openmm
+  parent: multicomp_periodic_bilayer
+  solvent_tests: [water+ions]
+  PBCX: 103.836
+  PBCY: 108.1836
+  Z: 23.43
+  lipids:
+    upper:
+      popc: 1
+    lower:
+      popc: 1
+  solv_membrane: true
+  MEMB_Z: 46.86
+  components:
+    muscovite:
+      type: periodic
+      pbc_z: 29.92
+      pos:
+        z: 48.33
+- label: muscovite + membrane (2 nm)
+  temp: 298.15
+  input: openmm
+  parent: multicomp_periodic_bilayer
+  solvent_tests: [water+ions]
+  PBCX: 103.836
+  PBCY: 108.1836
+  Z: 23.43
+  lipids:
+    upper:
+      popc: 1
+    lower:
+      popc: 1
+  solv_membrane: true
+  MEMB_Z: 46.86
+  components:
+    muscovite:
+      type: periodic
+      pbc_z: 29.92
+      pos:
+        z: 58.33
+- label: muscovite + membrane (3 nm)
+  temp: 298.15
+  input: openmm
+  parent: multicomp_periodic_bilayer
+  solvent_tests: [water+ions]
+  PBCX: 103.836
+  PBCY: 108.1836
+  Z: 23.43
+  lipids:
+    upper:
+      popc: 1
+    lower:
+      popc: 1
+  solv_membrane: true
+  MEMB_Z: 46.86
+  components:
+    muscovite:
+      type: periodic
+      pbc_z: 29.92
+      pos:
+        z: 68.33
 # Mixed solvent systems
 - label: water + ethanol (3% v/v)
   temp: 310.15
