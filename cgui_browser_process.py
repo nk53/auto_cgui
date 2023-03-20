@@ -16,6 +16,7 @@ import requests
 import yaml
 from splinter import Browser
 from splinter.element_list import ElementList
+from splinter.exceptions import ElementDoesNotExist
 from selenium.common.exceptions import UnexpectedAlertPresentException, TimeoutException
 
 # auto_cgui imports
@@ -710,6 +711,8 @@ class CGUIBrowserProcess(Process):
                 except UnexpectedAlertPresentException as exc:
                     if not alert:
                         raise
+                except ElementDoesNotExist as exc:
+                    print(f"Warning: received {exc}")
 
     @staticmethod
     def wait_visible(element, wait=None, click=False, alert=None):

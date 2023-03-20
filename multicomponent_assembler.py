@@ -237,7 +237,7 @@ class MCABrowserProcess(BilayerBrowserProcess, InputBrowserProcess):
             test_case[field] = None
 
         # need to know whether there are membrane components for some options
-        has_membrane = False
+        has_membrane = has_periodic = False
         num_non_solvents = 0
         for comp_name, comp_info in components.items():
             row = self.find_comp_row(comp_name, 'molpacking')
