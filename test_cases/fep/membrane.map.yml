@@ -1,0 +1,32 @@
+drags:
+  step: 4
+  presteps:
+    - set_upload_mol2()
+path:
+  step: 4
+  presteps:
+    - set_path()
+programs:
+  step: 5
+  presteps:
+    - set_program()
+protein_ffs:
+  step: 5
+  presteps:
+    - set_other_ff()
+ligand_ffs:
+  step: 5
+  presteps:
+    - set_other_ff()
+water_ffs:
+  step: 5
+  presteps:
+    - set_other_ff()
+ffs:
+  step: 5
+  presteps:
+    - set_ff()
+protocols:
+  step: 5
+  presteps:
+    - set_protocol()

@@ -1,0 +1,6 @@
+- label: 1kdx with terminal group patching
+  base: pdb/basic
+  pdb: 1kdx.pdb
+  terms:
+    - PROA GLYP CTER
+    - PROB NTER CTER

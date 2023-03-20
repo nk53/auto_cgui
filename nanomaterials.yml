@@ -1,0 +1,674 @@
+nanomaterial:
+  title: Nanomaterial Type
+  sub:
+    metals:
+      title: Metals
+      min_wulff_radius: 3
+      sub:
+        alm: Aluminum (Al)
+        acm: Actinium (Ac)
+        cam: Calcium (Ca)
+        cem: Cerium (Ce)
+        cum: Copper (Cu)
+        esm: Einsteinium (Es)
+        aum: Gold (Au)
+        aum_nanocluster:
+          name: Gold Nanocluster with Ligand (Au<sub>x</sub>SR<sub>y</sub>)
+          shapes: ""
+          ligand: true
+          pbc: "---"
+          core:
+            core_type:
+              type: select
+              label: Core Type
+              variable_title: core_type
+              default: au25
+              onchange: "update_system_volume()"
+              options:
+                au25: Au25(SR)18 (0.9 nm)
+                au36: Au36(SR)24 (1.1 nm)
+                au44: Au44(SR)28 (1.1 nm)
+                au68: Au68(SR)34 (1.2 nm)
+                au102: Au102(SR)44 (1.5 nm)
+                au133: Au133(SR)52 (1.7 nm)
+                au144: Au144(SR)60 (1.7 nm)
+                au246: Au246(SR)80 (2.2 nm)
+                au279: Au279(SR)84 (2.2 nm)
+                au314: Au314(SR)96 (2.3 nm)
+          ligand_morphology:
+            ligand_pattern:
+              type: select
+              label: Ligand Distribution
+              variable_title: ligand_pattern
+              default: random
+              allowed_nligands: ">1"
+              onchange: "check_allowed_vis()"
+              options:
+                random: Random
+                strip: Strip
+                janus: Janus
+            ligand_ratio_1:
+              type: text
+              label: "Ratio of ligand 1"
+              variable_title: ligand_ratio_1
+              default: 1
+              size: 3
+              allowed_nligands: ">1"
+              allowed_patterns: random
+              validation:
+                min: 1
+            ligand_ratio_2:
+              type: text
+              label: "Ratio of ligand 2"
+              variable_title: ligand_ratio_2
+              default: 1
+              size: 3
+              allowed_nligands: ">1"
+              allowed_patterns: random
+              validation:
+                min: 1
+            strip:
+              type: text
+              label: Number of Strips
+              variable_title: strip
+              default: 2
+              size: 3
+              allowed_nligands: ">1"
+              allowed_patterns: strip
+              validation:
+                min: 0
+        aum_nanoparticle:
+          name: Gold Nanoparticle with Ligand (Au<sub>x</sub>SR<sub>y</sub>)
+          shapes: ""
+          ligand: true
+          pbc: "---"
+          core:
+            core_type:
+              type: select
+              label: Core Type
+              variable_title: core_type
+              default: icosahedron
+              onchange: "check_allowed_vis()"
+              options:
+                icosahedron: Icosahedron
+                cube: Cube
+            attachment_pattern:
+              type: select
+              label: Attachment Type
+              variable_title: attachment_pattern
+              default: staple
+              allowed_cores: icosahedron
+              options:
+                "staple": Staple
+                "staple+bridge": "Staple &amp; Bridge"
+            core_chirality:
+              type: select
+              label: Chirality
+              variable_title: core_chirality
+              allowed_cores: icosahedron
+              default: R
+              options:
+                R: R
+                S: S
+            core_x:
+              type: text
+              label: "X length (Å)"
+              variable_title: core_x
+              allowed_cores: cube
+              size: 5
+              default: "22"
+              onchange: "update_system_volume()"
+              validation:
+                min: 5
+            core_y:
+              type: text
+              label: "Y length (Å)"
+              variable_title: core_y
+              allowed_cores: cube
+              size: 5
+              default: "22"
+              onchange: "update_system_volume()"
+              validation:
+                min: 5
+            core_z:
+              type: text
+              label: "Z length (Å)"
+              variable_title: core_z
+              allowed_cores: cube
+              size: 5
+              default: "22"
+              onchange: "update_system_volume()"
+              validation:
+                min: 5
+            core_radius:
+              type: text
+              label: "Radius (Å)"
+              variable_title: core_radius
+              allowed_cores: icosahedron
+              size: 5
+              default: "22"
+              onchange: "update_system_volume()"
+              validation:
+                min: 5
+          ligand_morphology:
+            ligand_pattern:
+              type: select
+              label: Ligand Distribution
+              variable_title: ligand_pattern
+              default: random
+              allowed_nligands: ">1"
+              onchange: "check_allowed_vis()"
+              options:
+                random: Random
+                janus: Janus
+            ligand_ratio_1:
+              type: text
+              label: "Ratio of ligand 1"
+              variable_title: ligand_ratio_1
+              default: 1
+              size: 3
+              allowed_nligands: ">1"
+              allowed_patterns: random
+              validation:
+                min: 1
+            ligand_ratio_2:
+              type: text
+              label: "Ratio of ligand 2"
+              variable_title: ligand_ratio_2
+              default: 1
+              size: 3
+              allowed_nligands: ">1"
+              allowed_patterns: random
+              validation:
+                min: 1
+            strip:
+              type: text
+              label: Number of Strips
+              variable_title: strip
+              default: 2
+              size: 3
+              allowed_nligands: ">1"
+              allowed_patterns: strip
+              validation:
+                min: 0
+            coverage:
+              type: text
+              label: Coverage (%)
+              variable_title: ligand_coverage
+              default: 100
+              size: 3
+              validation:
+                min: 0
+                max: 100
+        aum_surface:
+          name: Gold Surface with Ligand (Au<sub>x</sub>SR<sub>y</sub>)
+          shapes: "box"
+          mindex: "001 111"
+          pbc: "++-"
+          ligand: true
+          ligand_morphology:
+            ligand_pattern:
+              type: select
+              label: Ligand Distribution
+              variable_title: ligand_pattern
+              default: random
+              allowed_nligands: ">1"
+              onchange: "check_allowed_vis()"
+              options:
+                random: Random
+                strip: Strip
+            ligand_ratio_1:
+              type: text
+              label: "Ratio of ligand 1"
+              variable_title: ligand_ratio_1
+              default: 1
+              size: 3
+              allowed_nligands: ">1"
+              allowed_patterns: random
+              validation:
+                min: 1
+            ligand_ratio_2:
+              type: text
+              label: "Ratio of ligand 2"
+              variable_title: ligand_ratio_2
+              default: 1
+              size: 3
+              allowed_nligands: ">1"
+              allowed_patterns: random
+              validation:
+                min: 1
+            strip_x:
+              type: text
+              label: "# Strips along X"
+              variable_title: strip_x
+              default: 2
+              size: 3
+              allowed_nligands: ">1"
+              allowed_patterns: strip
+              validation:
+                min: 0
+            strip_y:
+              type: text
+              label: "# Strips along Y"
+              variable_title: strip_y
+              default: 2
+              size: 3
+              allowed_nligands: ">1"
+              allowed_patterns: strip
+              validation:
+                min: 0
+            coverage:
+              type: text
+              label: Coverage (%)
+              variable_title: ligand_coverage
+              default: 100
+              size: 3
+              validation:
+                min: 0
+                max: 100
+        irm: Iridium (Ir)
+        fem: Iron (Fe)
+        pbm: Lead (Pb)
+        nim: Nickel (Ni)
+        pdm: Palladium (Pd)
+        ptm: Platinum (Pt)
+        rhm: Rhodium (Rh)
+        agm: Silver (Ag)
+        srm: Strontium (Sr)
+        thm: Thorium (Th)
+        ybm: Ytterbium (Yb)
+    metaloxide:
+      title: Metal Oxides
+      sub:
+        ao:
+          name: "Aluminum Oxide (Al<sub>2</sub>O<sub>3</sub>)"
+          shapes: box
+          mindex: "001"
+        fo:
+          name: "Iron Oxide (Fe<sub>2</sub>O<sub>3</sub>)"
+          shapes: box
+          mindex: "001"
+        cro:
+          name: "Chromium Oxide (Cr<sub>2</sub>O<sub>3</sub>)"
+          shapes: box
+          mindex: "001"
+        cao:
+          name: "Calcium Oxide (CaO)"
+          shapes: box
+          mindex: "001"
+        mgo:
+          name: "Magnesium Oxide (MgO)"
+          shapes: box
+          mindex: "001"
+        nio:
+          name: "Nickel Oxide (NiO)"
+          shapes: box
+          mindex: "001"
+    metalhydroxide:
+      title: Metal Hydroxides
+      sub:
+        cah:
+          name: "Calcium Hydroxide (CaOH<sub>2</sub>)"
+          shapes: box
+          mindex: "001"
+        nih:
+          name: "Nickel Hydroxide (NiOH<sub>2</sub>)"
+          shapes: box
+          mindex: "001"
+    clay_minerals:
+      title: Clay Minerals
+      sub:
+        kn:
+          name: "Kaolinite (Al<sub>2</sub>Si<sub>2</sub>O<sub>5</sub>(OH)<sub>4</sub>)"
+          shapes: box
+          mindex: "001"
+        pp:
+          name: "Pyrophyllite (Al<sub>2</sub>Si<sub>4</sub>O<sub>10</sub>(OH)<sub>2</sub>)"
+          shapes: box
+          mindex: "001"
+        mm:
+          name: "Montmorillonite ((K, Na)<sub>n</sub>[Si<sub>4</sub>O<sub>8</sub>][Al<sub>2-n</sub>Mg<sub>n</sub>O<sub>2</sub>(OH)<sub>2</sub>])"
+          shapes: box
+          mindex: "001"
+          ion:
+            defect_ratio:
+              label: "(K, Na)<sub>x</sub>[Si<sub>4</sub>O<sub>8</sub>][Al<sub>(2-x)</sub>Mg<sub>x</sub>O<sub>2</sub>(OH<sub>2</sub>)]<br />(0 &le; x &lt; 0.95)"
+              default: 0
+              size: 7
+              variable_title: Ion Ratio
+              validation:
+                max: 0.95
+                min: 0
+            ion_type:
+              type: select
+              label: Ion Type
+              default: POT
+              options:
+                POT: "Potassium (K&#5161;)"
+                SOD: "Sodium (Na&#5161;)"
+          info_table:
+            title: Ratio of Defect Recommendations
+            pH_info:
+              label: "CEC (mmol / 100 g)"
+              cells: [87, 90, 108, 143]
+            ionization_info:
+              label: x
+              cells: [0.321, 0.333, 0.400, 0.533]
+    mica:
+      title: Mica
+      sub:
+        mc:
+          name: "Muscovite (KAl<sub>2</sub>(AlSi<sub>3</sub>)O<sub>10</sub>(OH)<sub>2</sub>)"
+          shapes: box
+          mindex: "001"
+    calcium_sulfates:
+      title: Calcium Sulfates
+      sub:
+        gs:
+          name: Gypsum (CaSO<sub>4</sub>&middot;2H<sub>2</sub>O)
+          mindex: "001 010 011 120 -111"
+          shapes: box wulff
+          min_mindices: 3
+          max_mindices: 3
+          min_wulff_radius: 14
+        hh:
+          name: Hemihydrate (2CaSO<sub>4</sub>&middot;H<sub>2</sub>O)
+          mindex: "001 100"
+          shapes: box
+        ah:
+          name: Anhydrite (CaSO<sub>4</sub>)
+          mindex: "001"
+          shapes: box
+    cement_minerals:
+      title: Cement Minerals
+      sub:
+        ta:
+          name: "Tricalcium Aluminate (Ca<sub>3</sub>Al<sub>2</sub>O<sub>6</sub>)"
+          mindex: "010"
+          shapes: box
+          surf:
+            qhyd:
+              type: select
+              label: Hydration
+              default: dry
+              variable_title: Surface Hydration
+              options:
+                dry: Dry
+                wet: Wet
+              onchange: "handle_hydration(this)"
+        ts:
+          name: "Tricalcium Silicate (Ca<sub>3</sub>SiO<sub>5</sub>)"
+          mindex: "001 010 100"
+          min_mindices: 3
+          min_wulff_radius: 7
+          shapes: box wulff
+          surf:
+            qhyd:
+              type: select
+              label: Hydration
+              default: dry
+              variable_title: Surface Hydration
+              options:
+                dry: Dry
+                wet: Wet
+              onchange: "handle_hydration(this)"
+        #ettr: Ettringite
+    calcium_silicates:
+      title: Calcium Silicate Hydrates
+      sub:
+        tb:
+          name: Tobermorite (Ca<sub>4</sub>Si<sub>6</sub>O<sub>15</sub>(OH)<sub>2</sub>&middot;5H<sub>2</sub>O)
+          mindex: "004"
+          shapes: box
+    silicate_minerals:
+      title: Silica
+      sub:
+        cr:
+          name: "α-Cristobalite (SiO<sub>2</sub>)"
+          shapes: box sphere
+          mindex: "20-2"
+          min_radius: 9
+          surf:
+            ion_percent:
+              label: "Degree of Ionization (%)<br />(Si-OH &gt; Si-O<sup>-</sup>Na<sup>+</sup>; max: 50%)"
+              default: 0
+              size: 7
+              variable_title: Degree of Ionization
+              allowed_periods: " x y z xy yz xz"
+              validation:
+                max: 50
+                min: 0
+            surf_conc:
+              label: "Surface Concentration of Si-OH<br />(only xy periodicity, 0 &le; c &le; 9.0 unit/nm<sup>2</sup>)"
+              default: "4.7"
+              size: 7
+              allowed_periods: xy
+              allowed_shapes: box
+              variable_title: Surface Density
+              validation:
+                max: 9.0
+                min: 0
+          info_table:
+            title: Ionization Recommendations
+            pH_info:
+              label: pH
+              cells: [3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+            ionization_info:
+              label: Ionization Degree (%)
+              cells: [0, 3.3, 6.6, 10.0, 13.3, 16.6, 20.0, 23.3, 26.6, 30.0]
+        qz:
+          name: "α-Quartz (SiO<sub>2</sub>)"
+          shapes: box sphere
+          mindex: "001"
+          min_radius: 5
+          surf:
+            ion_percent:
+              label: "Degree of Ionization (%)<br />(Si-OH &gt; Si-O<sup>-</sup>Na<sup>+</sup>, default: 0, max: 50)"
+              default: 0
+              size: 7
+              allowed_periods: " x y z xy yz xz"
+              validation:
+                max: 50
+                min: 0
+          info_table:
+            title: Ionization Recommendations
+            pH_info:
+              label: pH
+              cells: [3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+            ionization_info:
+              label: Ionization Degree (%)
+              cells: [0, 3.3, 6.6, 10.0, 13.3, 16.6, 20.0, 23.3, 26.6, 30.0]
+    other_minerals:
+      title: Phosphate minerals
+      sub:
+        ha:
+          name: "Hydroxyapatite (Ca<sub>5</sub>(PO<sub>4</sub>)<sub>3</sub>(OH))"
+          shapes: box wulff
+          min_wulff_radius: 5
+          mindex: "001 010 020 101"
+          pbc: "++-"
+          surf:
+            pH:
+              type: select
+              label: Environment pH
+              default: ha_basic
+              variable_title: Environment pH
+              onchange: "handle_pH(this)"
+              options:
+                ha_stbasic: "&gt; 14"
+                ha_basic: "~ 10"
+                ha_acidic: "~ 5"
+#            aspect_ratio:
+#              label: Aspect Ratio
+#              default: 1
+#              variable_title: Aspect Ratio
+#              allowed_shapes: wulff
+#              size: 7
+#              validation:
+#                min: 0
+    transition_metal_chalcogenitides:
+      title: Transition Metal Dichalcogenides
+      sub:
+        md:
+          name: "Molybdenum Disulfide (MoS<sub>2</sub>)"
+          mindex: "001"
+          shapes: box
+          pbc: "++u"
+          info_table:
+            title: "Unit Cell Info"
+            unitcell_x:
+              label: Unit Cell X
+              cells: [""]
+            unitcell_y:
+              label: Unit Cell Y
+              cells: [""]
+            unitcell_z:
+              label: Unit Cell Z
+              cells: [""]
+            layer_dim:
+              label: Layer Dimension
+              cells: [""]
+            nlayers:
+              label: Number of Layers
+              cells: ["N/A"]
+    carbon_materials:
+      title: Carbonaceous Materials
+      sub:
+        tube:
+          name: Carbon Nanotube (CNT)
+          shapes: ""
+          pbc: 1
+          general:
+            chirality:
+              label: "Chirality (n, m)"
+              sep: ', '
+              fields:
+                chirality_n:
+                  default: 3
+                  variable_title: chirality_n
+                  size: 3
+                  onchange: "update_system_volume()"
+                chirality_m:
+                  default: 3
+                  variable_title: chirality_m
+                  size: 3
+                  onchange: "update_system_volume()"
+            cell_copies:
+              label: Cell Copies
+              type: text
+              default: 1
+              size: 3
+              onchange: "update_system_volume()"
+            filltube:
+              label: Fill tube with water
+              type: checkbox
+              variable_title: filltube
+              allowed_systype: solution
+              allowed_pbc: x y z
+              onchange: "update_system_volume()"
+            velectron:
+              variable_title: Virtual Electron
+              label: Use virtual electron model
+              type: checkbox
+              checked: false
+          info_table:
+            title: Calculated Tube Info
+            onload: "update_system_volume()"
+            tube_length:
+              type: span
+              label: Tube Length
+              suffix: " Å"
+            tube_diameter:
+              type: span
+              label: Tube Diameter
+              suffix: " Å"
+            tube_conductivity:
+              type: strong
+              label: Tube Conductivity
+              type: strong
+            tube_system_volume:
+              type: span
+              label: "System Volume"
+              suffix: " Å<sup>3</sup>"
+        gp:
+          name: Graphene
+          shapes: "box"
+          pbc: "uuu"
+          mindex: "001"
+          general:
+            n_rings:
+              variable_title: Number of Rings
+              label: Number of Rings
+              default: 100
+              size: 3
+              allowed_defect: ">0"
+              onchange: "update_grap_runtime_estimate(this)"
+            percent_defect:
+              variable_title: Percent Defect
+              label: Percent Defect
+              default: 0
+              size: 3
+              validation:
+                min: 0
+              onchange: "toggle_defect(this)"
+            velectron:
+              variable_title: Virtual Electron
+              label: Use virtual electron model
+              type: checkbox
+              checked: false
+              allowed_defect: "0"
+            dense_defect:
+              type: checkbox
+              variable_title: Dense defect
+              label: Dense Defect
+              checked: false
+              allowed_defect: ">0"
+            runtime_estimate:
+              type: span
+              label: Estimated Runtime
+              allowed_defect: ">0"
+          info_table:
+            title: "Unit Cell Info"
+            unitcell_x:
+              label: Unit Cell X
+              cells: [""]
+            unitcell_y:
+              label: Unit Cell Y
+              cells: [""]
+            unitcell_z:
+              label: Unit Cell Z
+              cells: [""]
+            layer_dim:
+              label: Layer Dimension
+              cells: [""]
+            nlayers:
+              label: Number of Layers
+              cells: ["N/A"]
+        gi:
+          name: Graphite
+          shapes: "box"
+          pbc: "uuu"
+          mindex: "001"
+          general:
+            velectron:
+              variable_title: Virtual Electron
+              label: Use virtual electron model
+              type: checkbox
+              checked: false
+          info_table:
+            title: "Unit Cell Info"
+            unitcell_x:
+              label: Unit Cell X
+              cells: [""]
+            unitcell_y:
+              label: Unit Cell Y
+              cells: [""]
+            unitcell_z:
+              label: Unit Cell Z
+              cells: [""]
+            layer_dim:
+              label: Layer Dimension
+              cells: [""]
+            nlayers:
+              label: Number of Layers
+              cells: ["N/A"]

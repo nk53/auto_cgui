@@ -1,0 +1,13 @@
+- label: 2KLU with complex ion types (MgCl2 + Co2(CO3)3)
+  pdb: 2klu.cif
+  ions:
+    - cation: MG
+      anion: CLA
+      conc: 0
+      neutral: true
+    - [CO3P, CO3, .15] # [anion, cation, conc, neutral (optional)]
+- label: 2KLU with complex ion types (NH4-ACET + MgCO3)
+  pdb: 2klu.cif
+  ions:
+    - [NH4, ACET, .15, true]
+    - [MG, CO3, .1]

@@ -1,0 +1,541 @@
+martini:
+  cations:
+    CA:
+      atoms: [CA]
+      abbr: CA
+      base: dry_martini_v2.1.rtf
+      charge: 2
+      name: Ca<sup>2+</sup>
+    K:
+      atoms: [K]
+      abbr: K
+      base: dry_martini_v2.1.rtf
+      charge: 1
+      name: Cl<sup>+</sup>
+    NA:
+      atoms: [NA]
+      abbr: NA
+      base: martini_v2.0_ions.rtf
+      charge: 1
+      name: Cl<sup>+</sup>
+    NC3:
+      atoms: [NC3]
+      abbr: NC3
+      base: martini_v2.0_ions.rtf
+      charge: 1
+      name: Choline
+  anions:
+    CL:
+      atoms: [CL]
+      abbr: CL
+      base: martini_v2.0_ions.rtf
+      charge: -1
+      name: Cl<sup>-</sup>
+charmm:
+  cations:
+    title: Cation Type
+    sub:
+      alkali_metals:
+        title: Alkali Metals
+        sub:
+          LIT:
+            atoms: [LIT]
+            abbr: Li
+            base: toppar_water_ions.str
+            charge: 1
+            name: Li<sup>+</sup>
+          SOD:
+            atoms: [SOD]
+            abbr: Na
+            base: toppar_water_ions.str
+            charge: 1
+            name: Na<sup>+</sup>
+          POT:
+            atoms: [POT]
+            abbr: K
+            base: toppar_water_ions.str
+            charge: 1
+            name: K<sup>+</sup>
+          RUB:
+            atoms: [RUB]
+            abbr: Rb
+            base: toppar_water_ions.str
+            charge: 1
+            name: Rb<sup>+</sup>
+          CES:
+            atoms: [CES]
+            abbr: Cs
+            base: toppar_water_ions.str
+            charge: 1
+            name: Cs<sup>+</sup>
+      alkaline_earth_metals:
+        title: Alkaline Earth Metals
+        sub:
+          BE2P:
+            atoms: [BE2P]
+            abbr: Be
+            base: toppar_ions_won.str
+            charge: 2
+            name: Be<sup>2+</sup>
+          MG:
+            atoms: [MG]
+            abbr: Mg
+            base: toppar_water_ions.str
+            charge: 2
+            name: Mg<sup>2+</sup>
+          CAL:
+            atoms: [CAL]
+            abbr: Ca
+            base: toppar_water_ions.str
+            charge: 2
+            name: Ca<sup>2+</sup>
+          SR2P:
+            atoms: [SR2P]
+            abbr: Sr
+            base: toppar_ions_won.str
+            charge: 2
+            name: Sr<sup>2+</sup>
+          BAR:
+            atoms: [BAR]
+            abbr: Ba
+            base: toppar_water_ions.str
+            charge: 2
+            name: Ba<sup>2+</sup>
+          RA2P:
+            atoms: [RA2P]
+            abbr: Ra
+            base: toppar_ions_won.str
+            charge: 2
+            name: Ra<sup>2+</sup>
+      transition_metals:
+        title: Transition Metals
+        sub:
+          AG1P:
+            atoms: [AG1P]
+            abbr: Ag
+            base: toppar_ions_won.str
+            charge: 1
+            name: Ag<sup>+</sup>
+          AG2P:
+            atoms: [AG2P]
+            abbr: Ag
+            base: toppar_ions_won.str
+            charge: 2
+            name: Ag<sup>2+</sup>
+          AU1P:
+            atoms: [AU1P]
+            abbr: Au
+            base: toppar_ions_won.str
+            charge: 1
+            name: Au<sup>+</sup>
+          AU3P:
+            atoms: [AU3P]
+            abbr: Au
+            base: toppar_ions_won.str
+            charge: 3
+            name: Au<sup>3+</sup>
+          CD2:
+            atoms: [CD]
+            abbr: Cd
+            base: toppar_water_ions.str
+            charge: 2
+            name: Cd<sup>2+</sup>
+          CO3P:
+            atoms: [CO3P]
+            abbr: Co
+            base: toppar_ions_won.str
+            charge: 3
+            name: Co<sup>3+</sup>
+          CR2P:
+            atoms: [CR2P]
+            abbr: Cr
+            base: toppar_ions_won.str
+            charge: 2
+            name: Cr<sup>2+</sup>
+          CR3P:
+            atoms: [CR3P]
+            abbr: Cr
+            base: toppar_ions_won.str
+            charge: 3
+            name: Cr<sup>3+</sup>
+          CU1P:
+            atoms: [CU1P]
+            abbr: Cu
+            base: toppar_ions_won.str
+            charge: 1
+            name: Cu<sup>+</sup>
+          CU2P:
+            atoms: [CU2P]
+            abbr: Cu
+            base: toppar_ions_won.str
+            charge: 2
+            name: Cu<sup>2+</sup>
+          FE2P:
+            atoms: [FE2P]
+            abbr: Fe
+            base: toppar_ions_won.str
+            charge: 2
+            name: Fe<sup>2+</sup>
+          FE3P:
+            atoms: [FE3P]
+            abbr: Fe
+            base: toppar_ions_won.str
+            charge: 3
+            name: Fe<sup>3+</sup>
+          HG2P:
+            atoms: [HG2P]
+            abbr: Hg
+            base: toppar_ions_won.str
+            charge: 2
+            name: Hg<sup>2+</sup>
+          MN2P:
+            atoms: [MN2P]
+            abbr: Mn
+            base: toppar_ions_won.str
+            charge: 2
+            name: Mn<sup>2+</sup>
+          MN3P:
+            atoms: [MN3P]
+            abbr: Mn
+            base: toppar_ions_won.str
+            charge: 3
+            name: Mn<sup>3+</sup>
+          NI2P:
+            atoms: [NI2P]
+            abbr: Ni
+            base: toppar_ions_won.str
+            charge: 2
+            name: Ni<sup>2+</sup>
+          PD2P:
+            atoms: [PD2P]
+            abbr: Pd
+            base: toppar_ions_won.str
+            charge: 2
+            name: Pd<sup>2+</sup>
+          PT2P:
+            atoms: [PT2P]
+            abbr: Pt
+            base: toppar_ions_won.str
+            charge: 2
+            name: Pt<sup>2+</sup>
+          RH3P:
+            atoms: [RH3P]
+            abbr: Rh
+            base: toppar_ions_won.str
+            charge: 3
+            name: Rh<sup>3+</sup>
+          SC3P:
+            atoms: [SC3P]
+            abbr: Sc
+            base: toppar_ions_won.str
+            charge: 3
+            name: Sc<sup>3+</sup>
+          TI1P:
+            atoms: [TI1P]
+            abbr: Ti
+            base: toppar_ions_won.str
+            charge: 1
+            name: Ti<sup>+</sup>
+          TI3P:
+            atoms: [TI3P]
+            abbr: Ti
+            base: toppar_ions_won.str
+            charge: 3
+            name: Ti<sup>3+</sup>
+          V2P:
+            atoms: [V2P]
+            abbr: V
+            base: toppar_ions_won.str
+            charge: 2
+            name: V<sup>2+</sup>
+          V3P:
+            atoms: [V3P]
+            abbr: V
+            base: toppar_ions_won.str
+            charge: 3
+            name: V<sup>3+</sup>
+          Y3P:
+            atoms: [Y3P]
+            abbr: Y
+            base: toppar_ions_won.str
+            charge: 3
+            name: Y<sup>3+</sup>
+          ZN2:
+            atoms: [ZN]
+            abbr: Zn
+            base: toppar_water_ions.str
+            charge: 2
+            name: Zn<sup>2+</sup>
+      post_transition_metals:
+        title: Post-Transition Metals
+        sub:
+          AL3P:
+            atoms: [AL3P]
+            abbr: Al
+            base: toppar_ions_won.str
+            charge: 3
+            name: Al<sup>3+</sup>
+          GA3P:
+            atoms: [GA3P]
+            abbr: Ga
+            base: toppar_ions_won.str
+            charge: 3
+            name: Ga<sup>3+</sup>
+          IN3P:
+            atoms: [IN3P]
+            abbr: In
+            base: toppar_ions_won.str
+            charge: 3
+            name: In<sup>3+</sup>
+          SN2P:
+            atoms: [SN2P]
+            abbr: Sn
+            base: toppar_ions_won.str
+            charge: 2
+            name: Sn<sup>2+</sup>
+          TL3P:
+            atoms: [TL3P]
+            abbr: Tl
+            base: toppar_ions_won.str
+            charge: 3
+            name: Tl<sup>3+</sup>
+          PB2P:
+            atoms: [PB2P]
+            abbr: Pb
+            base: toppar_ions_won.str
+            charge: 2
+            name: Pb<sup>2+</sup>
+          BI3P:
+            atoms: [BI3P]
+            abbr: Bi
+            base: toppar_ions_won.str
+            charge: 3
+            name: Bi<sup>3+</sup>
+      lanthanides:
+        title: Lanthanides
+        sub:
+          LA3P:
+            atoms: [LA3P]
+            abbr: La
+            base: toppar_ions_won.str
+            charge: 3
+            name: La<sup>3+</sup>
+          CE3P:
+            atoms: [CE3P]
+            abbr: Ce
+            base: toppar_ions_won.str
+            charge: 3
+            name: Ce<sup>3+</sup>
+          PR3P:
+            atoms: [PR3P]
+            abbr: Pr
+            base: toppar_ions_won.str
+            charge: 3
+            name: Pr<sup>3+</sup>
+          ND3P:
+            atoms: [ND3P]
+            abbr: Nd
+            base: toppar_ions_won.str
+            charge: 3
+            name: Nd<sup>3+</sup>
+          PM3P:
+            atoms: [PM3P]
+            abbr: Pm
+            base: toppar_ions_won.str
+            charge: 3
+            name: Pm<sup>3+</sup>
+          SM2P:
+            atoms: [SM2P]
+            abbr: Sm
+            base: toppar_ions_won.str
+            charge: 2
+            name: Sm<sup>2+</sup>
+          SM3P:
+            atoms: [SM3P]
+            abbr: Sm
+            base: toppar_ions_won.str
+            charge: 3
+            name: Sm<sup>3+</sup>
+          EU2P:
+            atoms: [EU2P]
+            abbr: Eu
+            base: toppar_ions_won.str
+            charge: 2
+            name: Eu<sup>2+</sup>
+          EU3P:
+            atoms: [EU3P]
+            abbr: Eu
+            base: toppar_ions_won.str
+            charge: 3
+            name: Eu<sup>3+</sup>
+          GD3P:
+            atoms: [GD3P]
+            abbr: Gd
+            base: toppar_ions_won.str
+            charge: 3
+            name: Gd<sup>3+</sup>
+          TB3P:
+            atoms: [TB3P]
+            abbr: Tb
+            base: toppar_ions_won.str
+            charge: 3
+            name: Tb<sup>3+</sup>
+          DY3P:
+            atoms: [DY3P]
+            abbr: Dy
+            base: toppar_ions_won.str
+            charge: 3
+            name: Dy<sup>3+</sup>
+          HO3P:
+            atoms: [HO3P]
+            abbr: Ho
+            base: toppar_ions_won.str
+            charge: 3
+            name: Ho<sup>3+</sup>
+          ER3P:
+            atoms: [ER3P]
+            abbr: Er
+            base: toppar_ions_won.str
+            charge: 3
+            name: Er<sup>3+</sup>
+          TU3P:
+            atoms: [TU3P]
+            abbr: Tm
+            base: toppar_ions_won.str
+            charge: 3
+            name: Tm<sup>3+</sup>
+          YB2P:
+            atoms: [YB2P]
+            abbr: Yb
+            base: toppar_ions_won.str
+            charge: 2
+            name: Yb<sup>2+</sup>
+          YB3P:
+            atoms: [YB3P]
+            abbr: Yb
+            base: toppar_ions_won.str
+            charge: 3
+            name: Yb<sup>3+</sup>
+          LU3P:
+            atoms: [LU3P]
+            abbr: Lu
+            base: toppar_ions_won.str
+            charge: 3
+            name: Lu<sup>3+</sup>
+      actinides:
+        title: Actinides
+        sub:
+          U3P:
+            atoms: [U3P]
+            abbr: U
+            base: toppar_ions_won.str
+            charge: 3
+            name: U<sup>3+</sup>
+          PU3P:
+            atoms: [PU3P]
+            abbr: Pu
+            base: toppar_ions_won.str
+            charge: 3
+            name: Pu<sup>3+</sup>
+      polyatomic_cations:
+        title: Polyatomic Cations
+        sub:
+          NH4:
+            abbr: NH<sub>4</sub>
+            base: top_all36_cgenff.rtf
+            charge: 1
+            name: Ammonium (NH<sub>4</sub><sup>+</sup>)
+            natoms: 5
+  anions:
+    title: Anion Type
+    sub:
+      polyatomic_anions:
+        title: Polyatomic Anions
+        sub:
+          ACET:
+            abbr: C<sub>2</sub>H<sub>3</sub>O<sub>2</sub>
+            base: top_all36_cgenff.rtf
+            charge: -1
+            name: Acetate (C<sub>2</sub>H<sub>3</sub>O<sub>2</sub><sup>-</sup>)
+            natoms: 7
+          ALF4:
+            abbr: AlF<sub>4</sub>
+            base: top_all36_cgenff.rtf
+            charge: -1
+            name: Aluminum Tetraflouride (AlF<sub>4</sub><sup>-</sup>)
+            natoms: 5
+          CO3:
+            abbr: CO<sub>3</sub>
+            base: top_all36_cgenff.rtf
+            charge: -2
+            name: Ionized Carbonate (CO<sub>3</sub><sup>2-</sup>)
+            natoms: 4
+          CO31:
+            abbr: CHO<sub>3</sub>
+            base: top_all36_cgenff.rtf
+            charge: -1
+            name: Bicarbonate (CHO<sub>3</sub><sup>-</sup>)
+            natoms: 5
+          FORA:
+            abbr: CHO<sub>2</sub>
+            base: top_all36_cgenff.rtf
+            charge: -1
+            name: Formate (CHO<sub>2</sub><sup>-</sup>)
+            natoms: 4
+          MES1:
+            abbr: CH<sub>3</sub>S
+            base: top_all36_cgenff.rtf
+            charge: -1
+            name: Methylthiolate (CH<sub>3</sub>S<sup>-</sup>)
+            natoms: 5
+          METO:
+            abbr: CH<sub>3</sub>O
+            base: top_all36_cgenff.rtf
+            charge: -1
+            name: Methoxide (CH<sub>3</sub>O<sup>-</sup>)
+            natoms: 5
+          OH:
+            abbr: OH
+            base: toppar_water_ions.str
+            charge: -1
+            name: Hydroxide Ion (OH<sup>-</sup>)
+            natoms: 2
+          PO4:
+            abbr: PO<sub>4</sub>
+            base: toppar_all36_moreions.str
+            name: Phosphate (PO<sub>4</sub><sup>3-</sup>)
+            charge: -3
+            natoms: 5
+          HPO4:
+            abbr: HPO<sub>4</sub>
+            base: toppar_all36_moreions.str
+            name: Hydrogen Phosphate (HPO<sub>4</sub><sup>2-</sup>)
+            charge: -2
+            natoms: 6
+          H2PO4:
+            abbr: H<sub>2</sub>PO<sub>4</sub>
+            base: toppar_all36_moreions.str
+            name: Dihydrogen phosphate (H<sub>2</sub>PO<sub>4</sub><sup>-</sup>)
+            charge: -1
+            natoms: 7
+          SO4:
+            abbr: SO<sub>4</sub>
+            base: toppar_all36_moreions.str
+            name: Sulfate (SO<sub>4</sub><sup>2-</sup>)
+            charge: -2
+            natoms: 5
+          HSO4:
+            abbr: HPO<sub>4</sub>
+            base: toppar_all36_moreions.str
+            name: Hydrogen Sulfate (HPO<sub>4</sub><sup>-</sup>)
+            charge: -1
+            natoms: 6
+      halogens:
+        title: Halogens
+        sub:
+          CLA:
+            abbr: Cl
+            atoms: [CLA]
+            base: toppar_water_ions.str
+            charge: -1
+            name: Cl<sup>-</sup>

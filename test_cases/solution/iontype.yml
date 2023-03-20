@@ -1,0 +1,22 @@
+- label: changing ion type and ion concentration 5u4j
+  pdb: 5u4j.cif
+  ion_method: mc
+  ion_type: NaCl
+  ion_conc: 0.15
+
+- label: changing ion type and ion concentration 1l6x
+  pdb: 1l6x.cif
+  ion_method: mc
+  ion_type: CaCl2
+  ion_conc: 0.2
+
+- label: complex ion types (MgCl2 + Co2(CO3)3)
+  pdb: 2klu.cif
+  ions:
+    - cation: MG
+      anion: CLA
+      conc: 0
+      neutral: true
+    - cation: CO
+      anion: CO3
+      conc: .15

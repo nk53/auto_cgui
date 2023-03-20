@@ -1,0 +1,34 @@
+- label: 2K4T
+  pdb:
+    name: 2k4t.pdb
+    format: pdb
+  orient_ppm:
+  msp: 
+    MSP1D1_44
+  lipids:
+    upper:
+      popc: 1
+    lower:
+      popc: 1
+  input: openmm
+  hmr: True
+
+- label: 2RH1
+  pdb:
+    name: 2rh1.pdb
+    format: pdb
+  rids:
+    - PROA 30 800
+  chains:
+    - CARA
+  rotate_x_checked: True
+  rotate_X: 90
+  translate_checked: True
+  translate: -5
+  lipids:
+    upper:
+      popc: 1
+    lower:
+      popc: 1
+  input: openmm
+  hmr: True

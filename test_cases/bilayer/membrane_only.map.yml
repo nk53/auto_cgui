@@ -1,0 +1,63 @@
+X:
+  step: 1
+  elems:
+    - hetero_lx: X
+Y:
+  step: 1
+  elems:
+    - hetero_lx: Y
+XY:
+  step: 1
+  elems:
+    - hetero_lx: XY
+solvtype:
+  step: 1
+  elems:
+    - hetero_boxtype: solvtype
+# alias for solvtype
+boxtype:
+  step: 1
+  elems:
+    - hetero_boxtype: boxtype
+water_thickness:
+  step: 1
+  presteps:
+    - click_by_value('wdist')
+  elems:
+    - hetero_wdist: water_thickness
+Z:
+  step: 1
+  presteps:
+    - click_by_value('wdist')
+  elems:
+    - hetero_wdist: Z
+hydration_number:
+  step: 1
+  presteps:
+    - click_by_value('nhydration')
+  elems:
+    - nhydration: hydration_number
+lipids:
+  step: 1
+  presteps:
+    - select_lipids()
+ions_checked:
+  step: 2
+  elems:
+    - ions_checked: ions_checked
+ions:
+  step: 2
+  presteps:
+    - set_custom_ions()
+ion_conc:
+  step: 2
+  elems:
+    - "ion_conc[]": ion_conc
+ion_type:
+  step: 2
+  presteps:
+    - set_ion_type()
+ion_method:
+  step: 2
+  presteps:
+    - set_ion_method()

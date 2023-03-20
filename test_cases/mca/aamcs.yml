@@ -1,0 +1,163 @@
+# this file uses mostly default options to test different component types
+- label: solvated + membrane (rep 1)
+  base: components/basic
+  parent: first_page_bilayer
+  packing_method: aamcs
+  components:
+    1ubq:
+      type: solvated
+      count: 9
+    2hac:
+      type: membrane
+      count: 6
+  XY: 64.46
+  Z: 50
+- label: solvated + membrane (rep 2)
+  base: components/basic
+  parent: first_page_bilayer
+  packing_method: aamcs
+  components:
+    1ubq:
+      type: solvated
+      count: 9
+    2hac:
+      type: membrane
+      count: 6
+  XY: 64.46
+  Z: 50
+- label: solvated + membrane (rep 3)
+  base: components/basic
+  parent: first_page_bilayer
+  packing_method: aamcs
+  components:
+    1ubq:
+      type: solvated
+      count: 9
+    2hac:
+      type: membrane
+      count: 6
+  XY: 64.46
+  Z: 50
+- label: solvated (rep 1)
+  base: components/basic
+  parent: first_page_solution
+  packing_method: aamcs
+  components:
+    1ubq:
+      type: solvated
+      count: 3
+    1vii:
+      type: solvated
+      count: 3
+    3gb1:
+      type: solvated
+      count: 3
+  XYZ: 58.89
+- label: solvated (rep 2)
+  base: components/basic
+  parent: first_page_solution
+  packing_method: aamcs
+  components:
+    1ubq:
+      type: solvated
+      count: 3
+    1vii:
+      type: solvated
+      count: 3
+    3gb1:
+      type: solvated
+      count: 3
+  XYZ: 58.89
+- label: solvated (rep 3)
+  base: components/basic
+  parent: first_page_solution
+  packing_method: aamcs
+  components:
+    1ubq:
+      type: solvated
+      count: 3
+    1vii:
+      type: solvated
+      count: 3
+    3gb1:
+      type: solvated
+      count: 3
+  XYZ: 58.89
+- label: membrane same (rep 1)
+  base: components/basic
+  parent: first_page_bilayer
+  packing_method: aamcs
+  components:
+    2hac:
+      type: membrane
+      count: 3
+  XY: 64.46
+  Z: 50
+- label: membrane same (rep 2)
+  base: components/basic
+  parent: first_page_bilayer
+  packing_method: aamcs
+  components:
+    2hac:
+      type: membrane
+      count: 3
+  XY: 64.46
+  Z: 50
+- label: membrane same (rep 3)
+  base: components/basic
+  parent: first_page_bilayer
+  packing_method: aamcs
+  components:
+    2hac:
+      type: membrane
+      count: 3
+  XY: 64.46
+  Z: 50
+- label: membrane mix (rep 1)
+  base: components/basic
+  parent: first_page_bilayer
+  packing_method: aamcs
+  components:
+    2hac:
+      type: membrane
+      count: 3
+    2maf:
+      type: membrane
+      count: 3
+    lptd_e:
+      type: membrane
+      count: 3
+  XY: 196
+  Z: 50
+- label: membrane mix (rep 2)
+  base: components/basic
+  parent: first_page_bilayer
+  packing_method: aamcs
+  components:
+    2hac:
+      type: membrane
+      count: 3
+    2maf:
+      type: membrane
+      count: 3
+    lptd_e:
+      type: membrane
+      count: 3
+  XY: 196
+  Z: 50
+- label: membrane mix (rep 3)
+  base: components/basic
+  parent: first_page_bilayer
+  packing_method: aamcs
+  components:
+    2hac:
+      type: membrane
+      count: 3
+    2maf:
+      type: membrane
+      count: 3
+    lptd_e:
+      type: membrane
+      count: 3
+  XY: 196
+  Z: 50

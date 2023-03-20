@@ -1,13 +1,15 @@
 base: pdb/basic
 dict: basic.map.yml
-ion_method: distance
+#ion_method: distance
+ion_method: mc
+ion_type: NaCl
 steps:
   - module:
       name: pdb
       stop: -1
-  - wait_text: Computed Energy
+  - wait_text: Size Options
     poststeps:
-      - click_by_value('Calculate number of ions')
+      - click_by_value('Calculate Solvent Composition')
       - wait_script('is_updated')
   - wait_text: Periodic Boundary Condition Options
   - module:

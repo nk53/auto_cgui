@@ -1,0 +1,23 @@
+- label: Full-to-HMMM conversion of 2hac in bilayer
+  parent: full2hmmm
+  psf: bilayer_2hac.psf
+  pdb: bilayer_2hac.crd
+  str: bilayer_2hac.str
+
+- label: HMMM-to-Full conversion of 2hac in bilayer
+  parent: hmmm2full
+  psf: hmmm_2hac.psf
+  pdb: hmmm_2hac.crd
+  str: hmmm_2hac.str
+
+- label: Old Full-to-HMMM conversion of 2hac in bilayer
+  parent: full2hmmm
+  psf: bilayer_2hac_old.psf
+  pdb: bilayer_2hac_old.crd
+  str: bilayer_2hac_old.str
+
+- label: Old HMMM-to-Full conversion of 2hac in bilayer
+  parent: hmmm2full
+  psf: hmmm_2hac_old.psf
+  pdb: hmmm_2hac_old.crd
+  str: hmmm_2hac_old.str

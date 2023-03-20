@@ -1,0 +1,46 @@
+- label: 5O8F, Amber FF video demo 1
+  # pdb options
+  pdb: 5o8f.cif
+  chains: all
+  # protein orientation options
+  orient_axis:
+  flip: True
+  translate: 37.5
+  # membrane options
+  XY: 150
+  lipids:
+    lower:
+      chl1: 1
+      popc: 4
+    upper:
+      chl1: 1
+      popc: 4
+  # input options
+  input: amber
+  hmr: True
+  temperature: 303.15
+- label: 6IYC, Amber FF video demo 3
+  # pdb options
+  pdb: 6iyc.pqr
+  # protonation state (pstate) info should be pre-selected by C-GUI
+  ssbonds:
+    - PROA 50 PROA 62
+    - PROA 140 PROA 159 
+    - PROA 230 PROA 248 
+    - PROA 586 PROA 620 
+  # protein orientation options
+  orient_ppm:
+  flip: True
+  translate: 37.5
+  # membrane options
+  boxtype: hexa
+  XY: 125
+  lipids:
+    lower:
+      popc: 1
+    upper:
+      popc: 1
+  # input options
+  input: amber
+  hmr: True
+  temperature: 303.15

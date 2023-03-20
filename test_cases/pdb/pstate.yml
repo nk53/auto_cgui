@@ -1,0 +1,18 @@
+- label: 6IYC with disulfide bonds and protonation state
+  base: pdb/basic
+  pdb: 6iyc.pqr
+  # chain1 res rid patch
+  pstate:
+    - PROA ASP 283 ASPP
+    - PROA GLU 296 GLUP
+    - PROA GLU 333 GLUP
+    - PROA GLU 364 GLUP
+    - PROB ASP 257 ASPP
+    - PROB ASP 385 ASPP
+    - PROC ASP 140 ASPP
+  # chain1 resid1 chain2 resid2
+  ssbonds:
+    - PROA 50 PROA 62
+    - PROA 140 PROA 159
+    - PROA 230 PROA 248
+    - PROA 586 PROA 620

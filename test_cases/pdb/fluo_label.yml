@@ -1,0 +1,5 @@
+- label: 1gfl with fluorophore labels
+  base: pdb/basic
+  pdb: 1gfl.pdb
+  fluo_labels:
+    - CY3S PROA CYS 48

@@ -1,0 +1,83 @@
+# this file uses mostly default options to test different component types
+- label: solvated
+  parent: multicomp_solution
+  solvent_tests: [water, water+ions]
+  components:
+    1ubq:
+      type: solvated
+      count: 3
+    1vii:
+      type: solvated
+      count: 3
+    3gb1:
+      type: solvated
+      count: 3
+  XYZ: 60
+- label: solvated + custom_solvent
+  parent: multicomp_solution
+  solvent_tests: [water, ions, water+ions, None]
+  components:
+    1ubq:
+      type: solvated
+      count: 3
+    meoh:
+      type: solvent
+      density: 792
+    nbut:
+      type: solvent
+      density: 810
+    tolu:
+      type: solvent
+      density: 870
+  XYZ: 60
+- label: solvated + membrane_only
+  parent: multicomp_bilayer
+  solvent_tests: [water, water+ions]
+  components:
+    1ubq:
+      type: solvated
+      count: 3
+    1vii:
+      type: solvated
+      count: 3
+    3gb1:
+      type: solvated
+      count: 3
+  XY: 50
+  Z: 50
+  lipids:
+    upper:
+      ddpc: 1
+    lower:
+      ddpc: 1
+- label: membrane_only + custom_solvent
+  parent: multicomp_bilayer
+  solvent_tests: [water, water+ions]
+  components:
+    tolu:
+      type: solvent
+      density: 870
+  XY: 50
+  Z: 25
+  lipids:
+    upper:
+      ddpc: 1
+    lower:
+      ddpc: 1
+- label: membrane + custom_solvent
+  parent: multicomp_bilayer
+  solvent_tests: [water, water+ions]
+  components:
+    2hac:
+      type: membrane
+      count: 3
+    tolu:
+      type: solvent
+      density: 870
+  XY: 50
+  Z: 25
+  lipids:
+    upper:
+      ddpc: 1
+    lower:
+      ddpc: 1

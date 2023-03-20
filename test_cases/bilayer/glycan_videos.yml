@@ -1,0 +1,26 @@
+# this file uses mostly default options to test different component types
+- label: 3CHB/GM1 complex, Glycan video demo 3
+  base: components/basic
+  pdb: 3chb.cif
+  glycan:
+  -
+    type: glycolipid
+    segid: CARA
+    grs: |
+      1 CER160
+      2 - 1B: BGLC
+      3 - - 14B: BGAL
+      4 - - - 14B: BGALNA
+      5 - - - - 13B: BGAL
+      6 - - - 23A: ANE5AC
+  XY: 70
+  lipids:
+    lower:
+      chl1: 1
+      dopc: 2
+    upper:
+      chl1: 1
+      dopc: 2
+  input: openmm
+  hmr: True
+  temperature: 310.15

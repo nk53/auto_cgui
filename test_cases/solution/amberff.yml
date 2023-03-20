@@ -1,0 +1,10 @@
+- label: 6O0Z, Amber FF video demo 2
+  # pdb options
+  pdb: 6o0z.cif
+  # solution options
+  boxtype: octa
+  fitedge: 10
+  # input options
+  input: amber
+  hmr: True
+  temperature: 303.15

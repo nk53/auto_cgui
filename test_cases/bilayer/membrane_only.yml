@@ -1,0 +1,24 @@
+base: pdb/basic
+dict: membrane_only.map.yml
+ion_method: distance
+psf_validation:
+  target: step4_lipid.psf
+steps:
+  - wait_text: Lipid Type
+    poststeps:
+      - calc_size()
+    alert: accept
+    invalid_alert_text: There was a change
+  # solvent options are similar to solution builder, but we still handle
+  # them separately
+  - wait_text: Component Building Options
+    poststeps:
+      - click_by_value('Calculate Solvent Composition')
+      - wait_script('is_updated')
+  - wait_text: Building Ion and Waterbox
+  - wait_text: Assemble Generated Components
+  - module:
+      name: input
+      stop: -1
+  # membrane wait text differs from input's default
+  - wait_text: Equilibration Input Notes

@@ -1,9 +1,7 @@
-# this file uses mostly default options to test different component types
-- label: reader
-  base: components/basic
-  pdb: 1l6x
+- label: 1l6x with glycan
+  pdb: 1l6x.cif
   glycan:
-  - 
+  -
     type: n-linked
     prot: '{"segid":"PROA","resname":"ASN","resid":286}'
     grs: |
@@ -17,16 +15,10 @@
       9 - - - 16A: AMAN
       10 - - - - 12B: BGLCNA
       2 - 16A: AFUC
-  - 
+  -
     type: n-linked
     prot: '{"segid":"PROA","resname":"ASN","resid":276}'
     grs: |
       1 BGLCNA
       2 - 14B: BGLCNA
       3 - - 14B: BMAN
-  steps:
-    - wait_text: Manipulate PDB
-    - wait_text: Generate PDB
-      presteps:
-        - set_glycosylation()
-    - wait_text: Computed Energy

@@ -1,0 +1,16 @@
+files:
+  - csml.yml
+  - fluo_label.yml
+  - glycan.yml
+  - gpi.yml
+  - llp.yml
+  - mts_modifier.yml
+  - mts_nitride.yml
+  - mutation.yml
+  - phos.yml
+  - pstate.yml
+  - sdf.yml
+  - ssbond.yml
+  - staple.yml
+  - term.yml
+  - uaa.yml

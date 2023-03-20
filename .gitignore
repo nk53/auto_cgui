@@ -4,5 +4,8 @@ __pycache__/*
 *.xz
 *.tgz
 *.gz
+*.bak
+*.txt
+charmm-gui-*
 config.yml
 www

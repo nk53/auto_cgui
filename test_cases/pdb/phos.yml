@@ -1,0 +1,10 @@
+- label: 1KDX with default phosphorylations
+  pdb: 1kdx.pdb
+  phosphorylation:
+    - PROB SER 133 SP2
+- label: 2KLU with 3 added phosphorylations
+  pdb: 2klu.cif
+  phosphorylation:
+    - PROA SER 394 SP1
+    - PROA SER 415 SP1
+    - PROA SER 431 SP1

@@ -1,0 +1,14 @@
+- label: 1y26 with full unit cell
+  base: pdb/basic
+  pdb: 1y26.pdb
+  unit_cells:
+
+- label: 1p7b with full unit cell
+  base: pdb/basic
+  pdb: 1p7b.pdb
+  unit_cells:
+
+- label: 1hrc with full unit cell
+  base: pdb/basic
+  pdb: 1hrc.pdb
+  unit_cells:

@@ -1,0 +1,37 @@
+- label: 1UBQ with two staples in solution with explicit size
+  staples:
+    - RMETA3 PROA 1 PROA 3
+    - META5 PROA 25 PROA 29
+  pdb: 1ubq.pdb
+  input: openmm
+  hmr: True
+  size_option: explicit
+  X: 50
+  Y: 60
+  Z: 70
+- label: 186L modified with explicit size
+  pdb: 186l_modified.charmm
+  ligand: ligands/basic
+  chains:
+    - HETA
+    - HETB
+    - HETC
+    - HETD
+    - WATA
+  hcr:
+    - CLA CLA
+    - HED charmm
+    - LIG ctop_upload
+  X: 50
+  Y: 60
+  Z: 70
+- label: 2OI0_modified parameterized with explicit size
+  pdb: 2oi0_modified.pdb
+  ligand: ligands/basic
+  chains:
+    - HETA
+  hcr:
+    - LIG param
+  X: 50
+  Y: 60
+  Z: 70

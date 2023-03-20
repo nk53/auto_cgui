@@ -1,0 +1,7 @@
+# this file uses mostly default options to test different component types
+- label: 2klu with point mutations
+  pdb: 2klu.cif
+  # chain rid res patch
+  mutations:
+    - PROA 364 GLY ASN
+    - PROA 365 PRO ALA

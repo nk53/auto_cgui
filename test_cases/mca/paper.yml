@@ -1,0 +1,548 @@
+# Feig paper's systems
+- label: Feig paper, solvated only (5%)
+  temp: 310.15
+  input: openmm
+  hmr: true
+  parent: multicomp_solution
+  solvent_tests: [water+ions]
+  components:
+    1ubq:
+      type: solvated
+      count: 5
+    1vii:
+      type: solvated
+      count: 5
+    3gb1:
+      type: solvated
+      count: 5
+  XYZ: 153.32
+- label: Feig paper, solvated only (10%)
+  temp: 310.15
+  input: openmm
+  hmr: true
+  parent: multicomp_solution
+  solvent_tests: [water+ions]
+  components:
+    1ubq:
+      type: solvated
+      count: 10
+    1vii:
+      type: solvated
+      count: 10
+    3gb1:
+      type: solvated
+      count: 10
+  XYZ: 154.06
+- label: Feig paper, solvated only (30%)
+  temp: 310.15
+  input: openmm
+  hmr: true
+  parent: multicomp_solution
+  solvent_tests: [water+ions]
+  components:
+    1ubq:
+      type: solvated
+      count: 10
+    1vii:
+      type: solvated
+      count: 10
+    3gb1:
+      type: solvated
+      count: 10
+  XYZ: 106.31
+- label: Feig paper, membrane_only + solvated (5%)
+  temp: 310.15
+  input: openmm
+  hmr: true
+  parent: multicomp_bilayer
+  solvent_tests: [water+ions]
+  components:
+    1ubq:
+      type: solvated
+      count: 4
+    1vii:
+      type: solvated
+      count: 4
+    3gb1:
+      type: solvated
+      count: 4
+  lipids:
+    upper:
+      chl1: 1
+      popc: 1
+      psm: 1
+    lower:
+      chl1: 1
+      popc: 1
+      psm: 1
+  XY: 134.21
+  Z: 76.855
+- label: Feig paper, membrane_only + solvated (10%)
+  temp: 310.15
+  input: openmm
+  hmr: true
+  parent: multicomp_bilayer
+  solvent_tests: [water+ions]
+  components:
+    1ubq:
+      type: solvated
+      count: 8
+    1vii:
+      type: solvated
+      count: 8
+    3gb1:
+      type: solvated
+      count: 8
+  lipids:
+    upper:
+      chl1: 1
+      popc: 1
+      psm: 1
+    lower:
+      chl1: 1
+      popc: 1
+      psm: 1
+  XY: 134.18
+  Z: 77.67
+- label: Feig paper, membrane_only + solvated (30%)
+  temp: 310.15
+  input: openmm
+  hmr: true
+  parent: multicomp_bilayer
+  solvent_tests: [water+ions]
+  components:
+    1ubq:
+      type: solvated
+      count: 23
+    1vii:
+      type: solvated
+      count: 23
+    3gb1:
+      type: solvated
+      count: 23
+  lipids:
+    upper:
+      chl1: 1
+      popc: 1
+      psm: 1
+    lower:
+      chl1: 1
+      popc: 1
+      psm: 1
+  XY: 133.74
+  Z: 77.415
+# Pre-equilibrated membrane systems from Jumin
+- label: Axolemma + proteins (5%)
+  temp: 310.15
+  input: openmm
+  hmr: true
+  parent: multicomp_periodic
+  solvent_tests: [water+ions]
+  PBCX: 100.11
+  PBCY: 100.11
+  Z: 76.495 # target Z = 202.99
+  components:
+    axolemma:
+      type: periodic
+      pbc_z: 50
+      exclude_length: 10
+    1ubq:
+      type: solvated
+      count: 4
+    1vii:
+      type: solvated
+      count: 4
+    3gb1:
+      type: solvated
+      count: 4
+- label: Axolemma + proteins (10%)
+  temp: 310.15
+  input: openmm
+  hmr: true
+  parent: multicomp_periodic
+  solvent_tests: [water+ions]
+  PBCX: 100.11
+  PBCY: 100.11
+  Z: 76.495 # target Z = 202.99
+  components:
+    axolemma:
+      type: periodic
+      pbc_z: 50
+      exclude_length: 10
+    1ubq:
+      type: solvated
+      count: 8
+    1vii:
+      type: solvated
+      count: 8
+    3gb1:
+      type: solvated
+      count: 8
+- label: Axolemma + proteins (30%)
+  temp: 310.15
+  input: openmm
+  hmr: true
+  parent: multicomp_periodic
+  solvent_tests: [water+ions]
+  PBCX: 100.11
+  PBCY: 100.11
+  Z: 78.10 # target Z = 206.20 v/v% = 30%
+  components:
+    axolemma:
+      type: periodic
+      pbc_z: 50
+      exclude_length: 0
+    1ubq:
+      type: solvated
+      count: 23
+    1vii:
+      type: solvated
+      count: 23
+    3gb1:
+      type: solvated
+      count: 23
+# Polymer-bio systems from YK
+- label: PET + CO2
+  input: openmm
+  temp: 293.15
+  parent: multicomp_periodic
+  solvent_tests: [None]
+  PBCX: 97.593956
+  PBCY: 97.593956
+  components:
+    poly_pet:
+      type: periodic
+      exclude_length: 10
+      pbc_z: 100
+    co2:
+      type: solvent
+      density: 1.98
+- label: PEO40_PEE37 + proteins (5%)
+  input: openmm
+  hmr: true
+  parent: multicomp_periodic
+  solvent_tests: [water+ions]
+  PBCX: 107.875134
+  PBCY: 107.875134
+  Z: 34.755
+  components:
+    peo_pee:
+      type: periodic
+      pbc_z: 120
+      exclude_length: 10
+    1ubq:
+      type: solvated
+      count: 2
+    1vii:
+      type: solvated
+      count: 2
+    3gb1:
+      type: solvated
+      count: 2
+- label: PEO40_PEE37 + proteins (10%)
+  input: openmm
+  hmr: true
+  parent: multicomp_periodic
+  solvent_tests: [water+ions]
+  PBCX: 107.875134
+  PBCY: 107.875134
+  Z: 34.755
+  components:
+    peo_pee:
+      type: periodic
+      pbc_z: 120
+      exclude_length: 10
+    1ubq:
+      type: solvated
+      count: 4
+    1vii:
+      type: solvated
+      count: 4
+    3gb1:
+      type: solvated
+      count: 4
+- label: PEO40_PEE37 + proteins (30%)
+  input: openmm
+  hmr: true
+  parent: multicomp_periodic
+  solvent_tests: [water+ions]
+  PBCX: 107.875134
+  PBCY: 107.875134
+  Z: 38.02 # target Z = 196.04
+  components:
+    peo_pee:
+      type: periodic
+      exclude_length: 0
+      pbc_z: 120
+    1ubq:
+      type: solvated
+      count: 13
+    1vii:
+      type: solvated
+      count: 13
+    3gb1:
+      type: solvated
+      count: 13
+# Nano-bio systems
+- label: HA + proteins (5%)
+  input: openmm
+  parent: multicomp_periodic
+  solvent_tests: [water+ions]
+  PBCX: 103.587
+  PBCY: 114.1749
+  Z: 34.53
+  components:
+    ha:
+      type: periodic
+      pbc_z: 42
+      exclude_length: 5
+    1ubq:
+      type: solvated
+      count: 2
+    1vii:
+      type: solvated
+      count: 2
+    3gb1:
+      type: solvated
+      count: 2
+- label: HA + proteins (10%)
+  input: openmm
+  parent: multicomp_periodic
+  solvent_tests: [water+ions]
+  PBCX: 103.587
+  PBCY: 114.1749
+  Z: 34.53
+  components:
+    ha:
+      type: periodic
+      pbc_z: 42
+      exclude_length: 5
+    1ubq:
+      type: solvated
+      count: 4
+    1vii:
+      type: solvated
+      count: 4
+    3gb1:
+      type: solvated
+      count: 4
+- label: HA + proteins (30%)
+  input: openmm
+  parent: multicomp_periodic
+  solvent_tests: [water+ions]
+  PBCX: 103.587
+  PBCY: 114.1749
+  Z: 48.91
+  components:
+    ha:
+      type: periodic
+      pbc_z: 42
+      exclude_length: 5
+    1ubq:
+      type: solvated
+      count: 17
+    1vii:
+      type: solvated
+      count: 17
+    3gb1:
+      type: solvated
+      count: 17
+- label: QZ + proteins (5%)
+  input: openmm
+  parent: multicomp_periodic
+  solvent_tests: [water+ions]
+  PBCX: 103.173
+  PBCY: 102.1152
+  Z: 38.76
+  components:
+    qz:
+      type: periodic
+      pbc_z: 44
+      exclude_length: 5
+    1ubq:
+      type: solvated
+      count: 2
+    1vii:
+      type: solvated
+      count: 2
+    3gb1:
+      type: solvated
+      count: 2
+- label: QZ + proteins (10%)
+  input: openmm
+  parent: multicomp_periodic
+  solvent_tests: [water+ions]
+  PBCX: 103.173
+  PBCY: 102.1152
+  Z: 38.76
+  components:
+    qz:
+      type: periodic
+      pbc_z: 44
+      exclude_length: 5
+    1ubq:
+      type: solvated
+      count: 4
+    1vii:
+      type: solvated
+      count: 4
+    3gb1:
+      type: solvated
+      count: 4
+- label: QZ + proteins (30%)
+  input: openmm
+  parent: multicomp_periodic
+  solvent_tests: [water+ions]
+  PBCX: 103.173
+  PBCY: 102.1152
+  Z: 38.76
+  components:
+    qz:
+      type: periodic
+      pbc_z: 44
+      exclude_length: 0
+    1ubq:
+      type: solvated
+      count: 12
+    1vii:
+      type: solvated
+      count: 12
+    3gb1:
+      type: solvated
+      count: 12
+- label: muscovite + membrane (1 nm)
+  temp: 298.15
+  input: openmm
+  parent: multicomp_periodic_bilayer
+  solvent_tests: [water+ions]
+  PBCX: 103.836
+  PBCY: 108.1836
+  Z: 23.43
+  lipids:
+    upper:
+      popc: 1
+    lower:
+      popc: 1
+  solv_membrane: true
+  MEMB_Z: 46.86
+  components:
+    muscovite:
+      type: periodic
+      pbc_z: 29.92
+      pos:
+        z: 48.33
+- label: muscovite + membrane (2 nm)
+  temp: 298.15
+  input: openmm
+  parent: multicomp_periodic_bilayer
+  solvent_tests: [water+ions]
+  PBCX: 103.836
+  PBCY: 108.1836
+  Z: 23.43
+  lipids:
+    upper:
+      popc: 1
+    lower:
+      popc: 1
+  solv_membrane: true
+  MEMB_Z: 46.86
+  components:
+    muscovite:
+      type: periodic
+      pbc_z: 29.92
+      pos:
+        z: 58.33
+- label: muscovite + membrane (3 nm)
+  temp: 298.15
+  input: openmm
+  parent: multicomp_periodic_bilayer
+  solvent_tests: [water+ions]
+  PBCX: 103.836
+  PBCY: 108.1836
+  Z: 23.43
+  lipids:
+    upper:
+      popc: 1
+    lower:
+      popc: 1
+  solv_membrane: true
+  MEMB_Z: 46.86
+  components:
+    muscovite:
+      type: periodic
+      pbc_z: 29.92
+      pos:
+        z: 68.33
+# Mixed solvent systems
+- label: water + ethanol (3% v/v)
+  temp: 310.15
+  input: openmm
+  hmr: true
+  parent: multicomp_solution
+  solvent_tests: [water]
+  water_ratio: 10.356
+  components:
+    etoh:
+      type: solvent
+      density: 789.45
+  XYZ: 154.06
+- label: water + ethanol (6% v/v)
+  temp: 310.15
+  input: openmm
+  hmr: true
+  parent: multicomp_solution
+  solvent_tests: [water]
+  water_ratio: 5.018
+  components:
+    etoh:
+      type: solvent
+      density: 789.45
+  XYZ: 154.06
+- label: water + ethanol (9% v/v)
+  temp: 310.15
+  input: openmm
+  hmr: true
+  parent: multicomp_solution
+  solvent_tests: [water]
+  water_ratio: 3.239
+  components:
+    etoh:
+      type: solvent
+      density: 789.45
+  XYZ: 154.06
+- label: water + toluene (3% v/v)
+  temp: 310.15
+  input: openmm
+  hmr: true
+  parent: multicomp_solution
+  solvent_tests: [water]
+  water_ratio: 5.706
+  components:
+    tolu:
+      type: solvent
+      density: 870
+  XYZ: 154.06
+- label: water + toluene (6% v/v)
+  temp: 310.15
+  input: openmm
+  hmr: true
+  parent: multicomp_solution
+  solvent_tests: [water]
+  water_ratio: 2.765
+  components:
+    tolu:
+      type: solvent
+      density: 870
+  XYZ: 154.06
+- label: water + toluene (9% v/v)
+  temp: 310.15
+  input: openmm
+  hmr: true
+  parent: multicomp_solution
+  solvent_tests: [water]
+  water_ratio: 1.784
+  components:
+    tolu:
+      type: solvent
+      density: 870
+  XYZ: 154.06

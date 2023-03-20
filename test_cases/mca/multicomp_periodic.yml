@@ -1,0 +1,23 @@
+dict: basic.map.yml
+base: components/basic
+# "parent: False" means this has no parent
+parent: False
+psf_validation:
+  target: step2_molpacking.psf
+solvent_tests: [water+ions]
+steps:
+  - wait_text: Component ID
+    presteps:
+      - select_components()
+    alert: accept
+  - wait_text: Solvation Options
+    poststeps:
+      - SOLVENT_TEST_PLACEHOLDER
+      - set_component_density()
+      - click_by_attrs(value='Calculate Solvent Composition')
+      - wait_script('is_updated')
+  - wait_text: Periodic Boundary Condition Options
+  - module:
+      name: input
+      stop: -1
+  - wait_text: Equilibration Input Notes

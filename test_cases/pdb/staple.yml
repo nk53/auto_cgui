@@ -6,9 +6,3 @@
   staples:
     - RMETA3 PROA 1 PROA 3
     - META5 PROA 25 PROA 29
-  steps:
-    - wait_text: Manipulate PDB
-    - wait_text: Generate PDB
-      presteps:
-        - set_stapling()
-    - wait_text: Computed Energy

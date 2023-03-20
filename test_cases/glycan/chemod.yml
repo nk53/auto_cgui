@@ -1,0 +1,9 @@
+# this file uses mostly default options to test different component types
+- label: unbranched glycan with chemical modifications
+  glycan:
+    grs: |
+      1 AGLC_2NSF_6SUF
+      2 - 14A: AIDOA_2SUF
+      3 - - 14A: AGLC_2NSF_6SUF
+      4 - - - 14A: AIDOA_2SUF
+      5 - - - - 14A: AGLC_2NSF_6SUF

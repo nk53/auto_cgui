@@ -1,0 +1,44 @@
+- label: 2omf with biological assembly
+  base: pdb/basic
+  pdb: 2omf.pdb
+  bios:
+
+- label: 6bwj with biological assembly
+  base: pdb/basic
+  pdb: 6bwj.pdb
+  bios:
+
+- label: 5fyl with biological assembly
+  base: pdb/basic
+  pdb: 5fyl.pdb
+  chains:
+    - CARC
+    - CARU
+    - CARV
+#    - PROB
+    - PROC
+    - CARD
+    - CARE
+    - CARF
+    - CARG
+    - CARH
+    - CARI
+    - CARJ
+    - CARK
+    - CARL
+    - CARM
+    - CARN
+    - CARO
+    - CARP
+    - CARQ
+    - CARR
+    - CARS
+    - CARA
+    - CARB
+    - PROE
+    - CART
+    - PROF
+    - PROD
+    - PROA
+  bios:
+

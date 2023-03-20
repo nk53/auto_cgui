@@ -1,0 +1,16 @@
+- label: 4HG6 with disulfide bonds
+  base: pdb/basic
+  pdb: 4hg6.pdb
+  # chain1 resid1 chain2 resid2
+  ssbonds:
+    - PROB 163 PROB 430
+
+- label: 6IYC
+  base: pdb/basic
+  pdb: 6iyc.pdb
+  # chain1 resid1 chain2 resid2
+  ssbonds:
+    - PROA 50 PROA 62
+    - PROA 140 PROA 159
+    - PROA 230 PROA 248
+    - PROA 586 PROA 620

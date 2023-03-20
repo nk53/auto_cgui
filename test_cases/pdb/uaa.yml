@@ -1,0 +1,6 @@
+- label: 3k2r with unnatural amino acids
+  base: pdb/basic
+  pdb: 3k2r.pdb
+  uaas:
+    - U05 PROA TRP 126
+    - U05 PROA TRP 138

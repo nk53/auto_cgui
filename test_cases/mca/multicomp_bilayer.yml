@@ -1,6 +1,8 @@
 dict: basic.map.yml
 base: components/basic
 parent: False
+reference:
+  target: step2_molpacking.psf
 solvent_tests: [water+ions]
 steps:
   - wait_text: Component ID
@@ -12,6 +14,7 @@ steps:
     poststeps:
     - click('hetero_size_button', 'Calculated XY System Size')
     alert: accept
+    invalid_alert_text: There was a change
   - module:
       name: bilayer
       index: 4

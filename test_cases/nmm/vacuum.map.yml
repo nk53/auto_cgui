@@ -1,0 +1,30 @@
+X:
+  step: 1
+  presteps:
+    - set_xyz()
+Y:
+  step: 1
+  presteps:
+    - set_xyz()
+Z:
+  step: 1
+  presteps:
+    - set_xyz()
+fitedge:
+  step: 1
+  elems:
+    - fitedge: fitedge
+# alias for fitedge
+edge:
+  step: 1
+  elems:
+    - fitedge: edge
+solvtype:
+  step: 1
+  elems:
+    - solvtype: solvtype
+# alias for solvtype
+boxtype:
+  step: 1
+  elems:
+    - solvtype: boxtype

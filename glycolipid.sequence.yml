@@ -1,0 +1,1897 @@
+#Glyceroglycolipids
+Gc001:
+  name: MGDG
+  sequence: |
+    1 DAG-DL
+    2-B: BGAL
+Gc002:
+  name: DGDG
+  sequence: |
+    1 DAG-DL
+    2-B: BGAL
+    3--16B: BGAL
+Gc003:
+  name: SQDG
+  sequence: |
+    1 DAG-DL
+    2-B: BQUI_6SFO
+
+#Galactocerebrosides
+Ga001:
+  name: GalCer
+  sequence: |
+    1 CER160
+    2-B: BGAL
+Ga002:
+  name: Sulfatide
+  sequence: |
+    1 CER160
+    2-B: BGAL_3SUF
+Ga003:
+  name: II<sup>3</sup>-SO<sub>4</sub>-di-GalCer
+  sequence: |
+    1 CER160
+    2-B: BGAL
+    3--14B: BGAL_3SUF
+
+#Glucocerebrosides
+Gl001:
+  name: GlcCer
+  sequence: |
+    1 CER160
+    2-B: BGLC
+Gl002:
+  name: LacCer
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+
+#Globo-series
+Gb001:
+  name: P<sup>k</sup> antigen (Gb3, globotriaosylceramide)
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---14A: AGAL
+Gb002:
+  name: II<sup>3</sup>-Neu5Ac-Gb3
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---14B: BGAL
+    5---23A: ANE5AC
+Gb003:
+  name: III<sup>3</sup>-Gal-Gb3
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---14A: AGAL
+    5----13A: AGAL
+Gb004:
+  name: P antigen (Gb4, Globoside)
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---14A: AGAL
+    5----13B: BGALNA
+Gb005:
+  name: IV<sup>3</sup>-SO<sub>4</sub>-Gb4
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---14A: AGAL
+    5----13B: BGALNA_3SUF
+Gb006:
+  name: Forssman
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---14A: AGAL
+    5----13B: BGALNA
+    6-----13A: AGALNA
+Gb007:
+  name: SSEA-3 (Gb5)
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---14A: AGAL
+    5----13B: BGALNA
+    6-----13B: BGAL
+Gb008:
+  name: Para-Forssman
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---14A: AGAL
+    5----13B: BGALNA
+    6-----13B: BGALNA
+Gb009:
+  name: V<sup>3</sup>-SO<sub>4</sub>-Gb5
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---14A: AGAL
+    5----13B: BGALNA
+    6-----13B: BGAL_3SUF
+Gb010:
+  name: SSEA-4 (V<sup>3</sup>-Neu5Ac-Gb5, GL-7)
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---14A: AGAL
+    5----13B: BGALNA
+    6-----13B: BGAL
+    7------23A: ANE5AC
+Gb011:
+  name: SSEA-4 (V<sup>6</sup>-Neu5Ac-Gb5)
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---14A: AGAL
+    5----13B: BGALNA
+    6-----13B: BGAL
+    7------26A: ANE5AC
+Gb012:
+  name: H4-Gb3 (Globo H, GL-6)
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---14A: AGAL
+    5----13B: BGALNA
+    6-----13B: BGAL
+    7------12A: AFUC
+Gb013:
+  name: Branched Forssman
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---14A: AGAL
+    5----14B: BGALNA
+    6-----13B: BGAL
+    7----13B: BGALNA
+    8-----13A: AGALNA
+Gb014:
+  name: A4-Gb3
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---14A: AGAL
+    5----13B: BGALNA
+    6-----13B: BGAL
+    7------13A: AGALNA
+    8------12A: AFUC
+Gb015:
+  name: B4-Gb3
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---14A: AGAL
+    5----13B: BGALNA
+    6-----13B: BGAL
+    7------13A: AGAL
+    8------12A: AFUC
+Gb016:
+  name: Le<sup>x</sup> (IV<sup>6</sup>-Le<sup>x</sup>-Gb5)
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---14A: AGAL
+    5----13B: BGALNA
+    6-----16B: BGLCNA
+    7------14B: BGAL
+    8------13A: AFUC
+    9-----13B: BGAL
+Gb017:
+  name: IV<sup>6</sup>,V<sup>3</sup>-di-Neu5Ac-Gb5
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---14A: AGAL
+    5----13B: BGALNA
+    6-----26A: ANE5AC
+    7-----13B: BGAL
+    8------23A: ANE5AC
+
+#Ganglio-series
+Gg001:
+  name: GA2
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---14B: BGALNA
+Gg002:
+  name: GM3
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---23A: ANE5AC
+Gg003:
+  name: GM3 (KDN)
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---23A: AKDN
+Gg004:
+  name: GD3
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---23A: ANE5AC
+    5----28A: ANE5AC
+Gg005:
+  name: GA1 (Asialo-GM1)
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---14B: BGALNA
+    5----13B: BGAL
+Gg006:
+  name: GM2
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---14B: BGALNA
+    5---23A: ANE5AC
+Gg007:
+  name: GM2α
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---14B: BGALNA
+    5----26A: ANE5AC
+Gg008:
+  name: GM2 (KDN)
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---14B: BGALNA
+    5---23A: AKDN
+Gg009:
+  name: II<sup>3</sup>-SO<sub>4</sub>-GA1 (SM1a)
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL_3SUF
+    4---14B: BGALNA
+    5----13B: BGAL
+Gg010:
+  name: IV<sup>3</sup>-SO<sub>4</sub>-GA1 (SM1b)
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---14B: BGALNA
+    5----13B: BGAL_3SUF
+Gg011:
+  name: II<sup>3</sup>,IV<sup>3</sup>-bis-SO<sub>4</sub>-GA1 (SB1a)
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL_3SUF
+    4---14B: BGALNA
+    5----13B: BGAL_3SUF
+Gg012:
+  name: GM1b (cisGM1)
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---14B: BGALNA
+    5----13B: BGAL
+    6-----23A: ANE5AC
+Gg013:
+  name: GD2
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---14B: BGALNA
+    5---23A: ANE5AC
+    6----28A: ANE5AC
+Gg014:
+  name: GM1a (GM1)
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---14B: BGALNA
+    5----13B: BGAL
+    6---23A: ANE5AC
+Gg015:
+  name: GM1α
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---14B: BGALNA
+    5----13B: BGAL
+    6----26A: ANE5AC
+Gg016:
+  name: GT3
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---23A: ANE5AC
+    5----28A: ANE5AC
+    6-----28A: ANE5AC
+Gg017:
+  name: GM1 (KDN)
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---14B: BGALNA
+    5----13B: BGAL
+    6---23A: AKDN
+Gg018:
+  name: GD1a (Neu5Ac/KDN)
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---14B: BGALNA
+    5----13B: BGAL
+    6-----23A: AKDN
+    7---23A: ANE5AC
+Gg019:
+  name: GD1α (Neu5Ac/KDN)
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---14B: BGALNA
+    5----26A: ANE5AC
+    6----13B: BGAL
+    7-----23A: AKDN
+Gg020:
+  name: GD1a (KDN/Neu5Ac)
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---14B: BGALNA
+    5----13B: BGAL
+    6-----23A: ANE5AC
+    7---23A: AKDN
+Gg021:
+  name: 9-O-Acetyl-GT3
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---23A: ANE5AC
+    5----28A: ANE5AC
+    6-----28A: ANE5AC_9AC
+Gg022:
+  name: III<sup>2</sup>-Fuc-GD2
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---14B: BGALNA
+    5----12A: AFUC
+    6---23A: ANE5AC
+    7----28A: ANE5AC
+Gg023:
+  name: H4-GM3 (H-GM1)
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---14B: BGALNA
+    5----13B: BGAL
+    6-----12A: AFUC
+    7---23A: ANE5AC
+Gg024:
+  name: IV<sup>4</sup>-GalNAc-GM1
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---14B: BGALNA
+    5----13B: BGAL
+    6-----14B: BGALNA
+    7---23A: ANE5AC
+Gg025:
+  name: IV<sup>4</sup>-GalNAc-GM1b
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---14B: BGALNA
+    5----13B: BGAL
+    6-----14B: BGALNA
+    7-----23A: ANE5AC
+Gg026:
+  name: GD1a
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---14B: BGALNA
+    5----13B: BGAL
+    6-----23A: ANE5AC
+    7---23A: ANE5AC
+Gg027:
+  name: GD1a (Neu5Gc/Neu5Ac)
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---14B: BGALNA
+    5----13B: BGAL
+    6-----23A: ANE5AC
+    7---23A: ANE5GC
+Gg028:
+  name: GD1a (Neu5Gc/Neu5Gc)
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---14B: BGALNA
+    5----13B: BGAL
+    6-----23A: ANE5GC
+    7---23A: ANE5GC
+Gg029:
+  name: GD1aα
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---14B: BGALNA
+    5----26A: ANE5AC
+    6----13B: BGAL
+    7---23A: ANE5AC
+Gg030:
+  name: GD1α
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---14B: BGALNA
+    5----26A: ANE5AC
+    6----13B: BGAL
+    7-----23A: ANE5AC
+Gg031:
+  name: GD1b
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---14B: BGALNA
+    5----13B: BGAL
+    6---23A: ANE5AC
+    7----28A: ANE5AC
+Gg032:
+  name: GD1c (GD1)
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---14B: BGALNA
+    5----13B: BGAL
+    6-----23A: ANE5AC
+    7------28A: ANE5AC
+Gg033:
+  name: GM4
+  sequence: |
+    1 CER160
+    2-B: BGAL
+    3--23A: ANE5AC
+Gg034:
+  name: GT2
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---14B: BGALNA
+    5---23A: ANE5AC
+    6----28A: ANE5AC
+    7-----28A: ANE5AC
+Gg035:
+  name: GD1a (KDN/KDN)
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---14B: BGALNA
+    5----13B: BGAL
+    6-----23A: AKDN
+    7---23A: AKDN
+Gg036:
+  name: GD1α (KDN/KDN)
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---14B: BGALNA
+    5----26A: AKDN
+    6----13B: BGAL
+    7-----23A: AKDN
+Gg037:
+  name: GM2 (Neu5Gc)
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---14B: BGALNA
+    5---23A: ANE5GC
+Gg038:
+  name: H4-GD3 (H-GD1b)
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---14B: BGALNA
+    5----13B: BGAL
+    6-----12A: AFUC
+    7---23A: ANE5AC
+    8----28A: ANE5AC
+Gg039:
+  name: Gal-GD1b
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---14B: BGALNA
+    5----13B: BGAL
+    6-----13A: AGAL
+    7---23A: ANE5AC
+    8----28A: ANE5AC
+Gg040:
+  name: GalNAc-GD1a
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---14B: BGALNA
+    5----13B: BGAL
+    6-----14B: BGALNA
+    7-----23A: ANE5AC
+    8---23A: ANE5AC
+Gg041:
+  name: GalNAc-GD1a (Neu5Gc/Neu5Ac)
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---14B: BGALNA
+    5----13B: BGAL
+    6-----14B: BGALNA
+    7-----23A: ANE5AC
+    8---23A: ANE5GC
+Gg042:
+  name: GalNAc-GD1a (Neu5Ac/Neu5Gc)
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---14B: BGALNA
+    5----13B: BGAL
+    6-----14B: BGALNA
+    7-----23A: ANE5GC
+    8---23A: ANE5AC
+Gg043:
+  name: GT1a
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---14B: BGALNA
+    5----13B: BGAL
+    6-----23A: ANE5AC
+    7------28A: ANE5AC
+    8---23A: ANE5AC
+Gg044:
+  name: GT1aα (Chol-1α-a)
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---14B: BGALNA
+    5----26A: ANE5AC
+    6----13B: BGAL
+    7-----23A: ANE5AC
+    8---23A: ANE5AC
+Gg045:
+  name: GT1b
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---14B: BGALNA
+    5----13B: BGAL
+    6-----23A: ANE5AC
+    7---23A: ANE5AC
+    8----28A: ANE5AC
+Gg046:
+  name: GT1b (Neu5Gc/Neu5Ac/Neu5Ac)
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---14B: BGALNA
+    5----13B: BGAL
+    6-----23A: ANE5AC
+    7---23A: ANE5GC
+    8----28A: ANE5AC
+Gg047:
+  name: GT1bα
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---14B: BGALNA
+    5----26A: ANE5AC
+    6----13B: BGAL
+    7---23A: ANE5AC
+    8----28A: ANE5GC
+Gg048:
+  name: GT1c
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---14B: BGALNA
+    5----13B: BGAL
+    6---23A: ANE5AC
+    7----28A: ANE5AC
+    8-----28A: ANE5AC
+Gg049:
+  name: 9-O-Acetyl-GT1b
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---14B: BGALNA
+    5----13B: BGAL
+    6-----23A: ANE5AC
+    7---23A: ANE5AC
+    8----28A: ANE5AC_9AC
+Gg050:
+  name: B4-GM3 (B-GM1)
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---14B: BGALNA
+    5----13B: BGAL
+    6-----13A: AGAL
+    7-----12A: AFUC
+    8---23A: ANE5AC
+Gg051:
+  name: GQ1b
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---14B: BGALNA
+    5----13B: BGAL
+    6-----23A: ANE5AC
+    7------28A: ANE5AC
+    8---23A: ANE5AC
+    9----28A: ANE5AC
+Gg052:
+  name: GQ1α
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---14B: BGALNA
+    5----26A: ANE5AC
+    6-----28A: ANE5AC
+    7----13B: BGAL
+    8-----23A: ANE5AC
+    9------28A: ANE5AC
+Gg053:
+  name: GQ1bα (Chol-1α-b)
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---14B: BGALNA
+    5----26A: ANE5AC
+    6----13B: BGAL
+    7-----23A: ANE5AC
+    8---23A: ANE5AC
+    9----28A: ANE5AC
+Gg054:
+  name: GQ1c
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---14B: BGALNA
+    5----13B: BGAL
+    6-----23A: ANE5AC
+    7---23A: ANE5AC
+    8----28A: ANE5AC
+    9-----28A: ANE5AC
+Gg055:
+  name: GP1c
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---14B: BGALNA
+    5----13B: BGAL
+    6-----23A: ANE5AC
+    7------28A: ANE5AC
+    8---23A: ANE5AC
+    9----28A: ANE5AC
+    10-----28A: ANE5AC
+Gg056:
+  name: GP1cα
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---14B: BGALNA
+    5----13B: BGAL
+    6-----23A: ANE5AC
+    7----26A: ANE5AC
+    8---23A: ANE5AC
+    9----28A: ANE5AC
+    10-----28A: ANE5AC
+Gg057:
+  name: B4-GD3 (B-GD1b)
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---14B: BGALNA
+    5----13B: BGAL
+    6-----13A: AGAL
+    7-----12A: AFUC
+    8---23A: ANE5AC
+    9----28A: ANE5AC
+Gg058:
+  name: GQ1aα
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---14B: BGALNA
+    5----13B: BGAL
+    6-----23A: ANE5AC
+    7------28A: ANE5AC
+    8----26A: ANE5AC
+    9---23A: ANE5AC
+Gg059:
+  name: GH1cα
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---14B: BGALNA
+    5----13B: BGAL
+    6-----23A: ANE5AC
+    7------28A: ANE5AC
+    8----26A: ANE5AC
+    9---23A: ANE5AC
+    10----28A: ANE5AC
+    11-----28A: ANE5AC
+Gg060:
+  name: 9-O-Acetyl-GD3
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---23A: ANE5AC
+    5----28A: ANE5AC_9AC
+Gg061:
+  name: Chol-1β
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---14B: BGALNA
+    5----26A: ANE5AC
+    6----13B: BGAL
+    7---23A: ANE5AC
+    8----28A: ANE5AC
+Gg062:
+  name: GT1α
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    6---14B: BGALNA
+    4----26A: ANE5AC
+    5-----28A: ANE5AC
+    7----13B: BGAL
+    8-----23A: ANE5AC
+Gg063:
+  name: 9-O-Acetyl-GQ1b
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---14B: BGALNA
+    5----13B: BGAL
+    6-----23A: ANE5AC
+    7------28A: ANE5AC
+    8---23A: ANE5AC
+    9----28A: ANE5AC_9AC
+
+#Lacto-series
+Lc001:
+  name: Lc3 (Amino CTH)
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---13B: BGLCNA
+Lc002:
+  name: III<sup>6</sup>-SO<sub>4</sub>-Lc3
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---13B: BGLCNA_6SUF
+Lc003:
+  name: LcGg4
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---14B: BGALNA
+    5---13B: BGLCNA
+Lc004:
+  name: Lc4
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---13B: BGLCNA
+    5----13B: BGAL
+Lc005:
+  name: IV<sup>3</sup>-KDN-Lc4
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---13B: BGLCNA
+    5----13B: BGAL
+    6-----23A: AKDN
+Lc006:
+  name: IV<sup>6</sup>-KDN-Lc4
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---13B: BGLCNA
+    5----13B: BGAL
+    6-----26A: AKDN
+Lc007:
+  name: Le<sup>a</sup> (Le<sup>a</sup>-LacCer)
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---13B: BGLCNA
+    5----14A: AFUC
+    6----13B: BGAL
+Lc008:
+  name: IV<sup>6</sup>-Neu5Ac-Lc4
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---13B: BGLCNA
+    5----13B: BGAL
+    6-----26A: ANE5AC
+Lc009:
+  name: H1-LacCer
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---13B: BGLCNA
+    5----13B: BGAL
+    6-----12A: AFUC
+Lc010:
+  name: IV<sup>3</sup>-Neu5Ac-IV<sup>4</sup>-GalNAc-Lc4 (GalNAc-3'-isoLM1)
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---13B: BGLCNA
+    5----13B: BGAL
+    6-----14B: BGALNA
+    7-----23A: ANE5AC
+Lc011:
+  name: Lc6
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---13B: BGLCNA
+    5----13B: BGAL
+    6-----13B: BGLCNA
+    7------13B: BGAL
+Lc012:
+  name: Le<sup>b</sup> (Le<sup>b</sup>-LacCer)
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---13B: BGLCNA
+    5----14A: AFUC
+    6----13B: BGAL
+    7-----12A: AFUC
+Lc013:
+  name: sLe<sup>a</sup> (sLe<sup>a</sup>-LacCer)
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---13B: BGLCNA
+    5----14A: AFUC
+    6----13B: BGAL
+    7-----23A: ANE5AC
+Lc014:
+  name: A1-LacCer
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---13B: BGLCNA
+    5----13B: BGAL
+    6-----13A: AGALNA
+    7-----12A: AFUC
+Lc015:
+  name: B1-LacCer
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---13B: BGLCNA
+    5----13B: BGAL
+    6-----13A: AGAL
+    7-----12A: AFUC
+Lc016:
+  name: IV<sup>3</sup>-LacNAc-Lc4
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---13B: BGLCNA
+    5----13B: BGAL
+    6-----13B: BGLCNA
+    7------14B: BGAL
+Lc017:
+  name: Le<sup>b</sup> (IV<sup>3</sup>-GalNAc-Le<sup>b</sup>-LacCer)
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---13B: BGLCNA
+    5----14A: AFUC
+    6----13B: BGAL
+    7-----13A: AGALNA
+    8-----12A: AFUC
+Lc018:
+  name: Le<sup>b</sup> (IV<sup>3</sup>-Gal-Le<sup>b</sup>-LacCer)
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---13B: BGLCNA
+    5----14A: AFUC
+    6----13B: BGAL
+    7-----13A: AGAL
+    8-----12A: AFUC
+Lc019:
+  name: sLe<sup>a</sup> (III<sup>6</sup>-Neu5Ac-sLe<sup>a</sup>-LacCer)
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---13B: BGLCNA
+    5----26A: ANE5AC
+    6----14A: AFUC
+    7----13B: BGAL
+    8-----23A: ANE5AC
+Lc020:
+  name: V<sup>3,4</sup>-Neu5Ac,GalNAc-LcGg5 (Ganglio X1)
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---14B: BGALNA
+    5---13B: BGLCNA
+    6----13B: BGAL
+    7-----14B: BGALNA
+    8-----23A: ANE5AC
+Lc021:
+  name: A1-Lc4
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---13B: BGLCNA
+    5----13B: BGAL
+    6-----13B: BGLCNA
+    7------13B: BGAL
+    8-------13A: AGALNA
+    9-------12A: AFUC
+Lc022:
+  name: V<sup>3,4</sup>-Neu5Ac,GalNAc-LcGg6 (Ganglio X2)
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---14B: BGALNA
+    5----13B: BGAL
+    6---13B: BGLCNA
+    7----13B: BGAL
+    8-----14B: BGALNA
+    9-----23A: ANE5AC
+Lc023:
+  name: Le<sup>y</sup>-Le<sup>a</sup> (Le<sup>y</sup>-Le<sup>a</sup>-LacCer)
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---13B: BGLCNA
+    5----14A: AFUC
+    6----13B: BGAL
+    7-----13B: BGLCNA
+    8------14B: BGAL
+    9-------12A: AFUC
+    10------13A: AFUC
+Lc024:
+  name: sLe<sup>a</sup>-Le<sup>x</sup> (II<sup>3,6</sup>-sLe<sup>a</sup>,Le<sup>x</sup>-LacCer)
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---16B: BGLCNA
+    5----14B: BGAL
+    6----13A: AFUC
+    7---13B: BGLCNA
+    8----14A: AFUC
+    9----13B: BGAL
+    10-----23A: ANE5AC
+Lc025:
+  name: di-Le<sup>a</sup> (di-Le<sup>a</sup>-LacCer) 
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---13B: BGLCNA
+    5----14A: AFUC
+    6----13B: BGAL
+    7-----13B: BGLCNA
+    8------14A: AFUC
+    9------13B: BGAL
+Lc026:
+  name: Le<sup>b</sup>-Le<sup>a</sup> (Le<sup>b</sup>-Le<sup>a</sup>-LacCer)
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---13B: BGLCNA
+    5----14A: AFUC
+    6----13B: BGAL
+    7-----13B: BGLCNA
+    8------14A: AFUC
+    9------13B: BGAL
+    10-------12A: AFUC
+Lc027:
+  name: di-Le<sup>b</sup> (di-Le<sup>b</sup>-LacCer)
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---13B: BGLCNA
+    5----14A: AFUC
+    6----13B: BGAL
+    7-----12A: AFUC
+    8-----13B: BGLCNA
+    9------14A: AFUC
+    10------13B: BGAL
+    11-------12A: AFUC
+
+#Iso-globo-series
+iGb001:
+  name: iGb3
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---13A: AGAL
+iGb002:
+  name: Cytolipin R (iGb4)
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---13A: AGAL
+    5----13B: BGALNA
+iGb003:
+  name: IV<sup>3</sup>-SO<sub>4</sub>-iGb4
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---13A: AGAL
+    5----13B: BGALNA_3SUF
+
+#Neo-lacto-series
+nLc001:
+  name: nLc4 (paragloboside)
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---13B: BGLCNA
+    5----14B: BGAL
+nLc002:
+  name: IV<sup>3</sup>-Gal-nLc4
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---13B: BGLCNA
+    5----14B: BGAL
+    6-----13B: BGAL
+nLc003:
+  name: H2-LacCer
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---13B: BGLCNA
+    5----14B: BGAL
+    6-----12A: AFUC
+nLc004:
+  name: nLc5
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---13B: BGLCNA
+    5----14B: BGAL
+    6-----13B: BGLCNA
+nLc005:
+  name: P1 antigen
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---13B: BGLCNA
+    5----14B: BGAL
+    6-----14A: AGAL
+nLc006:
+  name: PX2 antigen
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---13B: BGLCNA
+    5----14B: BGAL
+    6-----13B: BGALNA
+nLc007:
+  name: IV<sup>3</sup>-Neu5Ac-nLc4 (3'-LM1)
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---13B: BGLCNA
+    5----14B: BGAL
+    6-----23A: ANE5AC
+nLc008:
+  name: Le<sup>x</sup> (SSEA-1, X-hapten, Le<sup>x</sup>-LacCer)
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---13B: BGLCNA
+    5----14B: BGAL
+    6----13A: AFUC
+nLc009:
+  name: Cad antigen (IV<sup>3,4</sup>-Neu5Ac,GalNAc-nLc4)
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---13B: BGLCNA
+    5----14B: BGAL
+    6-----14B: BGALNA
+    7-----23A: ANE5AC
+nLc010:
+  name: IV<sup>6</sup>-Neu5Ac-nLc4 (LSTb)
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---13B: BGLCNA
+    5----14B: BGAL
+    6-----26A: ANE5AC
+nLc011:
+  name: Le<sup>x</sup> (IV<sup>3</sup>-LacNAc-Le<sup>x</sup>-LacCer)
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---13B: BGLCNA
+    5----14B: BGAL
+    6-----13B: BGLCNA
+    7------14B: BGAL
+    8----13A: AFUC
+nLc012:
+  name: Le<sup>x</sup> (IV<sup>3</sup>-Gal-Le<sup>x</sup>-LacCer)
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---13B: BGLCNA
+    5----14B: BGAL
+    6-----13A: AGAL
+    7----13A: AFUC
+nLc013:
+  name: Le<sup>x</sup> (IV<sup>3</sup>-GlcNAc-Le<sup>x</sup>-LacCer)
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---13B: BGLCNA
+    5----14B: BGAL
+    6-----13B: BGLCNA
+    7----13A: AFUC
+nLc014:
+  name: IV<sup>3</sup>-Gal-nLcGg5
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---14B: BGALNA
+    5---13B: BGLCNA
+    6----14B: BGAL
+    7-----13A: AGAL
+nLc015:
+  name: Le<sup>y</sup> (Le<sup>y</sup>-LacCer)
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---13B: BGLCNA
+    5----14B: BGAL
+    6-----12A: AFUC
+    7----13A: AFUC
+nLc016:
+  name: nLc6 (i antigen)
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---13B: BGLCNA
+    5----14B: BGAL
+    6-----13B: BGLCNA
+    7------14B: BGAL
+nLc017:
+  name: V<sup>3</sup>-Neu5Ac-PX2 antigen
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---13B: BGLCNA
+    5----14B: BGAL
+    6-----13B: BGALNA
+    7------23A: ANE5AC
+nLc018:
+  name: V<sup>3</sup>-SO<sub>4</sub>-IV<sup>3</sup>-GlcA-nLc4 (SMUnLc4, SGGL)
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---13B: BGLCNA
+    5----14B: BGAL
+    6-----13B: BGLCA_3SUF
+nLc019:
+  name: sLe<sup>x</sup> (sLe<sup>x</sup>-LacCer)
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---13B: BGLCNA
+    5----14B: BGAL
+    6-----23A: ANE5AC
+    7----13A: AFUC
+nLc020:
+  name: A2'-LacCer
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---13B: BGLCNA
+    5----14B: BGAL
+    6-----13B: BGALNA
+    7-----12A: AFUC
+nLc021:
+  name: A2-LacCer
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---13B: BGLCNA
+    5----14B: BGAL
+    6-----13A: AGALNA
+    7-----12A: AFUC
+nLc022:
+  name: B2-LacCer
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---13B: BGLCNA
+    5----14B: BGAL
+    6-----13A: AGAL
+    7-----12A: AFUC
+nLc023:
+  name: V<sup>3</sup>-Gal-nLc5
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---13B: BGLCNA
+    5----14B: BGAL
+    6-----13B: BGLCNA
+    7------13B: BGAL
+nLc024:
+  name: VI<sup>3</sup>-Neu5Ac-nLc6 (G6 Ganglioside)
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---13B: BGLCNA
+    5----14B: BGAL
+    6-----13B: BGLCNA
+    7------14B: BGAL
+    8-------23A: ANE5AC
+nLc025:
+  name: Le<sup>a</sup> (Le<sup>a</sup>-nLc4)
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---13B: BGLCNA
+    5----14B: BGAL
+    6-----13B: BGLCNA
+    7------14A: AFUC
+    8------13B: BGAL
+nLc026:
+  name: Le<sup>x</sup> (Le<sup>x</sup>-nLc4)
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---13B: BGLCNA
+    5----14B: BGAL
+    6-----13B: BGLCNA
+    7------14B: BGAL
+    8------13A: AFUC
+nLc027:
+  name: H2-nLc4
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---13B: BGLCNA
+    5----14B: BGAL
+    6-----13B: BGLCNA
+    7------14B: BGAL
+    8-------12A: AFUC
+nLc028:
+  name: Le<sup>x</sup> (IV<sup>3</sup>-[Gal-GlcNAc]-Le<sup>x</sup>-LacCer)
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---13B: BGLCNA
+    5----14B: BGAL
+    6-----13B: BGLCNA
+    7------13B: BGAL
+    8----13A: AFUC
+nLc029:
+  name: di-Le<sup>x</sup> (di-Le<sup>x</sup>-LacCer)
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---13B: BGLCNA
+    5----14B: BGAL
+    6-----13B: BGLCNA
+    7------14B: BGAL
+    8------13A: AFUC
+    9----13A: AFUC
+nLc030:
+  name: I antigen
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---13B: BGLCNA
+    5----14B: BGAL
+    6-----16B: BGLCNA
+    7------14B: BGAL
+    8-----13B: BGLCNA
+    9------14B: BGAL
+nLc031:
+  name: Le<sup>a</sup>-Le<sup>x</sup> (Le<sup>a</sup>-Le<sup>x</sup>-LacCer)
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---13B: BGLCNA
+    5----14B: BGAL
+    6-----13B: BGLCNA
+    7------14A: AFUC
+    8------13B: BGAL
+    9----13A: AFUC
+nLc032:
+  name: Le<sup>x</sup> (Le<sup>x</sup>-nLc6)
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---13B: BGLCNA
+    5----14B: BGAL
+    6-----13B: BGLCNA
+    7------14B: BGAL
+    8-------13B: BGLCNA
+    9--------14B: BGAL
+    10--------13A: AFUC
+nLc033:
+  name: Le<sup>y</sup> (Le<sup>y</sup>-nLc4)
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---13B: BGLCNA
+    5----14B: BGAL
+    6-----13B: BGLCNA
+    7------14B: BGAL
+    8-------12A: AFUC
+    9------13A: AFUC
+nLc034:
+  name: VII<sup>3</sup>-SO<sub>4</sub>-VI<sup>3</sup>-GlcA-nLc6 (SMUnLc6, SGGL)
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---13B: BGLCNA
+    5----14B: BGAL
+    6-----13B: BGLCNA
+    7------14B: BGAL
+    8-------13B: BGLCA_3SUF
+nLc035:
+  name: V<sup>3</sup>-(Neu5Ac-Gal)-A2-LacCer
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---13B: BGLCNA
+    5----14B: BGAL
+    6-----13A: AGALNA
+    7------13B: BGAL
+    8-------23A: ANE5AC
+    9-----12A: AFUC
+nLc036:
+  name: A2-nLc4
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---13B: BGLCNA
+    5----14B: BGAL
+    6-----13B: BGLCNA
+    7------14B: BGAL
+    8-------13A: AGALNA
+    9-------12A: AFUC
+nLc037:
+  name: B2-nLc4
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---13B: BGLCNA
+    5----14B: BGAL
+    6-----13B: BGLCNA
+    7------14B: BGAL
+    8-------13A: AGAL
+    9-------12A: AFUC
+nLc038:
+  name: H3-H2-LacCer
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---13B: BGLCNA
+    5----14B: BGAL
+    6-----13A: AGALNA
+    7------13B: BGAL
+    8-------12A: AFUC
+    9-----12A: AFUC
+nLc039:
+  name: sLe<sup>x</sup> (X<sub>0</sub> Ganglio, sLe<sup>x</sup>-nLc4)
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---13B: BGLCNA
+    5----14B: BGAL
+    6-----13B: BGLCNA
+    7------14B: BGAL
+    8-------23A: ANE5AC
+    9------13A: AFUC
+nLc041:
+  name: sLe<sup>x</sup>-Le<sup>x</sup> (sLe<sup>x</sup>-Le<sup>x</sup>-LacCer)
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---13B: BGLCNA
+    5----14B: BGAL
+    6-----13B: BGLCNA
+    7------14B: BGAL
+    8-------23A: ANE5AC
+    9------13A: AFUC
+    10----13A: AFUC
+nLc042:
+  name: sLe<sup>a</sup>-Le<sup>x</sup> (sLe<sup>a</sup>-Le<sup>x</sup>-LacCer)
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---13B: BGLCNA
+    5----14B: BGAL
+    6-----13B: BGLCNA
+    7------14A: AFUC
+    8------13B: BGAL
+    9-------23A: ANE5AC
+    10----13A: AFUC
+nLc043:
+  name: Le<sup>y</sup>-Le<sup>x</sup> (Le<sup>y</sup>-Le<sup>x</sup>-LacCer)
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---13B: BGLCNA
+    5----14B: BGAL
+    6-----13B: BGLCNA
+    7------14B: BGAL
+    8-------12A: AFUC
+    9------13A: AFUC
+    10----13A: AFUC
+nLc044:
+  name: A3-H2-LacCer
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---13B: BGLCNA
+    5----14B: BGAL
+    6-----13A: AGALNA
+    7------13B: BGAL
+    8-------13A: AGALNA
+    9-------12A: AFUC
+    10-----12A: AFUC
+nLc045:
+  name: DG-6 I type
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---13B: BGLCNA
+    5----14B: BGAL
+    6-----16B: BGLCNA
+    7------14B: BGAL
+    8-------23A: ANE5AC
+    9-----13B: BGLCNA
+    10------14B: BGAL
+    11-------23A: ANE5AC
+nLc046:
+  name: di-Le<sup>x</sup> (di-Le<sup>x</sup>-nLc4)
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---13B: BGLCNA
+    5----14B: BGAL
+    6-----13B: BGLCNA
+    7------14B: BGAL
+    8-------13B: BGLCNA
+    9--------14B: BGAL
+    10--------13A: AFUC
+    11------13A: AFUC
+nLc047:
+  name: H3 antigen
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---13B: BGLCNA
+    5----14B: BGAL
+    6-----16B: BGLCNA
+    7------14B: BGAL
+    8-------12A: AFUC
+    9-----13B: BGLCNA
+    10------14B: BGAL
+    11-------12A: AFUC
+nLc048:
+  name: tri-Le<sup>x</sup> (tri-Le<sup>x</sup>-LacCer)
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---13B: BGLCNA
+    5----14B: BGAL
+    6-----13B: BGLCNA
+    7------14B: BGAL
+    8-------13B: BGLCNA
+    9--------14B: BGAL
+    10--------13A: AFUC
+    11------13A: AFUC
+    12----13A: AFUC
+nLc049:
+  name: <font colot='red'>Type A-active</font>
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---13B: BGLCNA
+    5----14B: BGAL
+    6-----16B: BGLCNA
+    7------14B: BGAL
+    8-------13A: AGLCNA
+    9-------12A: AFUC
+    10-----13B: BGLCNA
+    11------14B: BGAL
+    12-------23A: ANE5AC
+nLc050:
+  name: Le<sup>x</sup> (VIII<sup>3</sup>-LacNAc-Le<sup>x</sup>-nLc6)
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---13B: BGLCNA
+    5----14B: BGAL
+    6-----13B: BGLCNA
+    7------14B: BGAL
+    8-------13B: BGLCNA
+    9--------14B: BGAL
+    10---------13B: BGLCNA
+    11----------14B: BGAL
+    12--------13A: AFUC
+nLc051:
+  name: sLe<sup>x</sup>-Le<sup>x</sup> (X<sub>3</sub> Ganglio, sLe<sup>x</sup>-Le<sup>x</sup>-nLc4)
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---13B: BGLCNA
+    5----14B: BGAL
+    6-----13B: BGLCNA
+    7------14B: BGAL
+    8-------13B: BGLCNA
+    9--------14B: BGAL
+    10---------23A: ANE5AC
+    11--------13A: AFUC
+    12------13A: AFUC
+nLc052:
+  name: sLe<sup>x</sup>-Le<sup>x</sup> (X<sub>3</sub> Ganglio, sLe<sup>x</sup>-LacNAc-Le<sup>x</sup>-LacCer)
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---13B: BGLCNA
+    5----14B: BGAL
+    6-----13B: BGLCNA
+    7------14B: BGAL
+    8-------13B: BGLCNA
+    9--------14B: BGAL
+    10---------23A: ANE5AC
+    11--------13A: AFUC
+    12----13A: AFUC
+nLc053:
+  name: IV<sup>3,6</sup>-di-B2-nLc4
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---13B: BGLCNA
+    5----14B: BGAL
+    6-----16B: BGLCNA
+    7------14B: BGAL
+    8-------13A: AGAL
+    9-------12A: AFUC
+    10-----13B: BGLCNA
+    11------14B: BGAL
+    12-------13A: AGAL
+    13-------12A: AFUC
+nLc054:
+  name: IV<sup>3,6</sup>-di-A2-nLc4
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---13B: BGLCNA
+    5----14B: BGAL
+    6-----16B: BGLCNA
+    7------14B: BGAL
+    8-------13A: AGALNA
+    9-------12A: AFUC
+    10-----13B: BGLCNA
+    11------14B: BGAL
+    12-------13A: AGALNA
+    13-------12A: AFUC
+nLc055:
+  name: sLe<sup>x</sup>-di-Le<sup>x</sup> (X<sub>4</sub> Ganglio, sLe<sup>x</sup>-di-Le<sup>x</sup>-LacCer)
+  sequence: |
+    1 CER160
+    2-B: BGLC
+    3--14B: BGAL
+    4---13B: BGLCNA
+    5----14B: BGAL
+    6-----13B: BGLCNA
+    7------14B: BGAL
+    8-------13B: BGLCNA
+    9--------14B: BGAL
+    10---------23A: ANE5AC
+    11--------13A: AFUC
+    12------13A: AFUC
+    13----13A: AFUC
+
+#Glycophosphatidylinositols
+Gp001:
+  name: GPI-core
+  sequence: |
+    1 PI-DAG-DS
+    2-16A: AGLCN
+    3--14A: AMAN
+    4---16A: AMAN
+    5----12A: AMAN_6PEA
+Gp002:
+  name: <i>T. brucei</i> VSG
+  sequence: |
+    1 PI-DAG-DM
+    2-16A: AGLCN
+    3--14A: AMAN
+    4---16A: AMAN
+    5----12A: AMAN_6PEA
+    6-----12A: AGAL
+    7----13B: BGAL
+    8---13A: AGAL
+    9----16A: AGAL
+    10-----12A: AGAL
+    11----12A: AGAL
+Gp003:
+  name: <i>T. congolense</i> VSG
+  sequence: |
+    1 PI-DAG-DM
+    2-16A: AGLCN
+    3--14A: AMAN
+    4---16A: AMAN
+    5----12A: AMAN_6PEA
+    6---14B: BGLCNA
+    7----16B: BGAL
+Gp004:
+  name: <i>Toxoplasma</i> SAG-1
+  sequence: |
+    1 PI-DAG-DS
+    2-16A: AGLCN
+    3--14A: AMAN
+    4---16A: AMAN
+    5----12A: AMAN_6PEA
+    6---14B: BGALNA
+    7----14B: BGLC
+Gp005:
+  name: <i>Saccharomyces</i> GPI-APS
+  sequence: |
+    1 PI-CER240
+    2-16A: AGLCN
+    3--14A: AMAN
+    4---16A: AMAN
+    5----12A: AMAN_6PEA
+    6-----12A: AMAN
+    7------12A: AMAN
+    8------13A: AMAN
+Gp006:
+  name: <i>Aspergillus</i> GPI-APs
+  sequence: |
+    1 PI-CER240
+    2-16A: AGLCN
+    3--14A: AMAN
+    4---16A: AMAN
+    5----12A: AMAN_6PEA
+    6-----12A: AMAN
+    7------13A: AMAN
+Gp007:
+  name: <i>Dictyostelium</i> PSA
+  sequence: |
+    1 PI-CER181
+    2-16A: AGLCN
+    3--14A: AMAN_2PEA
+    4---16A: AMAN
+    5----12A: AMAN_6PEA
+    6-----12A: AMAN
+Gp008:
+  name: <i>Pyrus (pear)</i> AGP
+  sequence: |
+    1 PI-CER240
+    2-16A: AGLCN
+    3--14A: AMAN
+    4---16A: AMAN
+    5----12A: AMAN_6PEA
+    6---14B: BGAL
+Gp009:
+  name: Torpedo AChE
+  sequence: |
+    1 PI-DAG-DS
+    2-16A: AGLCN
+    3--14A: AMAN_2PEA
+    4---16A: AMAN
+    5----12A: AMAN_6PEA
+    6-----12A: AGLC
+    7---14A: AGALNA
+Gp010:
+  name: Porcine MDP
+  sequence: |
+    1 PI-DAG-DS
+    2-16A: AGLCN
+    3--14A: AMAN
+    4---16A: AMAN
+    5----12A: AMAN_6PEA
+    6---14A: AGALNA
+    7----13A: AGAL
+    8-----23A: ANE5AC
+Gp011:
+  name: Human spleen CD52-I
+  sequence: |
+    1 PI-DAG-DS
+    2-16A: AGLCN
+    3--14A: AMAN_2PEA
+    4---16A: AMAN
+    5----12A: AMAN_6PEA
+    6-----12A: AMAN
+Gp012:
+  name: Human PrP
+  sequence: |
+    1 PI-DAG-DS
+    2-16A: AGLCN
+    3--14A: AMAN_2PEA
+    4---16A: AMAN
+    5----12A: AMAN_6PEA
+    6-----12A: AMAN
+    7---14B: BGALNA
+

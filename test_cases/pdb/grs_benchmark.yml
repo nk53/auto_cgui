@@ -1,0 +1,384 @@
+- label: 3sdy with glycan
+  base: components/basic
+  pdb: 3sdy.cif # n-linked multiple
+  reference:
+  -
+    segid: CARA
+    grs: |
+      1 BGLCNA
+      2 - 14B: BGLCNA
+      3 - - 14B: BMAN
+      4 - - - 16A: AMAN
+  -
+    segid: CARB
+    grs: |
+      1 BGLCNA
+      2 - 14B: BGLCNA
+      3 - - 14B: BMAN
+      4 - - - 13A: AMAN
+      5 - - - 16A: AMAN
+      6 - 16B: BFUC
+  -
+    segid: CARC
+    grs: |
+      1 BGLCNA
+      2 - 14B: BGLCNA
+      3 - - 14B: BMAN
+      4 - - - 13A: AMAN
+  -
+    segid: CARD
+    grs: |
+      1 BGLCNA
+      2 - 14B: BGLCNA
+  -
+    segid: CARE
+    grs: |
+      1 BGLCNA
+      2 - 14B: BGLCNA
+      3 - - 14B: BMAN
+      4 - 16A: AFUC
+
+- label: 3nk3 with glycan
+  base: components/basic
+  pdb: 3nk3.cif # o-linked
+  reference:
+  -
+    segid: CARA
+    grs: |
+      1 AGALNA
+      2 - 13B: BGAL
+
+- label: 4b1q with glycan
+  base: components/basic
+  pdb: 4b1q.cif
+  reference:
+  -
+    segid: CARA
+    grs: |
+      1 AGALNA
+      2 - 13B: BGAL
+      3 - - 12A: ALGAL
+      4 - 16A: AGLCNA
+      5 - - 14A: ALGAL
+
+- label: 4cqy with glycan
+  base: components/basic
+  pdb: 4cqy.cif # Neu5Ac
+  reference:
+  -
+    segid: CARA
+    grs: |
+      1 BGLCNA
+      2 - 13B: BGAL
+      3 - - 23A: ANE5AC
+  -
+    segid: CARB
+    grs: |
+      1 BGLCNA
+      2 - 13B: BGAL
+      3 - - 23A: ANE5AC
+  -
+    segid: CARC
+    grs: |
+      1 BGLCNA
+      2 - 13B: BGAL
+      3 - - 23A: ANE5AC
+
+- label: 4hiz with glycan
+  base: components/basic
+  pdb: 4hiz.cif # Neu5Ac 29 link
+  reference:
+  -
+    segid: CARA
+    grs: |
+      1 BNE5AC
+      2 - 29A: ANE5AC
+
+- label: 3i02 with glycan
+  base: components/basic
+  pdb: 3i02.cif # Kdo
+  reference:
+  -
+    segid: CARA
+    grs: |
+      1 AKDA
+      2 - 24A: AKDO
+      3 - - 24A: AKDO
+
+- label: 3oko with glycan
+  base: components/basic
+  pdb: 3oko.cif # Kdo 28 link
+  reference:
+  -
+    segid: CARA
+    grs: |
+      1 AKDA
+      2 - 24A: AKDO
+      3 - - 28A: AKDO
+
+- label: 5fvn with glycan
+  base: components/basic
+  pdb: 5fvn.cif # Lipid A
+  reference:
+  -
+    segid: CARH
+    grs: |
+      3 AGLCN_1PH_2LIPAN1_3LIPAO1
+      1 - 16B: BGLCN_2LIPAN2_3LIPAO2_4PH
+      2 - - 26A: AKDO
+
+- label: 1qff with glycan
+  base: components/basic
+  pdb: 1qff.cif # LPS
+  reference:
+  -
+    segid: CARA
+    grs: |
+      1 AGLCN_1PPH_2LIPAN1_3LIPAO1
+      2 - 16A: AGLCN_2LIPAN2_3LIPAO2_4PH
+      3 - - 26A: AKDO
+      4 - - - 15A: AHEP_4PEA
+      5 - - - - 13A: AHEP_4PH
+      6 - - - - - 13A: AGLC
+      7 - - - - - - 13A: AGLC
+      8 - - - - - - 16A: AGAL
+      9 - - - 24A: AKDO
+
+- label: 1qlb with glycan
+  base: components/basic
+  pdb: 1qlb.cif # detergent
+  reference:
+  -
+    segid: CARA
+    grs: |
+      2 BGLC_1DET
+      1 - 14A: AGLC
+
+- label: 5dnf with glycan
+  base: components/basic
+  pdb: 5dnf.cif # GAGs
+  reference:
+  -
+    segid: CARD
+    grs: |
+      1 AGLC_2NSF_6SUF
+      2 - 14A: AIDOA_2SUF
+      3 - - 14A: AGLC_2NSF_6SUF
+
+- label: 3uan with glycan
+  base: components/basic
+  pdb: 3uan.cif # GAGs
+  reference:
+  -
+    segid: CARA
+    grs: |
+      1 BGLCA
+      2 - 14A: AGLC_2NSF_6SUF
+      3 - - 14A: AIDOA_2SUF
+      4 - - - 14A: AGLC_2NSF_6SUF
+      5 - - - - 14B: BGLCA
+      6 - - - - - 14A: AGLCNA_6SUF
+
+- label: 2vzt with glycan
+  base: components/basic
+  pdb: 2vzt.cif # should ignore unknown chemod
+  reference:
+  -
+    grs: 1 BGLCN
+    segid: CARA
+
+- label: 2e75 with glycan
+  base: components/basic
+  pdb: 2e75.cif
+  reference:
+  -
+    segid: CARA
+    grs: |
+      2 AGLC_1DET
+      1 - 14A: AGLC
+
+- label: 2gaz with glycan
+  base: components/basic
+  pdb: 2gaz.cif # PI-DAG
+  reference:
+  -
+    segid: CARD
+    grs: |
+      2 PIDAG
+      3 - 12A: AMAN
+      1 - 16A: AMAN
+
+- label: 3rzn with glycan
+  base: components/basic
+  pdb: 3rzn.cif # Cer
+  reference:
+  -
+    segid: CARA
+    grs: |
+      1 CER
+      2 - 11B: BGAL_3SUF
+
+- label: 1lt5 with glycan
+  base: components/basic
+  pdb: 1lt5.cif # S-linkage
+  reference:
+  -
+    segid: CARA
+    grs: |
+      1 BGAL
+      2 - 1S1B: BGAL
+      1 - - 1S1B: BGAL
+
+- label: 2vrq with glycan
+  base: components/basic
+  pdb: 2vrq.cif # Xyl-Ara
+  reference:
+  -
+    segid: CARA
+    grs: |
+      1 BXYL
+      2 - 14B: BXYL
+      3 - - 13A: ALARB
+      4 - - 14B: BXYL
+
+- label: 4bpa with glycan
+  base: components/basic
+  pdb: 4bpa.cif # Mur
+  reference:
+  -
+    segid: CARA
+    grs: |
+      1 BMU2AC_1OME
+      2 - 14B: BGLCNA
+      3 - - 14B: BMU2AC
+      4 - - - 14B: BGLCNA
+
+- label: 4c3x with glycan
+  base: components/basic
+  pdb: 4c3x.cif # sucrose
+  reference:
+  -
+    segid: CARA
+    grs: |
+      1 AGLC
+      2 - 21B: BFRU
+
+- label: 4xwz with glycan
+  base: components/basic
+  pdb: 4xwz.cif # FructoPyranose
+  reference:
+  -
+    segid: CARA
+    grs: 1 BFRUP
+
+- label: 3l2m with glycan
+  base: components/basic
+  pdb: 3l2m.cif # cyclo-dextrin
+  reference:
+  -
+    segid: CARA
+    grs: |
+      1 AGLC
+      6 - 14A: AGLC
+      5 - - 14A: AGLC
+      4 - - - 14A: AGLC
+      3 - - - - 14A: AGLC
+      2 - - - - - 14A: AGLC
+      1 - - - - - - 14A: AGLC
+
+- label: 1fwu with glycan
+  base: components/basic
+  pdb: 1fwu.cif # OMe
+  reference:
+  -
+    segid: CARA
+    grs: |
+      1 BGLCNA_1OME
+      2 - 13A: AFUC
+      3 - 14B: BGAL_3SUF
+
+- label: 1gz5 with glycan
+  base: components/basic
+  pdb: 1gz5.cif # phos
+  reference:
+  -
+    segid: CARA
+    grs: 1 AGLC_6PH
+
+- label: 2yau with glycan
+  base: components/basic
+  pdb: 2yau.cif # Ac
+  reference:
+  -
+    segid: CARA
+    grs: 1 BGLC_1SH_2AC_3AC_4AC_6AC
+
+- label: 4hg6 with glycan
+  base: components/basic
+  pdb: 4hg6.cif # polysaccharide
+  reference:
+-
+  segid: CARA
+  grs: |
+    1 BGLC
+    2 - 14B: BGLC
+    3 - - 14B: BGLC
+    4 - - - 14B: BGLC
+    5 - - - - 14B: BGLC
+    6 - - - - - 14B: BGLC
+    7 - - - - - - 14B: BGLC
+    8 - - - - - - - 14B: BGLC
+    9 - - - - - - - - 14B: BGLC
+    10 - - - - - - - - - 14B: BGLC
+    11 - - - - - - - - - - 14B: BGLC
+    12 - - - - - - - - - - - 14B: BGLC
+    13 - - - - - - - - - - - - 14B: BGLC
+    14 - - - - - - - - - - - - - 14B: BGLC
+    15 - - - - - - - - - - - - - - 14B: BGLC
+    16 - - - - - - - - - - - - - - - 14B: BGLC
+    17 - - - - - - - - - - - - - - - - 14B: BGLC
+    18 - - - - - - - - - - - - - - - - - 14B: BGLC
+
+- label: 5tps with glycan
+  base: components/basic
+  pdb: 5tps.cif # n-linked
+  reference:
+-
+  segid: CARA
+  grs: |
+    1 BGLCNA
+    2 - 14B: BGLCNA
+    3 - - 14B: BMAN
+    4 - - - 16A: AMAN
+    5 - - - - 12B: BGLCNA
+    6 - - - - - 14B: BGAL
+    7 - - - 13A: AMAN
+
+- label: 1axm with glycan
+  base: components/basic
+  pdb: 1axm.cif # GAGs
+  reference:
+  - 
+    segid: CARA
+    grs: |
+      1 AGLC_2NSF_6SUF
+      2 - 14A: AIDOA_2SUF
+      3 - - 14A: AGLC_2NSF_6SUF
+      4 - - - 14A: AIDOA_2SUF
+      5 - - - - 14A: AGLC_2NSF_6SUF
+  - 
+    segid: CARB
+    grs: |
+      1 AGLC_2NSF_6SUF
+      2 - 14A: AIDOA_2SUF
+      3 - - 14A: AGLC_2NSF_6SUF
+      4 - - - 14A: AIDOA_2SUF
+      5 - - - - 14A: AGLC_2NSF_6SUF
+  - 
+    segid: CARC
+    grs: |
+      1 AIDOA_2SUF
+      2 - 14A: AGLC_2NSF_6SUF
+      3 - - 14A: AIDOA_2SUF
+      4 - - - 14A: AGLC_2NSF_6SUF
+      5 - - - - 14B: BIDOA_2SUF

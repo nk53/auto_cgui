@@ -1,0 +1,120 @@
+orient_pdb:
+  step: 2
+  elems:
+    - align_option: 1
+orient_axis:
+  step: 2
+  elems:
+    - align_option: 2
+orient_vector:
+  step: 2
+  presteps:
+    - align_vector()
+orient_ppm:
+  step: 2
+  presteps:
+    - align_ppm()
+rotate_X:
+  step: 2
+  elems:
+    - rotate_x_checked: True
+    - rxdeg: rotate_X
+rotate_Y:
+  step: 2
+  presteps:
+  elems:
+    - rotate_y_checked: True
+    - rydeg: rotate_Y
+translate:
+  step: 2
+  elems:
+    - translate_checked: True
+    - zdist: translate
+flip:
+  step: 2
+  elems:
+    - flip_checked: True
+fill_checked:
+  elems:
+    - fill_checked: fill_checked
+X:
+  step: 3
+  elems:
+    - hetero_lx: X
+Y:
+  step: 3
+  elems:
+    - hetero_lx: Y
+XY:
+  step: 3
+  elems:
+    - hetero_lx: XY
+solvtype:
+  step: 3
+  elems:
+    - hetero_boxtype: solvtype
+# alias for solvtype
+boxtype:
+  step: 3
+  elems:
+    - hetero_boxtype: boxtype
+water_thickness:
+  step: 3
+  presteps:
+    - click_by_value('wdist')
+  elems:
+    - hetero_wdist: water_thickness
+Z:
+  step: 3
+  presteps:
+    - click_by_value('wdist')
+  elems:
+    - hetero_wdist: Z
+hydration_number:
+  step: 3
+  presteps:
+    - click_by_value('nhydration')
+  elems:
+    - nhydration: hydration_number
+area_calc:
+  step: 2
+  presteps:
+    - click_by_attrs(name='fill_checked', value='1')
+pdb_orientation:
+  step: 2
+  presteps:
+    - click_by_attrs(name='align_option', value='1')
+lipids:
+  step: 3
+  presteps:
+    - select_lipids()
+ions_checked:
+  step: 4
+  elems:
+    - ions_checked: ions_checked
+# alias for ions_checked
+ions:
+  step: 4
+  elems:
+    - ions_checked: ions
+ion_conc:
+  step: 4
+  elems:
+    - "ion_conc[]": ion_conc
+ion_type:
+  step: 4
+  elems:
+    - ion_type: ion_type
+ion_method:
+  step: 4
+  presteps:
+    - set_ion_method()
+# HMMM-specific options
+scaling_factor:
+  step: 3
+  elems:
+    - hetero_sf: scaling_factor
+terminal_carbon:
+  step: 3
+  elems:
+    - hetero_cc: terminal_carbon

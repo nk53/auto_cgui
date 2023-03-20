@@ -1,0 +1,31 @@
+dict: basic.map.yml
+base: components/basic
+# "parent: False" means this has no parent
+parent: False
+psf_validation:
+  target: step2_molpacking.psf
+solvent_tests: [water+ions]
+steps:
+  - wait_text: Component ID
+    presteps:
+      - select_components()
+    alert: accept
+  - wait_text: Lipid Type
+    presteps:
+    - select_lipids()
+    poststeps:
+    - click('hetero_size_button', 'Calculated XY System Size')
+    alert: accept
+    invalid_alert_text: There was a change
+  - module:
+      name: bilayer
+      index: 4
+  - wait_text: Solvation Options
+    poststeps:
+      - SOLVENT_TEST_PLACEHOLDER
+      - set_component_density()
+      - click_by_attrs(value='Calculate Solvent Composition')
+      - wait_script('is_updated')
+  - module:
+      name: bilayer
+      start: 7

@@ -1,0 +1,25 @@
+- label: 6XR3 with SDF from RCSB and Symmetry options
+  base: pdb/basic
+  pdb: 6xr3.pdb
+  # chain
+  chains:
+    - HETA
+  # resname
+  sdf:
+    - V7G
+  # symoption
+  symop:
+    - biomat
+
+- label: 4W53 with SDF from RCSB
+  base: pdb/basic
+  pdb: 4w53.pdb
+  # chain
+  chains:
+    - HETA
+    - HETB
+  # resname
+  sdf:
+    - MBN
+    - EPE
+

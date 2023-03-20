@@ -10,13 +10,14 @@ steps:
   - wait_text: Computed Energy
   - wait_text: Lipid Type
     poststeps:
-      - click('hetero_size_button', 'Calculated XY System Size')
+      - calc_size()
     alert: accept
+    invalid_alert_text: There was a change
   # solvent options are similar to solution builder, but we still handle
   # them separately
   - wait_text: Component Building Options
     poststeps:
-      - click_by_value('Calculate number of ions')
+      - click_by_value('Calculate Solvent Composition')
       - wait_script('is_updated')
   - wait_text: Building Ion and Waterbox
   - wait_text: Assemble Generated Components

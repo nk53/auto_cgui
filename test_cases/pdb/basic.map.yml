@@ -6,3 +6,96 @@ glycan:
   step: 2
   presteps:
     - set_glycosylation()
+gpi:
+  step: 2
+  presteps:
+    - set_gpi()
+phosphorylation:
+  step: 2
+  presteps:
+    - set_phosphorylation()
+terms:
+  step: 2
+  presteps:
+    - set_term()
+rids:
+  step: 1
+  presteps:
+    - rid_select()
+chains:
+  step: 1
+  presteps:
+    - chain_select()
+lipid_tails:
+  step: 2
+  presteps:
+    - set_lipid_tail()
+llps:
+  step: 2
+  presteps:
+    - set_llp()
+fluo_labels:
+  step: 2
+  presteps:
+    - set_fluo_label()
+mts_nitrides:
+  step: 2
+  presteps:
+    - set_mts_nitride()
+mts_modifiers:
+  step: 2
+  presteps:
+    - set_mts_modifier()
+mutation:
+  step: 2
+  presteps:
+    - set_mutation()
+# alias for mutation
+mutations:
+  step: 2
+  presteps:
+    - set_mutation()
+uaas:
+  step: 2
+  presteps:
+    - set_uaa()
+bios:
+  step: 2
+  presteps:
+    - set_bio()
+crystal_packings:
+  step: 2
+  presteps:
+    - set_crystal_packing()
+unit_cells:
+  step: 2
+  presteps:
+    - set_unit_cell()
+hcr:
+  step: 2
+  presteps:
+    - set_csml()
+ssbonds:
+  step: 2
+  presteps:
+    - set_ssbonds()
+hcoor:
+  step: 2
+  presteps:
+    - set_hcoor()
+pstate:
+  step: 2
+  presteps:
+    - set_pstate()
+sdf:
+  step: 2
+  presteps:
+    - set_sdf()
+symop:
+  step: 2
+  presteps:
+    - set_symop()
+reference:
+  step: 2
+  presteps:
+    - test_glycosylation()

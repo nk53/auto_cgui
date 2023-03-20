@@ -1,0 +1,86 @@
+- label: 6vsb_1_1_1 with lipid tails
+  base: pdb/basic
+  pdb: 6vsb_1_1_1.pdb
+  rids:
+    - PROA 1171 1273
+    - PROB 1171 1273
+    - PROC 1171 1273
+  chains:
+    - CARA
+    - CARB
+    - CARG
+    - CARC
+    - CARD
+    - CARE
+    - CARF
+    - CARI
+    - CARJ
+    - CARK
+    - CARL
+    - CARO
+    - CARP
+    - CARM
+    - CARN
+    - CARQ
+    - CARR
+    - CARS
+    - CART
+    - CARU
+    - CARV
+    - CARW
+    - CARH
+    - CAAE
+    - CAAF
+    - CAAG
+    - CAAH
+    - CAAI
+    - CAAJ
+    - CAAK
+    - CAAL
+    - CAAM
+    - CAAN
+    - CAAO
+    - CAAP
+    - CAAD
+    - CAAQ
+    - CAAR
+    - CARZ
+    - CAAC
+    - CAAA
+    - CAAS
+    - CAAB
+    - CAAT
+    - CARX
+    - CARY
+    - CAAU
+    - CAAV
+    - CAAW
+    - CAAX
+    - CAAY
+    - CAAZ
+    - CABA
+    - CABB
+    - CABC
+    - CABD
+    - CABE
+    - CABF
+    - CABG
+    - CABH
+    - CABI
+    - CABJ
+    - CABK
+    - CABL
+    - CABM
+    - CABN
+    - CABO
+    - CABP
+    - CABQ
+
+  lipid_tails:
+    - CYSP PROA CYS 1236
+    - CYSP PROA CYS 1241
+    - CYSP PROB CYS 1236
+    - CYSP PROB CYS 1241
+    - CYSP PROC CYS 1236
+    - CYSP PROC CYS 1241
+

@@ -1,0 +1,287 @@
+Glycoglycerolipids:
+    - Gc001
+    - Gc002
+    - Gc003
+
+Galactocerebrosides:
+    - Ga001
+    - Ga002
+    - Ga003
+
+Glucocerebrosides:
+    - Gl001
+    - Gl002
+
+Ganglio-series:
+  0-series:
+    - Gg001
+    - Gg007
+    - Gg005
+    - Gg009
+    - Gg010
+    - Gg011
+    - Gg015
+    - Gg012
+    - Gg025
+    - Gg032
+    - Gg030
+    - Gg019
+    - Gg036
+    - Gg062
+    - Gg052
+  a-series:
+    - Gg002
+    - Gg003
+    - Gg006
+    - Gg008
+    - Gg037
+    - Gg014
+    - Gg017
+    - Gg023
+    - Gg050
+    - Gg024
+    - Gg026
+    - Gg018
+    - Gg027
+    - Gg020
+    - Gg028
+    - Gg035
+    - Gg029
+    - Gg040
+    - Gg042
+    - Gg041
+    - Gg043
+    - Gg044
+    - Gg058
+  b-series:
+    - Gg004
+    - Gg060
+    - Gg013
+    - Gg022
+    - Gg031
+    - Gg038
+    - Gg057
+    - Gg039
+    - Gg045
+    - Gg046
+    - Gg049
+    - Gg061
+    - Gg047
+    - Gg051
+    - Gg063
+    - Gg053
+  c-series:
+    - Gg016
+    - Gg021
+    - Gg034
+    - Gg048
+    - Gg054
+    - Gg055
+    - Gg056
+    - Gg059
+  others:
+    - Gg033
+
+
+Globo-series:
+    - Gb001
+    - Gb002
+    - Gb003
+    - Gb004
+    - Gb005
+    - Gb006
+    - Gb008
+    - Gb007
+    - Gb009
+    - Gb010
+    - Gb011
+    - Gb017
+    - Gb014
+    - Gb015
+    - Gb012
+    - Gb013
+    - Gb016
+
+Iso-globo-series:
+    - iGb001
+    - iGb002
+    - iGb003
+
+Lacto-series:
+    - Lc001
+    - Lc002
+    - Lc003
+    - Lc004
+    - Lc008
+    - Lc005
+    - Lc006
+    - Lc014
+    - Lc015
+    - Lc009
+    - Lc007
+    - Lc012
+    - Lc013
+    - Lc017
+    - Lc018
+    - Lc019
+    - Lc024
+    - Lc010
+    - Lc020
+    - Lc022
+    - Lc011
+    - Lc016
+    - Lc021
+    - Lc025
+    - Lc027
+    - Lc026
+    - Lc023
+
+Neo-lacto-series:
+    - nLc001
+    - nLc007
+    - nLc010
+    - nLc018
+    - nLc021
+    - nLc020
+    - nLc022
+    - nLc003
+    - nLc008
+    - nLc019
+    - nLc015
+    - nLc002
+    - nLc012
+    - nLc014
+    - nLc005
+    - nLc006
+    - nLc017
+    - nLc009
+    - nLc035
+    - nLc038
+    - nLc044
+    - nLc004
+    - nLc013
+    - nLc023
+    - nLc016
+    - nLc024
+    - nLc034
+    - nLc036
+    - nLc037
+    - nLc027
+    - nLc025
+    - nLc026
+    - nLc011
+    - nLc028
+    - nLc029
+    - nLc039
+    - nLc041
+    - nLc033
+    - nLc031
+    - nLc042
+    - nLc043
+    - nLc030
+    - nLc045
+    - nLc047
+    - nLc049
+    - nLc053
+    - nLc054
+    - nLc032
+    - nLc046
+    - nLc048
+    - nLc051
+    - nLc052
+    - nLc055
+    - nLc050
+
+Blood groups:
+  ABO:
+    - Lc014
+    - Lc021
+    - nLc021
+    - nLc020
+    - nLc035
+    - nLc036
+    - Gb014
+    - Lc015
+    - nLc022
+    - nLc037
+    - Gg050
+    - Gg057
+    - Gb015
+    - Lc009
+    - nLc003
+    - nLc027
+    - Gb012
+    - Gg023
+    - Gg038
+    - nLc044
+    - nLc038
+    - nLc054
+    - nLc053
+  Lewis:
+    - Lc007
+    - nLc025
+    - Lc025
+    - Lc013
+    - Lc019
+    - Lc012
+    - Lc018
+    - Lc017
+    - Lc027
+    - Gb016
+    - nLc008
+    - nLc012
+    - nLc013
+    - nLc011
+    - nLc028
+    - nLc026
+    - nLc032
+    - nLc050
+    - nLc029
+    - nLc046
+    - nLc048
+    - nLc019
+    - nLc039
+    - nLc041
+    - nLc051
+    - nLc052
+    - nLc055
+    - nLc015
+    - nLc033
+    - nLc031
+    - Lc024
+    - nLc042
+    - Lc026
+    - Lc023
+    - nLc043
+  P1PK:
+    - Gb001
+    - Gb004
+    - nLc005
+    - nLc006
+
+Sulfoglycolipids:
+    - Ga002
+    - Ga003
+    - Gb005
+    - Gb009
+    - Gg009
+    - Gg010
+    - Gg011
+    - Lc002
+    - nLc018
+    - nLc034
+
+Glycophosphatidylinositols:
+    - Gp001
+    - Gp002
+    - Gp003
+    - Gp004
+    - Gp005
+    - Gp006
+    - Gp007
+    - Gp008
+    - Gp009
+    - Gp010
+    - Gp011
+    - Gp012
+

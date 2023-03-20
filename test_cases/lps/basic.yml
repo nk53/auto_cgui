@@ -1,0 +1,17 @@
+# Fill this file with specific test cases to perform
+- label: Escherichia coli with lipid A type 1 and 5 O-antigens
+  download: no
+  species: ec
+  lipa: type1
+  core: R1
+- label: Helicobacter pylori lipid A type 1 and all options
+  download: yes
+  species: hp
+  lipa: type1
+  core: A
+  oanti:
+    - Lex
+    - Ley
+    - Lea
+    - Leb
+    - H1

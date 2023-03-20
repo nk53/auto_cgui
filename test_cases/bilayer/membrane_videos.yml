@@ -1,0 +1,112 @@
+- label: GPI-CD59 in plasma membrane, Membrane video demo 2
+  pdb: 1cdr.cif
+  gpi:
+    lipid: '{"lipid_type":"PIDAG","name":"PI-DAG-DM"}'
+    grs: |
+      1 - 16A: AGLCN
+      2 - - 14A: AMAN
+      3 - - - 16A: AMAN
+      4 - - - - 12A: AMAN_6PEA
+      5 - - - - - 14A: AMAN
+      6 - - - - - - 13A: AMAN
+      7 - - - - - - 16A: AMAN
+      8 - - - - - - - 14A: AMAN_6SUF
+    segid: PROA
+  XY: 70
+  lipids:
+    lower:
+      chl1: 1
+      dopc: 2
+    upper:
+      chl1: 1
+      dopc: 2
+  input: openmm
+  hmr: True
+  temperature: 310.15
+
+- label: Axonal Membrane, Membrane video demo 3
+  parent: membrane_only.yml
+  size_method: nlipid
+  water_thickness: 40
+  lipids:
+    lower:
+      chl1: 119
+      popc: 47
+      sope: 46
+      pops: 7
+      popi: 10
+      ssm: 7
+    upper:
+      chl1: 66
+      popc: 26
+      sope: 25
+      pops: 4
+      popi: 5
+      ssm: 4
+      glpa:
+        lipid: CER180
+        count: 86
+      glpb:
+        predefined: Ga002 # Sulfatide
+        lipid: CER180
+        count: 17
+      glpc:
+        predefined: Gg014 # GM1a (GM1)
+        lipid: CER180
+        count: 4
+      glpd:
+        predefined: Gg026 # GD1a
+        lipid: CER180
+        count: 4
+  input: openmm
+  hmr: True
+  temperature: 310.15
+
+- label: C. jejuni outer membrane, Membrane video demo 4
+  parent: membrane_only.yml
+  size_method: nlipid
+  water_thickness: 40
+  lipids:
+    upper:
+      lpsa:
+        species: cj # C. jejuni
+        lip: lipa
+        core: O19a
+        count: 30
+      lpsb:
+        species: cj
+        lip: lipa
+        core: O19b
+        count: 30
+    lower:
+      pope: 138
+      popg: 34
+      lpsa: 30
+      lpsb: 0
+  input: openmm
+  hmr: True
+  temperature: 310.15
+
+- label: BtuB in E. coli outer membrane, Membrane video demo 5
+  parent: bilayer.yml
+  pdb: 1nqe.pdb
+  orient_axis: True
+  area_calc: True
+  water_thickness: 30
+  size_method: nlipid
+  lipids:
+    lower:
+      pvcl2: 5
+      pppe: 70
+      pvpg: 20
+    upper:
+      lpsa:
+        species: ec # E. coli
+        lip: lipa
+        core: K12
+        count: 38
+        oanti: O6, 2
+  input: openmm
+  hmr: True
+  temperature: 310.15
+

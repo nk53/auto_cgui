@@ -1,12 +1,29 @@
 # this file uses mostly default options to test different component types
+- label: 2OMF with spin labeling in POPC
+  pdb: 2omf.pdb
+  mts_nitrides:
+    - CYR1 PROA GLU 29
+    - CYR1 PROA GLY 72
+  bios:
+  pdb_orientation: True
+  XY: 100
+  lipids:
+    lower:
+      popc: 1
+    upper:
+      popc : 1
+  input: openmm
+  hmr: True
+  temperature: 310.15
+
 - label: 2HAC in bilayer with 2:1 DOPC and Cholesterol
-  jobid: 9562573932
-  resume_link: 3
   pdb: 2hac.cif
   orient_vector:
     - PROA ASP -3
     - PROA ARG 26
   XY: 40
+  ion_type: KCl
+  ion_conc: 0.15
   lipids:
     lower:
       chl1: 1
@@ -17,3 +34,23 @@
   input: openmm
   hmr: True
   temperature: 310.15
+
+- label: Glycoglycerolipid and Ganglio-series bilayer
+  parent: membrane_only.yml
+  size_method: nlipid
+  water_thickness: 40
+  lipids:
+    lower:
+      chl1: 1
+      popc: 1
+      glpa:
+        predefined: Gc001 # MGDG
+        count: 20
+    upper:
+      glpb:
+        predefined: Gg001 # GA2
+        count: 20
+  input: openmm
+  hmr: True
+  temperature: 310.15
+

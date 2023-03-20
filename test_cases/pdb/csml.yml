@@ -1,0 +1,55 @@
+- label: 5JY6 with CSML search
+  base: pdb/basic
+  pdb: 5jy6.pdb
+  ligand: ligands/basic
+  chains:
+    - HETA
+    - HETB
+    - HETC
+    - HETD
+    - HETE
+    - HETF
+    - HETG
+    - HETH
+    - WATA
+    - WATB
+    - WATC
+    - WATD
+  # resname charmm-name
+  hcr:
+    - NAD NAD
+
+- label: 4W53 with Antechamber and CGenFF
+  base: pdb/basic
+  pdb: 4w53.pdb
+  ligand: ligands/basic
+  chains:
+    - HETA
+    - HETB
+    - WATA
+  # resname charmm-name/cgen-opt
+  hcr:
+    - MBN antc_mol
+    - EPE charmm_mol
+
+- label: 186L with BBEN
+  base: pdb/basic
+  pdb: 186l.pdb
+  ligand: ligands/basic
+  chains:
+    - HETA
+    - HETB
+    - HETC
+    - WATA
+  hcr:
+    - HED charmm
+    - N4B BBEN
+
+- label: 2OI0_modified parameterized with PDB coordinates
+  base: pdb/basic
+  pdb: 2oi0_modified.pdb
+  ligand: ligands/basic
+  chains:
+    - HETA
+  hcr:
+    - LIG param

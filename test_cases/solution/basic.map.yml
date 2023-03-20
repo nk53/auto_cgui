@@ -35,16 +35,16 @@ ions_checked:
 # alias for ions_checked
 ions:
   step: 2
-  elems:
-    - ions_checked: ions
+  presteps:
+    - set_custom_ions()
 ion_conc:
   step: 2
   elems:
-    - ion_conc: ion_conc
+    - "ion_conc[]": ion_conc
 ion_type:
   step: 2
-  elems:
-    - ion_type: ion_type
+  presteps:
+    - set_ion_type()
 ion_method:
   step: 2
   presteps:

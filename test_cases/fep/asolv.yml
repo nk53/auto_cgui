@@ -1,0 +1,11 @@
+base: ligands/basic
+parent: False
+url_ym: ?doc=input/asolvating
+steps:
+  - wait_text: Force Field Options
+    presteps:
+      - click_by_attrs(value='CGenFF Checker') # FF checker
+      - self.browser.fill('lfitedge', 10)    # Waterbox Size
+  - module:
+      name: input
+      start: 1

@@ -1,0 +1,6 @@
+dict: vacuum.map.yml
+parent: False
+steps:
+  - module:
+      name: solution
+      start: 3
